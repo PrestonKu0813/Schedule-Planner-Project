@@ -12,15 +12,22 @@ driver = webdriver.Chrome(options=options)
 course = "data structure"
 course.replace(" ", "%20")
 
-driver.get("https://sis.rutgers.edu/soc/#keyword?keyword=LINEAR%20ALGEBRA&semester=12024&campus=NB&level=U")
+driver.get("https://sis.rutgers.edu/soc/#subjects?semester=12024&campus=NB&level=U")
 
-def index_number(course, section): #tested
+
+#SECTION INFORMATION
+def index_number(): #tested
+    # wait = WebDriverWait(driver, timeout=30)
+    # wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[3]/div[2]/div[2]/div["+str(section)+"]/div[2]/span[2]"))
+
+    # index_number = driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[3]/div[2]/div[2]/div["+str(section)+"]/div[2]/span[2]")
+    # return index_number.get_attribute("textContent")
+    
     wait = WebDriverWait(driver, timeout=30)
-    wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[3]/div[2]/div[2]/div["+str(section)+"]/div[2]/span[2]"))
+    wait.until(lambda d : driver.find_element(By.CLASS_NAME, "sectionIndexNumber"))
 
-    index_number = driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[3]/div[2]/div[2]/div["+str(section)+"]/div[2]/span[2]")
-    return index_number.get_attribute("textContent")
-
+    index_number = driver.find_elements(By.CLASS_NAME, "sectionIndexNumber")
+    return index_number
 
 def section_number(course, section): #tested
     wait = WebDriverWait(driver, timeout=30)
@@ -29,20 +36,19 @@ def section_number(course, section): #tested
     section_number = driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[3]/div[2]/div[2]/div["+str(section)+"]/div[2]/span[1]/span")
     return section_number.get_attribute("textContent")
 
-def instructor(course, section):
+def instructor():
     wait = WebDriverWait(driver, timeout=30)
-    wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[3]/div[2]/div[2]/div["+str(section)+"]/div[2]/span[5]"))
+    wait.until(lambda d : driver.find_element(By.CLASS_NAME, "instructors"))
 
-#/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div[1]/div/div/div[3]/div[2]/div[2]/div["+str(section)+"]/div[2]/span[5]
-#/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div[1]/div/div/div[3]/div[2]/div[2]/div[1]/div[2]/span[5]
-#/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div[1]/div/div/div[3]/div[2]/div[2]/div[1]/div/span[5]   
+    instructor = driver.find_elements(By.CLASS_NAME, "instructors")
 
-    instructor = driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[3]/div[2]/div[2]/div["+str(section)+"]/div[2]/span[5]")
-
-    if instructor.get_attribute("textContent") == None:
-        return "no instructor given"
-    else:
-        return instructor.get_attribute("textContent")
+    # for i in range(len(instructor)):
+    #     if instructor[i].get_attribute("textContent") == "":
+    #         instructor[i] = "Instructor not given"
+    #     else:
+    #         instructor[i] = instructor[i].get_attribute("textContent")
+    
+    return instructor
     
 
 def lecture_time(course, section):
@@ -57,21 +63,40 @@ def campus(course, section):
 def classroom(course, section):
     pass
 
+def core_code():
+    pass
 
-def course_name(course):
+#COURSE INFORMATION
+def course_info(): #return course name and number
+
+    # wait = WebDriverWait(driver, timeout=30)
+    # wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[1]/span"))
+
+    # course_name = driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[1]/span")
     wait = WebDriverWait(driver, timeout=30)
-    wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[1]/span"))
+    wait.until(lambda d : driver.find_element(By.CLASS_NAME, "highlighttext"))
 
-    course_name = driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[1]/span")
-    return course_name.get_attribute("textContent")
+    course_name = driver.find_elements(By.CLASS_NAME, "highlighttext")
 
-def credit(course):
+    return course_name 
+    #odd index: course number
+    #even index: course name
+
+def credit():
+    # wait = WebDriverWait(driver, timeout=30)
+    # wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[2]"))
+
+    # course_name = driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[2]")
+    
     wait = WebDriverWait(driver, timeout=30)
-    wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[2]"))
+    wait.until(lambda d : driver.find_element(By.CLASS_NAME, "courseCredits"))
 
-    course_name = driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[2]")
-    return course_name.get_attribute("textContent")
+    credit = driver.find_elements(By.CLASS_NAME, "courseCredits")
 
+    return credit 
+    
+
+#SUBJECT INFORMATION
 def subject_list():
     subject_array = []
 
@@ -94,8 +119,6 @@ def subject_list():
             break
     return subject_array
     
-
-
 def all_subject_courses(): #information of all courses in one subject
     course = 0
     section: 1
@@ -134,6 +157,9 @@ def test(): # test succeed
         except:
             break
 
-print(credit(1))
-print(credit(2))
+test1 = subject_list()
+
+for i in range (len(test1)):
+    print("test: " + test1[i].get_attribute("textContent"))
+
 driver.quit()
