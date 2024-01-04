@@ -1,19 +1,20 @@
 class Section:
-    def __init__(self, index_number:int, section_number:int, instructor:str, lecture_time: list, recitation:list, campus:str, classroom:str) -> None:
+    def __init__(self, index_number:int, section_number:int, instructor:str, lecture_info:list) -> None:
         self.index_number = index_number
         self.section_number = section_number
         self.instructor = instructor
-        self.lecture_time = lecture_time
-        self.recitation = recitation
-        self.campus = campus
-        self.classroom = classroom
+        self.lecture_info = lecture_info
+        # self.lecture_time = lecture_time
+        # self.recitation = recitation
+        # self.campus = campus
+        # self.classroom = classroom
 
     def __str__(self) -> str:
         return f"[{self.section_number}], taught by {self.instructor} on {self.campus}"
     
 
 class Course:
-    def __init__(self, num:str, name:str, credit:int, prereqs:str, SAS_core:str, sections_list:list = []) -> None:
+    def __init__(self, num:str, name:str, credit:int, prereqs:str, SAS_core:str, sections_list:list) -> None:
         self.course_number = num
         self.course_name = name
         self.credit = credit
