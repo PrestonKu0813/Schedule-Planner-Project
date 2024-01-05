@@ -1,16 +1,21 @@
 from typing import List
 
+class Lecture:
+    def __init__(self, lecture_day, lecture_time, campus, recitation, classroom, classroom_link) -> None:
+        self.lecture_day = lecture_day
+        self.lecture_time = lecture_time
+        self.campus = campus
+        self.recitation = recitation
+        self.classroom = classroom
+        self.classroom_link = classroom_link
+
 class Section:
-    def __init__(self, index_number:int, section_number:int, instructor:str, lecture_info:List[str]) -> None:
+    def __init__(self, index_number:int, section_number:int, instructor:str, lecture_info:List[Lecture]) -> None:
         self.index_number = index_number
         self.section_number = section_number
         self.instructor = instructor
-        self.lecture_day = lecture_info[0]
-        self.lecture_time = lecture_info[1]
-        self.campus = lecture_info[2]
-        self.recitation = lecture_info[3]
-        self.classroom = lecture_info[4]
-        self.classroom_link = lecture_info[5]
+        self.lecture_info = lecture_info
+        
 
     def __str__(self) -> str:
         return f"[{self.section_number}], taught by {self.instructor}"

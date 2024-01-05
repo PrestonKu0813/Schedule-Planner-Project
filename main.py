@@ -1,4 +1,4 @@
-from course_classes import Section, Course, Subject
+from course_classes import Section, Course, Subject, Lecture
 from firebase.firebase import DatabaseConn
 from typing import List
 import selenium
@@ -23,7 +23,6 @@ def section_id(section_class:WebElement) -> WebElement:
     id = section_class.get_attribute("id")
     section_id = driver.find_element(By.ID, id)
     return section_id
-
 
 def index_number(section_id:WebElement) -> str:
     index_number = section_id.find_element(By.CLASS_NAME, "sectionIndexNumber")
@@ -52,6 +51,7 @@ def lecture_info(section_id:WebElement) -> List[List[str]]:
             lecture_day = "Asynchronous content"
             lecture_time = -1
             campus = "Online"
+            recitation = -1
             classroom = -1
             classroom_link = -1
         else:
@@ -126,11 +126,13 @@ def subject_list() -> List[str]:
 
 #READ DATA
 def all_subjects(): #information of all the subjects
+    result_subjects = []
     subjects = subject_list()
-    for subject in range(len(subjects)):
+    for subject in subjects:
         driver.get("https://sis.rutgers.edu/soc/#courses?subject="+str(subject)+"&semester=12024&campus=NB&level=U")
-
-
+        result = Subject(subject, all_courses())
+        result_subjects.append(result)
+    return result_subjects
 
 def all_courses() -> List[Course]:
     result_courses = []
@@ -149,11 +151,22 @@ def all_sections(course_id:WebElement) -> List[Section]:
     classes = section_class(course_id)
     for i in range(len(classes)):
         ids = section_id(classes[i])
-        result = Section(index_number(ids), section_number(ids), instructor(ids), lecture_info(ids))
+        result = Section(index_number(ids), section_number(ids), instructor(ids), lecture_class(ids))
         result_sections.append(result)
     return result_sections
 
-def firebase(data:List[Subject]):
+def lecture_class(course_id:WebElement) -> List[Lecture]:
+    lecture_class_array = []
+    read_lecture_info = lecture_info(course_id)
+    for i in range(len(read_lecture_info)):
+        result = Lecture(read_lecture_info[i][0], read_lecture_info[i][1], 
+                         read_lecture_info[i][2],read_lecture_info[i][3],
+                         read_lecture_info[i][4], read_lecture_info[i][5])
+        lecture_class_array.append(result)
+    return lecture_class_array
+
+def firebase():
+    data = all_subjects()
     firebase = DatabaseConn()
     firebase.post_data(data)
 

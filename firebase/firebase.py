@@ -10,6 +10,7 @@ class DatabaseConn:
         self.db = firestore.client()
 
     def post_data(self, subject_list:List[Subject]):
+        count = 0
         for subject in subject_list:
             for course in subject.course_list:
                 self.db.collection(subject.subject_name).document(course.course_name).set(
@@ -21,9 +22,16 @@ class DatabaseConn:
                     self.db.collection(subject.subject_name).document(course.course_name).collection("sections").document(section.section_number).set(
                         {"index_number":section.index_number,
                          "section_number":section.section_number,
-                         "instructor":section.instructor,
-                         "lecture_day":section.lecture_day,
-                         "lecture_time":section.lecture_time,
-                         "campus":section.campus,
-                         "classroom":section.classroom,
-                         "clasroom_link":section.classroom_link})
+                         "instructor":section.instructor})
+                    for lecture in section.lecture_info:
+                        self.db.collection(subject.subject_name).document(course.course_name).collection("sections").document(
+                            section.section_number).collection("lecture_info").document("lecture_info"+str(count)).set(
+                                {"lecture_day":lecture.lecture_day,
+                                 "lecture_time":lecture.lecture_time,
+                                 "campus":lecture.campus,
+                                 "recitation":lecture.recitation,
+                                 "classroom":lecture.classroom,
+                                 "clasroom_link":lecture.classroom_link})
+                        count+=1
+
+
