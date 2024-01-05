@@ -7,12 +7,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import NoSuchElementException
 
 options = webdriver.ChromeOptions()
-options.add_experimental_option("detach",True)
-
 driver = webdriver.Chrome(options=options)
-driver.get("https://sis.rutgers.edu/soc/#keyword?keyword=HISTORY%20OF%20LABOR%20AND%20WORK%20IN%20THE%20U.S.%201880%20TO%201945&semester=12024&campus=NB&level=U")
 
 #SECTION INFORMATION
 def section_class(course_id:WebElement) -> List[WebElement]:
@@ -40,6 +38,17 @@ def instructor(section_id:WebElement) -> str:
     else:
         return instructor.get_attribute("textContent")
 
+#consider 3 cases:
+    #Asynchronous content and Online
+    #Online Lecture/Classes
+    #Recitation
+
+# lecture_day = lecture_info.find_element(By.CLASS_NAME, "meetingTimeDay").get_attribute("textContent")
+# lecture_time = lecture_info.find_element(By.CLASS_NAME, "meetingTimeHours").get_attribute("textContent")
+# campus = lecture_info.find_element(By.CLASS_NAME, "meetingTimeCampus").get_attribute("textContent")
+# recitation = 0
+# classroom_info = lecture_info.find_element(By.CLASS_NAME, "meetingTimeBuildingAndRoom")
+
 def lecture_info(section_id:WebElement) -> List[List[str]]:
     lecture_info_array = []
     length_info = section_id.find_element(By.ID, str(section_id.get_attribute("id"))+".meetingTimes.divOuter")
@@ -47,18 +56,31 @@ def lecture_info(section_id:WebElement) -> List[List[str]]:
 
     for i in range(0, length):
         lecture_info = section_id.find_element(By.ID, str(section_id.get_attribute("id"))+".meetingTimes.divInner"+str(i))
-        if lecture_info.find_element(By.XPATH, "//span").get_attribute("textContent") == "Asynchronous content" and lecture_info.find_element(By.XPATH, "//span[2]").get_attribute("textContent") == "Online":
+        if lecture_info.find_element(By.XPATH, "./span").get_attribute("textContent") == "Asynchronous content" and lecture_info.find_element(By.XPATH, "./span[2]").get_attribute("textContent") == "Online":
             lecture_day = "Asynchronous content"
             lecture_time = -1
             campus = "Online"
-            recitation = -1
+            recitation = 0
+            classroom = -1
+            classroom_link = -1
+        elif lecture_info.find_element(By.XPATH, "./span").get_attribute("textContent") == "Hours by arrangement":
+            lecture_day = "Hours by arrangement"
+            lecture_time = -1
+            campus = -1
+            recitation = 0
             classroom = -1
             classroom_link = -1
         else:
-            lecture_day = lecture_info.find_element(By.CLASS_NAME, "meetingTimeDay").get_attribute("textContent")
-            lecture_time = lecture_info.find_element(By.CLASS_NAME, "meetingTimeHours").get_attribute("textContent")
-            campus = lecture_info.find_element(By.CLASS_NAME, "meetingTimeCampus").get_attribute("textContent")
-            classroom_info = lecture_info.find_element(By.CLASS_NAME, "meetingTimeBuildingAndRoom")
+            if "recitation" in lecture_info.find_element(By.XPATH, "./span").get_attribute("class"):
+                recitation = 1
+            else:
+                recitation = 0
+
+            lecture_day = lecture_info.find_element(By.ID, lecture_info.get_attribute("id")+".dayName").get_attribute("textContent")
+            lecture_time = lecture_info.find_element(By.ID, lecture_info.get_attribute("id")+".hours").get_attribute("textContent")
+            campus = lecture_info.find_element(By.ID, lecture_info.get_attribute("id")+".campus").get_attribute("textContent")
+            classroom_info = lecture_info.find_element(By.ID, lecture_info.get_attribute("id")+".building")
+
             if classroom_info.get_attribute("textContent") == "":
                 classroom = -1
                 classroom_link = -1
@@ -102,8 +124,10 @@ def core_code(course_id:WebElement) -> str:
         return -1
 
 #SUBJECT INFORMATION
-def subject_list() -> List[str]:
-    subject_array = []
+def subject_list() -> dict[str:str]:
+    subject_dict = {}
+
+    driver.get("https://sis.rutgers.edu/soc/#subjects?semester=12024&campus=NB&level=U")
 
     wait = WebDriverWait(driver, timeout=30)
     wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[1]/div[1]/div[1]/div[3]/div[1]/div/div[1]/input"))
@@ -114,25 +138,38 @@ def subject_list() -> List[str]:
     wait = WebDriverWait(driver, timeout=30)
     wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/div[7]/div[1]/div[1]"))
 
-    count = 2
-    while True:
-        try:
-            subject_list = driver.find_element(By.XPATH, "/html/body/div[7]/div[1]/div["+str(count)+"]")
-            subject_array.append(subject_list.get_attribute("textContent"))
-            count+=1
-        except:
-            break
-    return subject_array
+    length = 166
+
+    for i in range(0, length):
+        subject_list = driver.find_element(By.ID, "dijit_form_FilteringSelect_0_popup"+str(i))
+        subject_name = subject_list.get_attribute("textContent").split("(")[0]
+        subject_number = subject_list.get_attribute("textContent").split("(")[1].removesuffix(")")
+        subject_dict[subject_number] = subject_name
+
+    return subject_dict
 
 #READ DATA
 def all_subjects(): #information of all the subjects
     result_subjects = []
     subjects = subject_list()
-    for subject in subjects:
+    # count = 0
+    for subject in subjects.keys():
+        # if count == 3:
+        #     break
+        driver.switch_to.new_window("tab")
         driver.get("https://sis.rutgers.edu/soc/#courses?subject="+str(subject)+"&semester=12024&campus=NB&level=U")
-        result = Subject(subject, all_courses())
+        result = Subject(subjects[subject], all_courses())
         result_subjects.append(result)
+        driver.close()
+        # count+=1
     return result_subjects
+
+# def one_subject():
+#     result_subjects = []
+#     driver.get("https://sis.rutgers.edu/soc/#courses?subject=010&semester=12024&campus=NB&level=U")
+#     result = Subject("Accounting", all_courses())
+#     result_subjects.append(result)
+#     return result_subjects
 
 def all_courses() -> List[Course]:
     result_courses = []
@@ -140,8 +177,8 @@ def all_courses() -> List[Course]:
     for i in range(len(classes)):
         ids = course_id(classes[i])
         course_infos = course_info(ids)
-        course_number = course_infos[0]
-        course_name = course_infos[1]
+        course_number = course_infos[0].get_attribute("textContent")
+        course_name = course_infos[1].get_attribute("textContent")
         result = Course(course_number, course_name, credit(ids), core_code(ids), all_sections(ids))
         result_courses.append(result)
     return result_courses
@@ -170,36 +207,5 @@ def firebase():
     firebase = DatabaseConn()
     firebase.post_data(data)
 
-def test():
-    test_subject = course_class()
-    for i in range(0, 3): #len(test_subject)
-        id = course_id(test_subject[i])
-        course_infos = course_info(id)
-        print(course_infos[0].get_attribute("textContent"))
-        print(course_infos[1].get_attribute("textContent"))
-        print(credit(id))
-        print(core_code(id))
-        section_classes = section_class(id)
-        for j in range(0, 3): #len(section_classes)
-            try:
-                section_ids = section_id(section_classes[j])
-                print(section_ids.get_attribute("id"))
-                print(index_number(section_ids))
-                print(section_number(section_ids))
-                print(instructor(section_ids))
-            except:
-                continue
-
-def test_function():
-    test_subject = course_class()
-    id = test_subject[0]
-    section_class_list = section_class(id)
-    section_ids = section_id(section_class_list[10])
-    print(section_ids.get_attribute("id"))
-    time_info = lecture_info(section_ids)
-    for i in range(len(time_info)):
-        for j in range(len(time_info[i])):
-            print(time_info[i][j])
-
-test_function()
+firebase()
 driver.quit()

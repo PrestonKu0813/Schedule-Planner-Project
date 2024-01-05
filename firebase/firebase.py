@@ -1,4 +1,4 @@
-from course_classes import Section, Course, Subject
+from course_classes import Lecture, Section, Course, Subject
 from typing import List
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -10,7 +10,6 @@ class DatabaseConn:
         self.db = firestore.client()
 
     def post_data(self, subject_list:List[Subject]):
-        count = 0
         for subject in subject_list:
             for course in subject.course_list:
                 self.db.collection(subject.subject_name).document(course.course_name).set(
@@ -19,6 +18,7 @@ class DatabaseConn:
                      "credit":course.credit,
                      "sas_core":course.sas_core})
                 for section in course.section_list:
+                    count = 0
                     self.db.collection(subject.subject_name).document(course.course_name).collection("sections").document(section.section_number).set(
                         {"index_number":section.index_number,
                          "section_number":section.section_number,
@@ -33,5 +33,3 @@ class DatabaseConn:
                                  "classroom":lecture.classroom,
                                  "clasroom_link":lecture.classroom_link})
                         count+=1
-
-
