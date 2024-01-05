@@ -11,11 +11,7 @@ options = webdriver.ChromeOptions()
 options.add_experimental_option("detach",True)
 
 driver = webdriver.Chrome(options=options)
-course = "data structure"
-course.replace(" ", "%20")
-
-driver.get("https://sis.rutgers.edu/soc/#courses?subject=640&semester=12024&campus=NB&level=U")
-
+driver.get("https://sis.rutgers.edu/soc/#keyword?keyword=CALCULUS&semester=12024&campus=NB&level=U")
 
 #SECTION INFORMATION
 def section_class(course_id:WebElement) -> List[WebElement]:
@@ -53,21 +49,22 @@ def instructor(section_id:WebElement) -> str:
 def lecture_info(section_id:WebElement) -> List[str]:
     lecture_info_array = []
     count = 0
+
     while True:
         try:
             lecture_info = section_id.find_element(By.ID, str(section_id.get_attribute("id"))+".meetingTimes.divInner"+str(count))
             lecture_day = lecture_info.find_element(By.CLASS_NAME, "meetingTimeDay").get_attribute("textContent")
             lecture_time = lecture_info.find_element(By.CLASS_NAME, "meetingTimeHours").get_attribute("textContent")
             campus = lecture_info.find_element(By.CLASS_NAME, "meetingTimeCampus").get_attribute("textContent")
-            classroom = lecture_info.find_element(By.CLASS_NAME, "meetingTimeBuildingAndRoom").get_attribute("textContent")
-            classroom_link = lecture_info.find_element(By.CLASS_NAME, "meetingTimeBuildingAndRoom").get_attribute("href")
+            classroom_info = lecture_info.find_element(By.CLASS_NAME, "meetingTimeBuildingAndRoom")
+            classroom = classroom_info.get_attribute("textContent")
+            classroom_link = classroom_info.find_element(By.TAG_NAME, "a").get_attribute("href")
             lecture_info_inner_array = [lecture_day, lecture_time, campus, classroom, classroom_link]
             lecture_info_array.append(lecture_info_inner_array)
             count+=1
         except:
             break
     return lecture_info_array
-
 
 #COURSE INFORMATION
 def course_class() -> List[WebElement]:
@@ -83,7 +80,6 @@ def course_id(subject_class:WebElement) -> WebElement:
     return course_id
 
 def course_info(course_id:WebElement) -> List[WebElement]:  #return course name and number
-
     # wait = WebDriverWait(driver, timeout=30)
     # wait.until(lambda d : driver.find_element(By.XPATH, "/html/body/main/div[2]/table/tbody/tr/td[2]/div[5]/div[1]/div/div["+str(course)+"]/div/div/div[2]/span[4]/span[1]/span"))
 
@@ -128,17 +124,35 @@ def subject_list() -> List[str]:
     while True:
         try:
             subject_list = driver.find_element(By.XPATH, "/html/body/div[7]/div[1]/div["+str(count)+"]")
-            count+=1
             subject_array.append(subject_list.get_attribute("textContent"))
+            count+=1
         except:
             break
     return subject_array
 
 
-def all_info(): #information of all the subjects
+def all_subject(): #information of all the subjects
     subjects = subject_list()
     for subject in range(len(subjects)):
         driver.get("https://sis.rutgers.edu/soc/#courses?subject="+str(subject)+"&semester=12024&campus=NB&level=U")
+
+def all_courses():
+    classes = course_class()
+    for i in range(len(classes)):
+        ids = course_id(classes[i])
+        course_info(ids)
+        credit(ids)
+        core_code(ids)
+        all_section(ids)
+
+def all_section(course_id:WebElement):
+    classes = section_class(course_id)
+    for i in range(len(classes)):
+        ids = section_id(classes[i])
+        index_number(ids)
+        section_number(ids)
+        instructor(ids)
+        lecture_info(ids)
 
 def test():
     test_subject = course_class()
@@ -169,7 +183,10 @@ def test_function():
     for i in range(len(time_info)):
         for j in range(len(time_info[i])):
             print(time_info[i][j])
-    
 
-test_function()
-driver.quit()
+# wait = WebDriverWait(driver, timeout=30)
+# wait.until(lambda d : driver.find_element(By.ID, "01:640:112.4.section01.0.sectionData.meetingTimes.divOuter"))
+# parent_div = driver.find_element(By.ID, "01:640:112.4.section01.0.sectionData.meetingTimes.divOuter")
+# length = parent_div.find_element(By.XPATH, "./div")
+# print(length)
+# driver.quit()
