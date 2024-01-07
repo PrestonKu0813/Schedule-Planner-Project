@@ -1,0 +1,2 @@
+firebase_admin==6.3.0
+selenium==4.16.0
