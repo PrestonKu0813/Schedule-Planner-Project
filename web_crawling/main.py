@@ -123,7 +123,7 @@ def core_code(course_id:WebElement) -> str:
 
 #SUBJECT INFORMATION
 def subject_list() -> dict[str:str]:
-    subject_dict = {}
+    subject_dict = []
 
     driver.get("https://sis.rutgers.edu/soc/#subjects?semester=12024&campus=NB&level=U")
 
@@ -140,34 +140,24 @@ def subject_list() -> dict[str:str]:
 
     for i in range(0, length):
         subject_list = driver.find_element(By.ID, "dijit_form_FilteringSelect_0_popup"+str(i))
-        subject_name = subject_list.get_attribute("textContent").split("(")[0]
+        subject_name = subject_list.get_attribute("textContent").split("(")[0].replace("/", "-")
         subject_number = subject_list.get_attribute("textContent").split("(")[1].removesuffix(")")
-        subject_dict[subject_number] = subject_name
+        subject_dict.append(subject_name)
+        subject_dict.append(subject_number)
 
     return subject_dict
 
 #READ DATA
-def all_subjects(): #information of all the subjects
-    result_subjects = []
-    subjects = subject_list()
-    # count = 0
-    for subject in subjects.keys():
-        # if count == 3:
-        #     break
-        driver.switch_to.new_window("tab")
-        driver.get("https://sis.rutgers.edu/soc/#courses?subject="+str(subject)+"&semester=12024&campus=NB&level=U")
-        result = Subject(subjects[subject], all_courses())
-        result_subjects.append(result)
-        driver.close()
-        # count+=1
-    return result_subjects
-
-# def one_subject():
-#     result_subjects = []
-#     driver.get("https://sis.rutgers.edu/soc/#courses?subject=010&semester=12024&campus=NB&level=U")
-#     result = Subject("Accounting", all_courses())
-#     result_subjects.append(result)
-#     return result_subjects
+def one_subject(subject_name, subject_number) -> Subject: #information of one subject
+    original_window = driver.current_window_handle
+    print("pulling subject: " + subject_name)
+    driver.switch_to.new_window("tab")
+    driver.get("https://sis.rutgers.edu/soc/#courses?subject="+str(subject_number)+"&semester=12024&campus=NB&level=U")
+    result = Subject(subject_name, all_courses())
+    print("posting subject: " + subject_name)
+    driver.close()
+    driver.switch_to.window(original_window)
+    return result
 
 def all_courses() -> List[Course]:
     result_courses = []
@@ -177,7 +167,9 @@ def all_courses() -> List[Course]:
         course_infos = course_info(ids)
         course_number = course_infos[0].get_attribute("textContent")
         course_name = course_infos[1].get_attribute("textContent")
+        print("pulling course: " + course_name)
         result = Course(course_number, course_name, credit(ids), core_code(ids), all_sections(ids))
+        print("posting course: " + course_name)
         result_courses.append(result)
     return result_courses
 
@@ -186,7 +178,9 @@ def all_sections(course_id:WebElement) -> List[Section]:
     classes = section_class(course_id)
     for i in range(len(classes)):
         ids = section_id(classes[i])
+        print("pulling section: " + section_number(ids))
         result = Section(index_number(ids), section_number(ids), instructor(ids), lecture_class(ids))
+        print("posting section: " + section_number(ids))
         result_sections.append(result)
     return result_sections
 
@@ -194,16 +188,37 @@ def lecture_class(course_id:WebElement) -> List[Lecture]:
     lecture_class_array = []
     read_lecture_info = lecture_info(course_id)
     for i in range(len(read_lecture_info)):
+        print("pulling lecture info" + str(i))
         result = Lecture(read_lecture_info[i][0], read_lecture_info[i][1], 
                          read_lecture_info[i][2],read_lecture_info[i][3],
                          read_lecture_info[i][4], read_lecture_info[i][5])
+        print("posting lecture info" + str(i))
         lecture_class_array.append(result)
     return lecture_class_array
 
+def bugs(error_message_dict:dict):
+    if len(error_message_dict) == 0:
+        print("no error")
+    else:
+        for error in error_message_dict.keys():
+            print("subject: " + error_message_dict[error] + "has error: " + error)
+
 def firebase():
-    data = all_subjects()
+    error_message_dict = {}
     firebase = DatabaseConn()
-    firebase.post_data(data)
+    subjects = subject_list()
+    for i in range(80*2, len(subjects), 2):
+        try:
+            data = one_subject(subjects[i], subjects[i+1])
+            print("uploading suject: " + subjects[i])
+            firebase.post_data(data)
+            print("subject: " + subjects[i] + "uploaded!")
+        except Exception as error_message:
+            print(error_message)
+            print(subjects[i])
+            error_message_dict[subjects[i]] = error_message
+            continue
+    bugs(error_message_dict)
 
 firebase()
 driver.quit()
