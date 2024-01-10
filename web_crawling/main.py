@@ -123,7 +123,7 @@ def core_code(course_id:WebElement) -> str:
 
 #SUBJECT INFORMATION
 def subject_list() -> dict[str:str]:
-    subject_dict = []
+    subject_dict = {}
 
     driver.get("https://sis.rutgers.edu/soc/#subjects?semester=12024&campus=NB&level=U")
 
@@ -142,8 +142,7 @@ def subject_list() -> dict[str:str]:
         subject_list = driver.find_element(By.ID, "dijit_form_FilteringSelect_0_popup"+str(i))
         subject_name = subject_list.get_attribute("textContent").split("(")[0].replace("/", "-")
         subject_number = subject_list.get_attribute("textContent").split("(")[1].removesuffix(")")
-        subject_dict.append(subject_name)
-        subject_dict.append(subject_number)
+        subject_dict[subject_number] = subject_name
 
     return subject_dict
 
@@ -207,16 +206,16 @@ def firebase():
     error_message_dict = {}
     firebase = DatabaseConn()
     subjects = subject_list()
-    for i in range(80*2, len(subjects), 2):
+    for subject in subjects.keys():
         try:
-            data = one_subject(subjects[i], subjects[i+1])
-            print("uploading suject: " + subjects[i])
+            data = one_subject(subjects[subject], subject)
+            print("uploading suject: " + subjects[subject])
             firebase.post_data(data)
-            print("subject: " + subjects[i] + "uploaded!")
+            print("subject: " + subjects[subject] + "uploaded!")
         except Exception as error_message:
             print(error_message)
-            print(subjects[i])
-            error_message_dict[subjects[i]] = error_message
+            print(subjects[subject])
+            error_message_dict[error_message] = subjects[subject]
             continue
     bugs(error_message_dict)
 
