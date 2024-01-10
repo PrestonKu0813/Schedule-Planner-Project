@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 web_crawlwing/firebase/key.json
+web_crawlwing/firebase/bfg.jar
