@@ -161,3 +161,4 @@ cython_debug/
 
 bfg.jar
 web_crawling/firebase/key.json
+**/.DS_Store
