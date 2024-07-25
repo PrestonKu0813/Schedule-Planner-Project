@@ -1,17 +1,17 @@
 # import sys
 # sys.path.append("/web_crawling/firebase")
-from course_classes import Lecture, Section, Course, Subject
+from web_classes.course_classes import Lecture, Section, Course, Subject
 from typing import List
 import firebase_admin
 from firebase_admin import credentials, firestore
 
 class DatabaseConn:
     def __init__(self) -> None:
-        self.cred = credentials.Certificate("web_crawling/firebase/key.json")
+        self.cred = credentials.Certificate("firebase/key.json")
         self.app = firebase_admin.initialize_app(self.cred)
         self.db = firestore.client()
 
-    def post_data(self, subject:Subject):
+    def allData(self, subject:Subject):
         for course in subject.course_list:
             print("uploading course: " + course.course_name)
             document_course_name = course.course_name.replace("/", "-")
@@ -42,5 +42,6 @@ class DatabaseConn:
                     count+=1
                     print("lecture info" + str(count) + " uploaded")
                 
-            
+    def update():
+        pass
                 
