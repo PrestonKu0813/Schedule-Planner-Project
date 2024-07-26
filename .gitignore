@@ -160,5 +160,6 @@ cython_debug/
 #.idea/
 
 bfg.jar
+web_crawling/mySQL/key.json
 web_crawling/firebase/key.json
 **/.DS_Store

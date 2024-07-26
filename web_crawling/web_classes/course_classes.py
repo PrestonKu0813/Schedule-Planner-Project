@@ -1,37 +1,38 @@
 from typing import List
 
 class Lecture:
-    def __init__(self, lecture_day, lecture_time, campus, recitation, classroom, classroom_link) -> None:
-        self.lecture_day = lecture_day
-        self.lecture_time = lecture_time
+    def __init__(self, lectureDay, lectureTime, campus, recitation, classroom, classroomLink) -> None:
+        self.lectureDay = lectureDay
+        self.lectureTime = lectureTime
         self.campus = campus
         self.recitation = recitation
         self.classroom = classroom
-        self.classroom_link = classroom_link
+        self.classroomLink = classroomLink
 
 class Section:
-    def __init__(self, index_number:int, section_number:int, instructor:str, lecture_info:List[Lecture]) -> None:
-        self.index_number = index_number
-        self.section_number = section_number
+    def __init__(self, indexNumber:int, sectionNumber:int, instructor:str, lectureInfo:List[Lecture]) -> None:
+        self.indexNumber = indexNumber
+        self.sectionNumber = sectionNumber
         self.instructor = instructor
-        self.lecture_info = lecture_info
+        self.lectureInfo = lectureInfo
         
 
     def __str__(self) -> str:
-        return f"[{self.section_number}], taught by {self.instructor}"
+        return f"[{self.sectionNumber}], taught by {self.instructor}"
 
 class Course:
-    def __init__(self, number:str, name:str, credit:int, sas_core:str, sections_list:List[Section]) -> None:
-        self.course_number = number
-        self.course_name = name
+    def __init__(self, courseNumber:str, courseName:str, credit:int, sasCore:str, sectionsList:List[Section]) -> None:
+        self.courseNumber = courseNumber
+        self.courseName = courseName
         self.credit = credit
-        self.sas_core = sas_core
-        self.section_list = sections_list
+        self.sasCore = sasCore
+        self.sectionsList = sectionsList
 
     def __str__(self) -> str:
-        return f"[{self.course_number}] {self.course_name}, {self.credit} credits, with {len(self.sections)} sections"
+        return f"[{self.courseNumber}] {self.courseName}, {self.credit} credits, with {len(self.sections)} sections"
 
 class Subject:
-    def __init__(self, subject_name, courses_list:List[Course]) -> None:
-        self.subject_name = subject_name
-        self.course_list = courses_list
+    def __init__(self, subjectName, subjectCode, coursesList:List[Course]) -> None:
+        self.subjectName = subjectName
+        self.subjectCode = subjectCode
+        self.coursesList = coursesList

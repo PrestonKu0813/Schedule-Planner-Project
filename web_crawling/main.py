@@ -3,8 +3,8 @@ from web_classes.web_subjects import WebSubject
 from web_classes.web_courses import WebCourse
 from web_classes.web_sections import WebSection
 from web_classes.error_class import Error
-from firebase.firebase import DatabaseConn
-# from firebase.toJSON import create_dictionary
+from firebase.firebase import FirebaseConn
+from preprocessing.to_JSON import create_dictionary
 from typing import List
 import selenium
 from selenium import webdriver
@@ -26,7 +26,7 @@ def oneSubject(subjectName, subjectNumber) -> Subject: #information of one subje
     print("pulling subject: " + subjectName)
     driver.switch_to.new_window("tab")
     driver.get("https://sis.rutgers.edu/soc/#courses?subject="+str(subjectNumber)+"&semester=92024&campus=NB&level=U")
-    result = Subject(subjectName, allCourses())
+    result = Subject(subjectName, subjectNumber, allCourses())
     print("posting subject: " + subjectName)
     driver.close()
     driver.switch_to.window(originalWindow)
@@ -71,7 +71,7 @@ def lectureClass(courseID:WebElement) -> List[Lecture]:
 
 def firebase():
     errorMessageDict = {}
-    firebase = DatabaseConn()
+    firebase = FirebaseConn()
     subjects = webSubject.subjectList(driver)
     for subject in subjects.keys():
         try:
@@ -85,6 +85,55 @@ def firebase():
             errorMessageDict[errorMessage] = subjects[subject]
             continue
     error.bugsDectect(errorMessageDict)
+
+# def compare(subject:str, newSubjectDict:dict):
+
+#     with open("firebase/data.json", "r") as file:
+#         data = json.load(file)
+
+#     # with open("firebase/data_copy.json", "r") as file:
+#     #     data_copy = json.load(file)
+
+#     oldSubjectDict = data[subject]
+#     newSubjectDict = newSubjectDict[subject]
+
+#     # data = data[subject]
+#     # data_copy = data_copy[subject]
+#     # result = DeepDiff(data_copy, data)
+
+#     updateDict = DeepDiff(oldSubjectDict, newSubjectDict)
+#     updateDict["item_added"] = {}
+#     updateDict["item_removed"] = {}
+#     updateDict["values_changed"] = {}
+    
+#     with open("firebase/update.json", "w") as outfile:
+#         updateData = json.dump(updateDict, outfile)
+
+# def update():
+#     jsonData = {}
+#     subjects = subjectList()
+
+#     counter = 0
+
+#     for subject in subjects.keys():
+#         if counter >= 1:
+#             break
+        
+#         data = oneSubject(subjects[subject], subject)
+#         # data = one_subject("Accounting", "010")
+#         print("creating suject: " + subjects[subject])
+#         subjectDict = create_dictionary(data)
+#         jsonData[subjects[subject]] = subjectDict
+#         print("subject: " + subjects[subject] + " created!")
+#         if os.path.exists("firebase/data.json"): 
+#             compare(subjects[subject], jsonData)
+#         else:
+#             with open("firebase/data.json", "w") as outfile:
+#                 json.dump(jsonData, outfile)
+#         counter+=1
+    
+
+# update()
 
 firebase()
 driver.quit()
