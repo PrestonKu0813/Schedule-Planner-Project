@@ -21,11 +21,11 @@ class Section:
         return f"[{self.sectionNumber}], taught by {self.instructor}"
 
 class Course:
-    def __init__(self, courseNumber:str, courseName:str, credit:int, sasCore:str, sectionsList:List[Section]) -> None:
+    def __init__(self, courseNumber:str, courseName:str, credit:int, coreCode:str, sectionsList:List[Section]) -> None:
         self.courseNumber = courseNumber
         self.courseName = courseName
         self.credit = credit
-        self.sasCore = sasCore
+        self.coreCode = coreCode
         self.sectionsList = sectionsList
 
     def __str__(self) -> str:

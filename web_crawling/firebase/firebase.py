@@ -18,7 +18,7 @@ class FirebaseConn:
                 {"course_number":course.courseNumber,
                     "course_name":course.courseName,
                     "credit":course.credit,
-                    "sas_core":course.sasCore})
+                    "sas_core":course.coreCode})
             print("course: " + course.courseName + " uploaded")
             for section in course.sectionsList:
                 print("uploading section: " + section.sectionNumber)

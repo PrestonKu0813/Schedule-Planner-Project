@@ -1,4 +1,5 @@
 from typing import List
+import re
 import selenium
 from selenium import webdriver
 import selenium.webdriver
@@ -30,7 +31,9 @@ class WebCourse:
         
     def credit(self, courseID:WebElement) -> str:
         credit = courseID.find_element(By.CLASS_NAME, "courseCredits")
-        return credit.get_attribute("textContent")
+        creditText = credit.get_attribute("textContent")
+        creditNumber = re.search(r'\d+', creditText)
+        return int(creditNumber.group())
 
     def coreCode(self, courseID:WebElement) -> str:
         try:

@@ -16,7 +16,7 @@ def create_dictionary(subject:Subject):
             "course_number":course.courseNumber,
             "course_name":course.courseName,
             "credit":course.credit,
-            "sas_core":course.sasCore,
+            "sas_core":course.coreCode,
             "sections":{}}
         print("course: " + course.courseName + " created")
 

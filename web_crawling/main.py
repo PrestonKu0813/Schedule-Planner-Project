@@ -4,8 +4,10 @@ from web_classes.web_courses import WebCourse
 from web_classes.web_sections import WebSection
 from web_classes.error_class import Error
 from firebase.firebase import FirebaseConn
+from mySQL.mySQL import MySQLConn
 from preprocessing.to_JSON import create_dictionary
 from typing import List
+import re
 import selenium
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -86,6 +88,20 @@ def firebase():
             continue
     error.bugsDectect(errorMessageDict)
 
+def mySQL():
+    mySQL = MySQLConn()
+    subjects = webSubject.subjectList(driver)
+    counter = 0
+    for subject in subjects.keys():
+        if counter > 0:
+            break
+        data = oneSubject(subjects[subject], subject)
+        print("uploading suject: " + subjects[subject])
+        mySQL.insertData(data)
+        print("subject: " + subjects[subject] + " uploaded!")
+        counter+=1
+
+
 # def compare(subject:str, newSubjectDict:dict):
 
 #     with open("firebase/data.json", "r") as file:
@@ -134,6 +150,7 @@ def firebase():
     
 
 # update()
+# firebase()
+mySQL()
 
-firebase()
 driver.quit()
