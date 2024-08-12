@@ -1,7 +1,7 @@
-from sqlalchemy import create_engine, ForeignKey, Column, SmallInteger, Integer, VARCHAR, JSON
+from sqlalchemy import create_engine, ForeignKey, Column, VARCHAR, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from ENUM import Key
+from mySQL.ENUM import Key
 import json
 
 Base = declarative_base()
@@ -9,18 +9,18 @@ path = "mySQL/key.json"
 file = open(path)
 key = json.load(file)
 
-host = key[Key.HOST]
-user = key[Key.USR]
-password = key[Key.PASS]
-port = key[Key.PORT]
-database = key[Key.DB]
+host = key[Key.HOST.value]
+user = key[Key.USR.value]
+password = key[Key.PASS.value]
+port = key[Key.PORT.value]
+database = key[Key.DB.value]
 
 mysql_db_url = f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}"
 
 class SQLSubject(Base):
     __tablename__ = "subject"
 
-    subject_code = Column("subject_code", Integer, primary_key=True)
+    subject_code = Column("subject_code", VARCHAR(255), primary_key=True)
     subject_name = Column("subject_name", VARCHAR(255))
 
     def __init__(self, subject_code, subject_name):
@@ -34,10 +34,10 @@ class SQLCourse(Base):
     __tablename__ = "course"
 
     course_number = Column("course_number", VARCHAR(255), primary_key=True)
-    subject_code = Column(Integer, ForeignKey("subject.subject_code"))
+    subject_code = Column(VARCHAR(255), ForeignKey("subject.subject_code"))
     course_name = Column("course_name", VARCHAR(255))
-    credit = Column("credit", SmallInteger)
-    core_code = Column("core_code", VARCHAR)
+    credit = Column("credit", VARCHAR(255))
+    core_code = Column("core_code", VARCHAR(255))
 
     def __init__(self, course_number, subject_code, course_name, credit, core_code):
         self.course_number = course_number
@@ -52,7 +52,7 @@ class SQLCourse(Base):
 class SQLSection(Base):
     __tablename__ = "section"
 
-    index_number = Column("index_number", Integer, primary_key=True)
+    index_number = Column("index_number", VARCHAR(255), primary_key=True)
     course_number = Column(VARCHAR(255), ForeignKey("course.course_number"))
     section_number = Column("section_number", VARCHAR(255))
     instructor = Column("instructor", VARCHAR(255))

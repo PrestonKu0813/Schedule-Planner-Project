@@ -1,10 +1,8 @@
-from typing import List, Dict
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from mySQL.tables import SQLSubject, SQLCourse, SQLSection
 from web_classes.course_classes import Subject
-from ENUM import Key
+from mySQL.ENUM import Key
 import json
 
 class MySQLConn:
@@ -13,11 +11,11 @@ class MySQLConn:
         file = open(path)
         key = json.load(file)
 
-        host = key[Key.HOST]
-        user = key[Key.USR]
-        password = key[Key.PASS]
-        port = key[Key.PORT]
-        database = key[Key.DB]
+        host = key[Key.HOST.value]
+        user = key[Key.USR.value]
+        password = key[Key.PASS.value]
+        port = key[Key.PORT.value]
+        database = key[Key.DB.value]
 
         mysql_db_url = f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}"
         engine = create_engine(mysql_db_url)
