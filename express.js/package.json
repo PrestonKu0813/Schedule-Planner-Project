@@ -12,7 +12,9 @@
   "dependencies": {
     "express": "^4.19.2",
     "knex": "^3.1.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"

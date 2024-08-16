@@ -1,0 +1,93 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: API documentation
+  version: 0.1.9
+servers:
+  - url: http://localhost:3000
+    description: production server
+paths:
+  /:
+    get:
+      tags:
+        - explore
+      summary: return lists of all subjects
+      description: home page
+      responses:
+        "200":
+          description: A json of the subject list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subject_code:
+                    type: object
+                    properties:
+                      subject_name:
+                        type: string
+                      courses:
+                        type: object
+                        properties:
+                          course_number:
+                            type: object
+                            properties:
+                              course_name:
+                                type: string
+                              credit:
+                                type: integer
+                              core_code:
+                                type: string
+        "500":
+          description: internal error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+
+  /{id}:
+    get:
+      tags:
+        - explore
+      summary: return specific subject
+      description: home page
+      responses:
+        "200":
+          description: A json of a subject
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subject_code:
+                    type: string
+                  subject_name:
+                    type: string
+                  courses:
+                    type: object
+                    properties:
+                      course_number:
+                        type: object
+                        properties:
+                          course_name:
+                            type: string
+                          credit:
+                            type: integer
+                          core_code:
+                            type: string
+        "500":
+          description: internal error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
