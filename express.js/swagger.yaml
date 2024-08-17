@@ -7,7 +7,7 @@ servers:
   - url: http://localhost:3000
     description: production server
 paths:
-  /:
+  /explore:
     get:
       tags:
         - explore
@@ -24,6 +24,8 @@ paths:
                   subject_code:
                     type: object
                     properties:
+                      subject_code:
+                        type: string
                       subject_name:
                         type: string
                       courses:
@@ -32,14 +34,16 @@ paths:
                           course_number:
                             type: object
                             properties:
+                              course_number:
+                                type: string
                               course_name:
                                 type: string
                               credit:
                                 type: integer
                               core_code:
                                 type: string
-        "500":
-          description: internal error
+        "400":
+          description: invalid request
           content:
             application/json:
               schema:
@@ -50,7 +54,7 @@ paths:
                   error_message:
                     type: string
 
-  /{id}:
+  /explore/{id}:
     get:
       tags:
         - explore
@@ -74,14 +78,16 @@ paths:
                       course_number:
                         type: object
                         properties:
+                          course_number:
+                            type: string
                           course_name:
                             type: string
                           credit:
                             type: integer
                           core_code:
                             type: string
-        "500":
-          description: internal error
+        "400":
+          description: invalid request
           content:
             application/json:
               schema:
