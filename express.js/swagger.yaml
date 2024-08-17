@@ -11,8 +11,8 @@ paths:
     get:
       tags:
         - explore
-      summary: return lists of all subjects
-      description: home page
+      summary: return a list of all subjects
+      description:
       responses:
         "200":
           description: A json of the subject list
@@ -58,11 +58,11 @@ paths:
     get:
       tags:
         - explore
-      summary: return a specific subject
+      summary: return a specific subject info
       description:
       responses:
         "200":
-          description: A json of a subject and its courses
+          description: A json of a subject
           content:
             application/json:
               schema:
@@ -72,20 +72,6 @@ paths:
                     type: string
                   subject_name:
                     type: string
-                  courses:
-                    type: object
-                    properties:
-                      course_number:
-                        type: object
-                        properties:
-                          course_number:
-                            type: string
-                          course_name:
-                            type: string
-                          credit:
-                            type: integer
-                          core_code:
-                            type: string
         "400":
           description: invalid request
           content:
@@ -97,6 +83,44 @@ paths:
                     type: integer
                   error_message:
                     type: string
+
+  /explore/{id}/courses:
+    get:
+      tags:
+        - explore
+      summary: return a specific subject's courses
+      description:
+      responses:
+        "200":
+          description: A json of a subject's courses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  course_number:
+                    type: object
+                    properties:
+                      course_number:
+                        type: string
+                      course_name:
+                        type: string
+                      credit:
+                        type: integer
+                      core_code:
+                        type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+
   /course/{id}:
     get:
       tags:
@@ -183,3 +207,49 @@ paths:
                     type: integer
                   error_message:
                     type: string
+
+  /user/{id}:
+    get:
+      tags:
+        - user
+      summary: return user data
+      description:
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - user
+      summary: update user data
+      description:
+      requestBody:
+        description:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - user
+      summary: delete user data
+      description:
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
