@@ -58,11 +58,11 @@ paths:
     get:
       tags:
         - explore
-      summary: return specific subject
-      description: home page
+      summary: return a specific subject
+      description:
       responses:
         "200":
-          description: A json of a subject
+          description: A json of a subject and its courses
           content:
             application/json:
               schema:
@@ -86,6 +86,92 @@ paths:
                             type: integer
                           core_code:
                             type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+  /course/{id}:
+    get:
+      tags:
+        - course
+      summary: return a specific course info
+      description:
+      responses:
+        "200":
+          description: A json of a course
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  course_number:
+                    type: string
+                  course_name:
+                    type: string
+                  credit:
+                    type: integer
+                  core_code:
+                    type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+
+  /course/{id}/sections:
+    get:
+      tags:
+        - course
+      summary: return a specific course's sections
+      description:
+      responses:
+        "200":
+          description: A json of a course's sections
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  index_number:
+                    type: object
+                    properties:
+                      index_number:
+                        type: string
+                      section_number:
+                        type: string
+                      instructor:
+                        type: string
+                      lecture_info:
+                        type: object
+                        properties:
+                          info_number:
+                            type: object
+                            properties:
+                              lecture_day:
+                                type: string
+                              lecture_time:
+                                type: string
+                              campus:
+                                type: string
+                              recitation:
+                                type: boolean
+                              classroom:
+                                type: string
+                              classroom_link:
+                                type: string
         "400":
           description: invalid request
           content:
