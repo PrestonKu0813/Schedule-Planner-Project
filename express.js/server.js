@@ -1,5 +1,3 @@
-const { courseByCourseNumber } = require("./mysql_query/query");
-
 const express = require("express");
 const app = express();
 port = 3000;

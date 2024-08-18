@@ -162,6 +162,5 @@ cython_debug/
 bfg.jar
 web_crawling/mySQL/key.json
 web_crawling/firebase/key.json
-express.js/key.json
-express.js/node_modules
+express.js/node_modules/
 **/.DS_Store
