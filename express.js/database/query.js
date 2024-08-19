@@ -29,14 +29,61 @@ async function sectionsByCourseNumber(courseNumber) {
   return sectionsObject;
 }
 
-function subjectBysectionCode(subjectCode) {
-  return db
+async function getAllSubjects() {
+  let subjectsObject = {}
+  const coursesArray = await db
+    .table('subject')
+    .innerJoin('course', `subject.${database_names.subject.CODE}`, `course.${database_names.subject.CODE}`)
+    .orderBy(`subject.${database_names.subject.CODE}`, 'asc')
+
+  for (let i = 0; i < coursesArray.length; i++) {
+    const course = coursesArray[i];
+
+    if (!(course[database_names.subject.CODE] in subjectsObject)) {
+      let currentSubject = {};
+      currentSubject[database_names.subject.CODE] = course[database_names.subject.CODE];
+      currentSubject[database_names.subject.NAME] = course[database_names.subject.NAME];
+      currentSubject["courses"] = {}
+      subjectsObject[course[database_names.subject.CODE]] = currentSubject;
+    }
+
+    let courseObject = {}
+    courseObject[database_names.course.NUMBER] = course[database_names.course.NUMBER];
+    courseObject[database_names.course.NAME] = course[database_names.course.NAME];
+    courseObject[database_names.course.CREDIT] = course[database_names.course.CREDIT];
+    courseObject[database_names.course.CORE_CODE] = course[database_names.course.CORE_CODE];
+
+    subjectsObject[course[database_names.subject.CODE]][course[database_names.course.NUMBER]] = courseObject;
+  }
+  return subjectsObject;
+}
+
+async function subjectBySectionCode(subjectCode) {
+  const subject = await db
     .table(database_names.table.SUBJECT)
-    .where(database_names.subject.CODE, subjectCode);
+    .where(database_names.subject.CODE, subjectCode)
+  return subject;
+}
+
+async function coursesBySubject(subjectCode) {
+  let coursesObject = {}
+  coursesArray = await db
+    .table('subject')
+    .innerJoin('course', `subject.${database_names.subject.CODE}`, `course.${database_names.subject.CODE}`)
+    .where(`subject.${database_names.subject.CODE}`, subjectCode)
+    .orderBy(`subject.${database_names.subject.CODE}`, 'asc')
+  for (let i = 0; i < coursesArray.length; i++) {
+    const course = coursesArray[i];
+    courseNumber = course[database_names.course.NUMBER];
+    coursesObject[courseNumber] = course;
+  }
+  return coursesObject;
 }
 
 module.exports = {
   courseByCourseNumber,
   sectionsByCourseNumber,
-  subjectBysectionCode,
+  getAllSubjects,
+  subjectBySectionCode,
+  coursesBySubject
 };
