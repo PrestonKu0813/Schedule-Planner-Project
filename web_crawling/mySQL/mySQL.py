@@ -36,12 +36,12 @@ class MySQLConn:
                 
                 for lectureInfo in section.lectureInfo:
                     lectureInfoDict = {}
-                    lectureInfoDict["lectureDay"] = lectureInfo.lectureDay
-                    lectureInfoDict["lectureTime"] = lectureInfo.lectureTime
+                    lectureInfoDict["lecture_day"] = lectureInfo.lectureDay
+                    lectureInfoDict["lecture_time"] = lectureInfo.lectureTime
                     lectureInfoDict["campus"] = lectureInfo.campus
                     lectureInfoDict["recitation"] = lectureInfo.recitation
                     lectureInfoDict["classroom"] = lectureInfo.classroom
-                    lectureInfoDict["classroomLink"] = lectureInfo.classroomLink
+                    lectureInfoDict["classroom_link"] = lectureInfo.classroomLink
                     lectureInfosDict[f"info{counter}"] = lectureInfoDict
                     counter+=1
 
