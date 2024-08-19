@@ -3,33 +3,36 @@
 // const knex = mysqlConn.getDB;
 
 const db = require("./mysql_conn");
+const database_names = require("../enums/mysql_names");
 
 async function courseByCourseNumber(courseNumber) {
   const course = await db
-    .table("course")
-    .where("course_number", courseNumber)
+    .table(database_names.table.COURSE)
+    .where(database_names.course.NUMBER, courseNumber)
     .first();
-  delete course["subject_code"];
-  return course
+  delete course[database_names.subject.CODE];
+  return course;
 }
 
 async function sectionsByCourseNumber(courseNumber) {
   const sectionsObject = {};
   const sectionsArray = await db
-    .table("section")
-    .where("course_number", courseNumber);
+    .table(database_names.table.SECTION)
+    .where(database_names.course.NUMBER, courseNumber);
   for (let i = 0; i < sectionsArray.length; i++) {
-    const index_number = sectionsArray[i]["index_number"];
-    lecture_info = JSON.parse(sectionsArray[i]["lecture_info"]);
-    sectionsArray[i]["lecture_info"] = lecture_info;
-    delete sectionsArray[i]["course_number"];
+    const index_number = sectionsArray[i][database_names.section.INDEX];
+    lecture_info = JSON.parse(sectionsArray[i][database_names.section.INFO]);
+    sectionsArray[i][database_names.section.INFO] = lecture_info;
+    delete sectionsArray[i][database_names.course.NUMBER];
     sectionsObject[index_number] = sectionsArray[i];
   }
   return sectionsObject;
 }
 
 function subjectBysectionCode(subjectCode) {
-  return db.table("subject").where("subject_code", subjectCode);
+  return db
+    .table(database_names.table.SUBJECT)
+    .where(database_names.subject.CODE, subjectCode);
 }
 
 module.exports = {
