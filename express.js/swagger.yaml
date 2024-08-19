@@ -56,6 +56,13 @@ paths:
 
   /explore/{id}:
     get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: subject_code, ex. 198
       tags:
         - explore
       summary: return a specific subject info
@@ -86,6 +93,13 @@ paths:
 
   /explore/{id}/courses:
     get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: subject_code, ex. 198
       tags:
         - explore
       summary: return a specific subject's courses
@@ -123,6 +137,13 @@ paths:
 
   /course/{id}:
     get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: course_number, ex. 01:198:111
       tags:
         - course
       summary: return a specific course info
@@ -157,6 +178,13 @@ paths:
 
   /course/{id}/sections:
     get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: course_number, ex. 01:198:111
       tags:
         - course
       summary: return a specific course's sections
