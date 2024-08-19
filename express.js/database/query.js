@@ -3,8 +3,9 @@
 // const knex = mysqlConn.getDB;
 
 const db = require("./mysql_conn");
-const database_names = require("../enums/mysql_names");
+const database_names = require("../enums/database_names");
 
+// course query
 async function courseByCourseNumber(courseNumber) {
   const course = await db
     .table(database_names.table.COURSE)
@@ -29,14 +30,40 @@ async function sectionsByCourseNumber(courseNumber) {
   return sectionsObject;
 }
 
+// subject query
 function subjectBysectionCode(subjectCode) {
   return db
     .table(database_names.table.SUBJECT)
     .where(database_names.subject.CODE, subjectCode);
 }
 
+// user query
+async function isUserExist(userId) {
+  const idArray = await db
+    .table(database_names.table.USER)
+    .select(database_names.user.GOOGLE_ID)
+    .where(database_names.user.GOOGLE_ID, userId);
+
+  if (idArray.length > 0) {
+    return true;
+  }
+  return false;
+}
+
+async function insertUser(userId, userName) {
+  return await db.table(database_names.table.USER).insert(
+    {
+      google_id: userId,
+      user_name: userName,
+    },
+    userId
+  );
+}
+
 module.exports = {
   courseByCourseNumber,
   sectionsByCourseNumber,
   subjectBysectionCode,
+  isUserExist,
+  insertUser,
 };
