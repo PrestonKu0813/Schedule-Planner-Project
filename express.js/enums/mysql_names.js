@@ -5,7 +5,7 @@ module.exports = {
     SECTION: "section",
   },
   subject: {
-    CODE: "subject_name",
+    CODE: "subject_code",
     NAME: "subject_name",
   },
   course: {
