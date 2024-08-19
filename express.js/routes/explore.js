@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { subjectBysectionCode } = require("../database/query");
 
 router.get("/", (req, res) => {
   res.send("hello world");

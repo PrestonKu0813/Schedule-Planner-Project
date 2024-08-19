@@ -1,5 +1,4 @@
 {
-  
   "version": "0.2.0",
   "configurations": [
     {
@@ -7,7 +6,7 @@
       "type": "debugpy",
       "request": "launch",
       "program": "/Users/preston/Desktop/Schedule-Planner-Project/web_crawling/main.py",
-      "console": "integratedTerminal",
+      "console": "integratedTerminal"
     }
   ]
 }

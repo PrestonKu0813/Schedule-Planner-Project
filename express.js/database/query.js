@@ -12,7 +12,12 @@ function sectionsByCourseNumber(courseNumber) {
   return db.table("section").where("course_number", courseNumber);
 }
 
+function subjectBysectionCode(subjectCode) {
+  return db.table("subject").where("subject_code", subjectCode);
+}
+
 module.exports = {
   courseByCourseNumber,
   sectionsByCourseNumber,
+  subjectBysectionCode,
 };
