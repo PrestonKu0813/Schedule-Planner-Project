@@ -23,11 +23,11 @@ class MySQLConn:
         self.session = Session()
     
     def insertData(self, subject:Subject):
-        self.session.add(SQLSubject(subject.subjectCode, subject.subjectName))
+        self.session.merge(SQLSubject(subject.subjectCode, subject.subjectName))
         self.session.commit()
 
         for course in subject.coursesList:
-            self.session.add(SQLCourse(course.courseNumber, subject.subjectCode, course.courseName, int(course.credit), course.coreCode))
+            self.session.merge(SQLCourse(course.courseNumber, subject.subjectCode, course.courseName, int(course.credit), course.coreCode))
             self.session.commit()
             
             for section in course.sectionsList:
@@ -46,5 +46,5 @@ class MySQLConn:
                     counter+=1
 
                 lectureInfosDictString = json.dumps(lectureInfosDict)
-                self.session.add(SQLSection(section.indexNumber, course.courseNumber, section.sectionNumber, section.instructor, lectureInfosDictString))
+                self.session.merge(SQLSection(section.indexNumber, course.courseNumber, section.sectionNumber, section.instructor, lectureInfosDictString))
                 self.session.commit()
