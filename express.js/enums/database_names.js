@@ -3,6 +3,7 @@ module.exports = {
     SUBJECT: "subject",
     COURSE: "course",
     SECTION: "section",
+    USER: "user",
   },
   subject: {
     CODE: "subject_code",
@@ -19,5 +20,9 @@ module.exports = {
     NUMBER: "section_number",
     INSTRUCTOR: "instructor",
     INFO: "lecture_info",
+  },
+  user: {
+    GOOGLE_ID: "google_id",
+    NAME: "user_name",
   },
 };
