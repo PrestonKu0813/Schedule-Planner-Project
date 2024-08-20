@@ -20,63 +20,105 @@ async function sectionsByCourseNumber(courseNumber) {
   const sectionsArray = await db
     .table(database_names.table.SECTION)
     .where(database_names.course.NUMBER, courseNumber);
+
   for (let i = 0; i < sectionsArray.length; i++) {
-    const index_number = sectionsArray[i][database_names.section.INDEX];
-    lecture_info = JSON.parse(sectionsArray[i][database_names.section.INFO]);
-    sectionsArray[i][database_names.section.INFO] = lecture_info;
+    const indexNumber = sectionsArray[i][database_names.section.INDEX];
+    const lectureInfo = JSON.parse(
+      sectionsArray[i][database_names.section.INFO]
+    );
+    sectionsArray[i][database_names.section.INFO] = lectureInfo;
     delete sectionsArray[i][database_names.course.NUMBER];
-    sectionsObject[index_number] = sectionsArray[i];
+    sectionsObject[indexNumber] = sectionsArray[i];
   }
   return sectionsObject;
 }
 
+// subject query
 async function getAllSubjects() {
-  let subjectsObject = {}
-  const coursesArray = await db
-    .table('subject')
-    .innerJoin('course', `subject.${database_names.subject.CODE}`, `course.${database_names.subject.CODE}`)
-    .orderBy(`subject.${database_names.subject.CODE}`, 'asc')
+  const subjectsObject = {};
+  // const coursesArray = await db
+  //   .table("subject")
+  //   .innerJoin(
+  //     "course",
+  //     `subject.${database_names.subject.CODE}`,
+  //     `course.${database_names.subject.CODE}`
+  //   )
+  //   .orderBy(`subject.${database_names.subject.CODE}`, "asc");
+
+  // for (let i = 0; i < coursesArray.length; i++) {
+  //   const course = coursesArray[i];
+
+  //   if (!(course[database_names.subject.CODE] in subjectsObject)) {
+  //     const currentSubject = {};
+  //     currentSubject[database_names.subject.CODE] =
+  //       course[database_names.subject.CODE];
+  //     currentSubject[database_names.subject.NAME] =
+  //       course[database_names.subject.NAME];
+  //     currentSubject["courses"] = {};
+  //     subjectsObject[course[database_names.subject.CODE]] = currentSubject;
+  //   }
+
+  //   const courseObject = {};
+  //   courseObject[database_names.course.NUMBER] =
+  //     course[database_names.course.NUMBER];
+  //   courseObject[database_names.course.NAME] =
+  //     course[database_names.course.NAME];
+  //   courseObject[database_names.course.CREDIT] =
+  //     course[database_names.course.CREDIT];
+  //   courseObject[database_names.course.CORE_CODE] =
+  //     course[database_names.course.CORE_CODE];
+
+  //   subjectsObject[course[database_names.subject.CODE]][
+  //     course[database_names.course.NUMBER]
+  //   ] = courseObject;
+  // }
+
+  const subjectArray = await db.table(database_names.table.SUBJECT).select("*");
+  const coursesArray = await db.table(database_names.table.COURSE).select("*");
+  const subjectCoursesColumn = "courses";
+
+  for (let i = 0; i < subjectArray.length; i++) {
+    const subjectCode = subjectArray[i][database_names.subject.CODE];
+    subjectsObject[subjectCode] = subjectArray[i];
+    subjectsObject[subjectCode][subjectCoursesColumn] = {};
+  }
 
   for (let i = 0; i < coursesArray.length; i++) {
-    const course = coursesArray[i];
-
-    if (!(course[database_names.subject.CODE] in subjectsObject)) {
-      let currentSubject = {};
-      currentSubject[database_names.subject.CODE] = course[database_names.subject.CODE];
-      currentSubject[database_names.subject.NAME] = course[database_names.subject.NAME];
-      currentSubject["courses"] = {}
-      subjectsObject[course[database_names.subject.CODE]] = currentSubject;
-    }
-
-    let courseObject = {}
-    courseObject[database_names.course.NUMBER] = course[database_names.course.NUMBER];
-    courseObject[database_names.course.NAME] = course[database_names.course.NAME];
-    courseObject[database_names.course.CREDIT] = course[database_names.course.CREDIT];
-    courseObject[database_names.course.CORE_CODE] = course[database_names.course.CORE_CODE];
-
-    subjectsObject[course[database_names.subject.CODE]][course[database_names.course.NUMBER]] = courseObject;
+    const subjectCode = coursesArray[i][database_names.subject.CODE];
+    const courseNumber = coursesArray[i][database_names.course.NUMBER];
+    delete coursesArray[i][database_names.subject.CODE];
+    subjectsObject[subjectCode][subjectCoursesColumn][courseNumber] =
+      coursesArray[i];
   }
+
   return subjectsObject;
 }
 
-async function subjectBySectionCode(subjectCode) {
-  const subject = await db
+async function subjectBySubjectCode(subjectCode) {
+  return await db
     .table(database_names.table.SUBJECT)
     .where(database_names.subject.CODE, subjectCode)
-  return subject;
+    .first();
 }
 
-async function coursesBySubject(subjectCode) {
-  let coursesObject = {}
+async function coursesBySubjectCode(subjectCode) {
+  const coursesObject = {};
   coursesArray = await db
-    .table('subject')
-    .innerJoin('course', `subject.${database_names.subject.CODE}`, `course.${database_names.subject.CODE}`)
-    .where(`subject.${database_names.subject.CODE}`, subjectCode)
-    .orderBy(`subject.${database_names.subject.CODE}`, 'asc')
+    // .table(database_names.table.SUBJECT)
+    // .innerJoin(
+    //   "course",
+    //   `subject.${database_names.subject.CODE}`,
+    //   `course.${database_names.subject.CODE}`
+    // )
+    // .where(`subject.${database_names.subject.CODE}`, subjectCode)
+    // .orderBy(`subject.${database_names.subject.CODE}`, "asc");
+    .table(database_names.table.COURSE)
+    .where(database_names.subject.CODE, subjectCode);
+
   for (let i = 0; i < coursesArray.length; i++) {
-    const course = coursesArray[i];
-    courseNumber = course[database_names.course.NUMBER];
-    coursesObject[courseNumber] = course;
+    courseNumber = coursesArray[i][database_names.course.NUMBER];
+    delete coursesArray[i][database_names.subject.CODE];
+    coursesObject[courseNumber] = coursesArray[i];
   }
   return coursesObject;
 }
@@ -107,8 +149,8 @@ module.exports = {
   courseByCourseNumber,
   sectionsByCourseNumber,
   getAllSubjects,
-  subjectBySectionCode,
-  coursesBySubject,
+  subjectBySubjectCode,
+  coursesBySubjectCode,
   isUserExist,
   insertUser,
 };

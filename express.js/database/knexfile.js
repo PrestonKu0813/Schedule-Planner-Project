@@ -1,5 +1,5 @@
-require("dotenv").config()
-ENV = process.env.ENV
+// require("dotenv").config();
+ENV = process.env.ENV;
 require("dotenv").config({ path: `./env/.env.${ENV}` });
 
 /**
