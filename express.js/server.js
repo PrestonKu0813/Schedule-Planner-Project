@@ -1,5 +1,7 @@
 const express = require("express");
+require("dotenv").config({ path: `./env/.env.${process.env.ENV}` });
 const passportSetup = require("./config/passport_setting");
+const cookieSession = require("cookie-session");
 const app = express();
 port = 3000;
 
@@ -26,7 +28,16 @@ app.use("/course", courseRouter);
 
 // auth route
 const authRouter = require("./routes/auth");
+const { config } = require("dotenv");
 app.use("/auth", authRouter);
+
+// cookie session
+app.use(
+  cookieSession({
+    maxAge: 60 * 60 * 1000, // an hour
+    keys: [process.env.SESSION_KEY],
+  })
+);
 
 // run server
 app.listen(port, () => {

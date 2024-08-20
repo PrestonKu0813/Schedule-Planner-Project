@@ -51,13 +51,12 @@ async function isUserExist(userId) {
 }
 
 async function insertUser(userId, userName) {
-  return await db.table(database_names.table.USER).insert(
-    {
+  await db
+    .insert({
       google_id: userId,
       user_name: userName,
-    },
-    userId
-  );
+    })
+    .into(database_names.table.USER);
 }
 
 module.exports = {
