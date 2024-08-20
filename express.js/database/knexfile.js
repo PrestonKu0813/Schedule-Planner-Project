@@ -1,4 +1,6 @@
-require("dotenv").config({ path: `./env/.env.${process.env.ENV}` });
+require("dotenv").config()
+ENV = process.env.ENV
+require("dotenv").config({ path: `./env/.env.${ENV}` });
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
