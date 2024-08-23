@@ -3,7 +3,10 @@ module.exports = {
     SUBJECT: "subject",
     COURSE: "course",
     SECTION: "section",
-    USER: "user",
+    USER: {
+      MAIN: "main_user",
+      GOOGLE: "google_user",
+    },
   },
   subject: {
     CODE: "subject_code",
@@ -22,8 +25,15 @@ module.exports = {
     INFO: "lecture_info",
   },
   user: {
-    ID: "user_id",
-    GOOGLE_ID: "google_id",
-    NAME: "name",
+    MAIN: {
+      ID: "user_id",
+      PASSWORD: "password",
+      NAME: "name",
+    },
+    GOOGLE: {
+      ID: "user_id",
+      GOOGLE_ID: "google_id",
+      NAME: "name",
+    },
   },
 };

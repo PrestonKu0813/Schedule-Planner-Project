@@ -102,11 +102,11 @@ async function coursesBySubjectCode(subjectCode) {
 }
 
 // user query
-async function isUserExist(googleId) {
+async function isGoogleUserExist(googleId) {
   const idArray = await db
-    .table(database_names.table.USER)
-    .select(database_names.user.GOOGLE_ID)
-    .where(database_names.user.GOOGLE_ID, googleId);
+    .table(database_names.table.USER.GOOGLE)
+    .select(database_names.user.GOOGLE.GOOGLE_ID)
+    .where(database_names.user.GOOGLE.GOOGLE_ID, googleId);
 
   if (idArray.length > 0) {
     return true;
@@ -114,38 +114,41 @@ async function isUserExist(googleId) {
   return false;
 }
 
-async function insertUser(googleId, userName) {
+async function insertGoogleUser(googleId, userName) {
   const data = {};
-  data[database_names.user.ID] = uuidv4();
-  data[database_names.user.GOOGLE_ID] = googleId;
-  data[database_names.user.NAME] = userName;
+  data[database_names.user.GOOGLE.ID] = uuidv4();
+  data[database_names.user.GOOGLE.GOOGLE_ID] = googleId;
+  data[database_names.user.GOOGLE.NAME] = userName;
 
-  await db.insert(data).into(database_names.table.USER);
+  await db.insert(data).into(database_names.table.USER.GOOGLE);
 }
 
-async function getUserByGoogle(googleId) {
+async function getGoogleUserByGoogle(googleId) {
   return await db
-    .table(database_names.table.USER)
-    .where(database_names.user.GOOGLE_ID, googleId)
+    .table(database_names.table.USER.GOOGLE)
+    .where(database_names.user.GOOGLE.GOOGLE_ID, googleId)
     .first();
 }
 
-async function getUserById(userId) {
+async function getGoogleUserById(userId) {
   return await db
-    .table(database_names.table.USER)
-    .where(database_names.user.ID, userId)
+    .table(database_names.table.USER.GOOGLE)
+    .where(database_names.user.GOOGLE.ID, userId)
     .first();
 }
 
 module.exports = {
+  // course
   courseByCourseNumber,
   sectionsByCourseNumber,
   courseSearch,
+  // subject
   getAllSubjects,
   subjectBySubjectCode,
   coursesBySubjectCode,
-  isUserExist,
-  getUserByGoogle,
-  getUserById,
-  insertUser,
+  // users
+  isGoogleUserExist,
+  getGoogleUserByGoogle,
+  getGoogleUserById,
+  insertGoogleUser,
 };
