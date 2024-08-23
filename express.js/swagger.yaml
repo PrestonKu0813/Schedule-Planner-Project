@@ -235,6 +235,46 @@ paths:
                     type: integer
                   error_message:
                     type: string
+  /course/{name}/search:
+    get:
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: course_name, ex. discrete structure
+      tags:
+        - course
+      summary: return related courses
+      description:
+      responses:
+        "200":
+          description: A json of related courses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  course_number:
+                    type: string
+                  course_name:
+                    type: string
+                  credit:
+                    type: integer
+                  core_code:
+                    type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
 
   /user/{id}:
     get:
