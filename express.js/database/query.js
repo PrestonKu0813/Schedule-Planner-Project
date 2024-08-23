@@ -37,42 +37,6 @@ async function sectionsByCourseNumber(courseNumber) {
 // subject query
 async function getAllSubjects() {
   const subjectsObject = {};
-  // const coursesArray = await db
-  //   .table("subject")
-  //   .innerJoin(
-  //     "course",
-  //     `subject.${database_names.subject.CODE}`,
-  //     `course.${database_names.subject.CODE}`
-  //   )
-  //   .orderBy(`subject.${database_names.subject.CODE}`, "asc");
-
-  // for (let i = 0; i < coursesArray.length; i++) {
-  //   const course = coursesArray[i];
-
-  //   if (!(course[database_names.subject.CODE] in subjectsObject)) {
-  //     const currentSubject = {};
-  //     currentSubject[database_names.subject.CODE] =
-  //       course[database_names.subject.CODE];
-  //     currentSubject[database_names.subject.NAME] =
-  //       course[database_names.subject.NAME];
-  //     currentSubject["courses"] = {};
-  //     subjectsObject[course[database_names.subject.CODE]] = currentSubject;
-  //   }
-
-  //   const courseObject = {};
-  //   courseObject[database_names.course.NUMBER] =
-  //     course[database_names.course.NUMBER];
-  //   courseObject[database_names.course.NAME] =
-  //     course[database_names.course.NAME];
-  //   courseObject[database_names.course.CREDIT] =
-  //     course[database_names.course.CREDIT];
-  //   courseObject[database_names.course.CORE_CODE] =
-  //     course[database_names.course.CORE_CODE];
-
-  //   subjectsObject[course[database_names.subject.CODE]][
-  //     course[database_names.course.NUMBER]
-  //   ] = courseObject;
-  // }
 
   const subjectArray = await db.table(database_names.table.SUBJECT).select("*");
   const coursesArray = await db.table(database_names.table.COURSE).select("*");
@@ -105,14 +69,6 @@ async function subjectBySubjectCode(subjectCode) {
 async function coursesBySubjectCode(subjectCode) {
   const coursesObject = {};
   coursesArray = await db
-    // .table(database_names.table.SUBJECT)
-    // .innerJoin(
-    //   "course",
-    //   `subject.${database_names.subject.CODE}`,
-    //   `course.${database_names.subject.CODE}`
-    // )
-    // .where(`subject.${database_names.subject.CODE}`, subjectCode)
-    // .orderBy(`subject.${database_names.subject.CODE}`, "asc");
     .table(database_names.table.COURSE)
     .where(database_names.subject.CODE, subjectCode);
 
