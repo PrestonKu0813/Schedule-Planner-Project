@@ -34,6 +34,27 @@ async function sectionsByCourseNumber(courseNumber) {
   return sectionsObject;
 }
 
+async function courseSearch(courseName) {
+  const coursesObject = {};
+  const upperCaseCourseName = courseName.toUpperCase();
+
+  const coursesArray = await db
+    .table(database_names.table.COURSE)
+    .whereILike(database_names.course.NAME, `%${upperCaseCourseName}%`);
+
+  if (coursesArray.length === 0) {
+    return { message: "not result" };
+  }
+
+  for (let i = 0; i < coursesArray.length; i++) {
+    courseNumber = coursesArray[i][database_names.course.NUMBER];
+    delete coursesArray[i][database_names.subject.CODE];
+    coursesObject[courseNumber] = coursesArray[i];
+  }
+
+  return coursesObject;
+}
+
 // subject query
 async function getAllSubjects() {
   const subjectsObject = {};
@@ -119,6 +140,7 @@ async function getUserById(userId) {
 module.exports = {
   courseByCourseNumber,
   sectionsByCourseNumber,
+  courseSearch,
   getAllSubjects,
   subjectBySubjectCode,
   coursesBySubjectCode,
