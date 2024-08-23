@@ -1,9 +1,8 @@
-const express = require("express");
+const router = require("express").Router();
 const {
   courseByCourseNumber,
   sectionsByCourseNumber,
 } = require("../database/query");
-const router = express.Router();
 
 router.get("/:course_number", async (req, res) => {
   const course_number = req.params.course_number;

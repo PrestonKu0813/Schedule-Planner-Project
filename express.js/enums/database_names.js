@@ -22,7 +22,8 @@ module.exports = {
     INFO: "lecture_info",
   },
   user: {
+    ID: "user_id",
     GOOGLE_ID: "google_id",
-    NAME: "user_name",
+    NAME: "name",
   },
 };

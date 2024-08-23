@@ -4,6 +4,7 @@
 
 const db = require("./mysql_conn");
 const database_names = require("../enums/database_names");
+const { v4: uuidv4 } = require("uuid");
 
 // course query
 async function courseByCourseNumber(courseNumber) {
@@ -124,11 +125,11 @@ async function coursesBySubjectCode(subjectCode) {
 }
 
 // user query
-async function isUserExist(userId) {
+async function isUserExist(googleId) {
   const idArray = await db
     .table(database_names.table.USER)
     .select(database_names.user.GOOGLE_ID)
-    .where(database_names.user.GOOGLE_ID, userId);
+    .where(database_names.user.GOOGLE_ID, googleId);
 
   if (idArray.length > 0) {
     return true;
@@ -136,13 +137,27 @@ async function isUserExist(userId) {
   return false;
 }
 
-async function insertUser(userId, userName) {
-  await db
-    .insert({
-      google_id: userId,
-      user_name: userName,
-    })
-    .into(database_names.table.USER);
+async function insertUser(googleId, userName) {
+  const data = {};
+  data[database_names.user.ID] = uuidv4();
+  data[database_names.user.GOOGLE_ID] = googleId;
+  data[database_names.user.NAME] = userName;
+
+  await db.insert(data).into(database_names.table.USER);
+}
+
+async function getUserByGoogle(googleId) {
+  return await db
+    .table(database_names.table.USER)
+    .where(database_names.user.GOOGLE_ID, googleId)
+    .first();
+}
+
+async function getUserById(userId) {
+  return await db
+    .table(database_names.table.USER)
+    .where(database_names.user.ID, userId)
+    .first();
 }
 
 module.exports = {
@@ -152,5 +167,7 @@ module.exports = {
   subjectBySubjectCode,
   coursesBySubjectCode,
   isUserExist,
+  getUserByGoogle,
+  getUserById,
   insertUser,
 };

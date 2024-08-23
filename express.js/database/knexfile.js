@@ -16,7 +16,7 @@ module.exports = {
       database: process.env.DB_DATABASE,
     },
     migrations: {
-      directory: "./migrations",
+      directory: "./schema/migration",
     },
   },
 };
