@@ -29,11 +29,13 @@ module.exports = {
       ID: "user_id",
       PASSWORD: "password",
       NAME: "name",
+      SESSION: "session_expired",
     },
     GOOGLE: {
       ID: "user_id",
       GOOGLE_ID: "google_id",
       NAME: "name",
+      SESSION: "session_expired",
     },
   },
 };

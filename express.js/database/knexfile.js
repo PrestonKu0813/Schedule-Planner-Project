@@ -1,6 +1,11 @@
 // require("dotenv").config();
-ENV = process.env.ENV;
-require("dotenv").config({ path: `./env/.env.${ENV}` });
+
+/* 
+running knex migration in database folder directory
+require("dotenv").config({ path: `../env/.env.${process.env.ENV}` });
+*/
+
+require("dotenv").config({ path: `./env/.env.${process.env.ENV}` });
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -16,7 +21,6 @@ module.exports = {
       database: process.env.DB_DATABASE,
     },
     migrations: {
-      extension: "ts",
       directory: "./schema/migrations",
     },
   },
