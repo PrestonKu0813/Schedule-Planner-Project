@@ -11,7 +11,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 passport.serializeUser((user, done) => {
-  const id = database_names.user.ID;
+  const id = database_names.user.GOOGLE.ID;
   console.log("comfirm " + user[id]);
   done(null, user[id]);
 });
@@ -46,6 +46,7 @@ passport.use(
           // not yet registered
           console.log(currentUser);
           insertGoogleUser(profile[auth.ID], profile[auth.NAME]).then(
+            // add session column in the future
             function () {
               isGoogleUserExist(profile[auth.ID]).then((newUser) => {
                 if (newUser) {

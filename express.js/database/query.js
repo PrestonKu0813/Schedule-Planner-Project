@@ -101,7 +101,7 @@ async function coursesBySubjectCode(subjectCode) {
   return coursesObject;
 }
 
-// user query
+// google user query
 async function isGoogleUserExist(googleId) {
   const idArray = await db
     .table(database_names.table.USER.GOOGLE)
@@ -137,6 +137,30 @@ async function getGoogleUserById(userId) {
     .first();
 }
 
+async function getGoogleUserBySession(session) {
+  return await db
+    .table(database_names.table.USER.GOOGLE)
+    .where(database_names.user.GOOGLE.SESSION, session)
+    .first();
+}
+
+// main user query
+async function insertMainUser(name, password) {
+  // use express-validator
+  const data = {};
+  data[database_names.user.MAIN.ID] = uuidv4();
+  data[database_names.user.MAIN.NAME] = name;
+  data[database_names.user.MAIN.PASSWORD] = password;
+  await db.insert(data).into(database_names.table.USER.MAIN);
+}
+
+async function getMainUserBySession(session) {
+  return await db
+    .table(database_names.table.USER.GOOGLE)
+    .where(database_names.user.GOOGLE.SESSION, session)
+    .first();
+}
+
 module.exports = {
   // course
   courseByCourseNumber,
@@ -146,9 +170,13 @@ module.exports = {
   getAllSubjects,
   subjectBySubjectCode,
   coursesBySubjectCode,
-  // users
+  // google users
   isGoogleUserExist,
   getGoogleUserByGoogle,
   getGoogleUserById,
   insertGoogleUser,
+  getGoogleUserBySession,
+  // main users
+  insertMainUser,
+  getMainUserBySession,
 };

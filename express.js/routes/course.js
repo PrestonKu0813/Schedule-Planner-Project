@@ -11,6 +11,7 @@ router.get("/:course_number", async (req, res) => {
     const courses = await courseByCourseNumber(courseNumber);
     res.json(courses);
   } catch (err) {
+    // err instance of
     if (res.statusCode == 400) {
       res.json({
         status: 400,
