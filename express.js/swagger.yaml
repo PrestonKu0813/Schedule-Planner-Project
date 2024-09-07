@@ -1,0 +1,323 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: API documentation
+  version: 0.1.9
+servers:
+  - url: http://localhost:3000
+    description: production server
+paths:
+  /explore:
+    get:
+      tags:
+        - explore
+      summary: return a list of all subjects
+      description:
+      responses:
+        "200":
+          description: A json of the subject list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subject_code:
+                    type: object
+                    properties:
+                      subject_code:
+                        type: string
+                      subject_name:
+                        type: string
+                      courses:
+                        type: object
+                        properties:
+                          course_number:
+                            type: object
+                            properties:
+                              course_number:
+                                type: string
+                              course_name:
+                                type: string
+                              credit:
+                                type: integer
+                              core_code:
+                                type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+
+  /explore/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: subject_code, ex. 198
+      tags:
+        - explore
+      summary: return a specific subject info
+      description:
+      responses:
+        "200":
+          description: A json of a subject
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subject_code:
+                    type: string
+                  subject_name:
+                    type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+
+  /explore/{id}/courses:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: subject_code, ex. 198
+      tags:
+        - explore
+      summary: return a specific subject's courses
+      description:
+      responses:
+        "200":
+          description: A json of a subject's courses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  course_number:
+                    type: object
+                    properties:
+                      course_number:
+                        type: string
+                      course_name:
+                        type: string
+                      credit:
+                        type: integer
+                      core_code:
+                        type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+
+  /course/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: course_number, ex. 01:198:111
+      tags:
+        - course
+      summary: return a specific course info
+      description:
+      responses:
+        "200":
+          description: A json of a course
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  course_number:
+                    type: string
+                  course_name:
+                    type: string
+                  credit:
+                    type: integer
+                  core_code:
+                    type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+
+  /course/{id}/sections:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: course_number, ex. 01:198:111
+      tags:
+        - course
+      summary: return a specific course's sections
+      description:
+      responses:
+        "200":
+          description: A json of a course's sections
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  index_number:
+                    type: object
+                    properties:
+                      index_number:
+                        type: string
+                      section_number:
+                        type: string
+                      instructor:
+                        type: string
+                      lecture_info:
+                        type: object
+                        properties:
+                          info_number:
+                            type: object
+                            properties:
+                              lecture_day:
+                                type: string
+                              lecture_time:
+                                type: string
+                              campus:
+                                type: string
+                              recitation:
+                                type: boolean
+                              classroom:
+                                type: string
+                              classroom_link:
+                                type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+  /course/{name}/search:
+    get:
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: course_name, ex. discrete structure
+      tags:
+        - course
+      summary: return related courses
+      description:
+      responses:
+        "200":
+          description: A json of related courses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  course_number:
+                    type: string
+                  course_name:
+                    type: string
+                  credit:
+                    type: integer
+                  core_code:
+                    type: string
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error_message:
+                    type: string
+
+  /user/{id}:
+    get:
+      tags:
+        - user
+      summary: return user data
+      description:
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+        - user
+      summary: update user data
+      description:
+      requestBody:
+        description:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - user
+      summary: delete user data
+      description:
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
