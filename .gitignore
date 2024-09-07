@@ -163,5 +163,6 @@ bfg.jar
 web_crawling/mySQL/key.json
 web_crawling/firebase/key.json
 express.js/node_modules/
+react.js/node_modules/
 express.js/.vscode/
 **/.DS_Store
