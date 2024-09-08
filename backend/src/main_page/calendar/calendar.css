@@ -1,0 +1,122 @@
+.calendar {
+  border: 5px solid black;
+  background-color: rgb(231, 226, 213);
+  height: 100%;
+  width: 40%;
+  overflow-y: hidden;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  text-align: center;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  color: #000000;
+}
+.calendar_days_first {
+  position: absolute;
+  border-right: 5px solid #e04c4c;
+  height: 100%;
+  width: 15%;
+  float: left;
+}
+
+.calendar_days {
+  position: relative;
+  border-right: 5px solid #303fae00;
+  height: 100%;
+  width: 12.8%;
+  float: left;
+}
+
+.calendar_hour_first {
+  border-bottom: 3px solid rgb(49, 71, 115);
+  position: absolute;
+  height: 50px;
+  width: auto;
+  text-align: left;
+}
+
+.calendar_hour {
+  border-bottom: 3px solid rgb(49, 71, 115);
+  position: relative;
+  height: 40px;
+  width: auto;
+  text-align: left;
+}
+
+.calendar_box {
+  border-right: 5px solid #606ab400;
+  height: 40px;
+  width: 100px;
+  position: absolute;
+  text-align: center;
+}
+
+/* .calendar_full {
+  height: 100%;
+  position: relative;
+  overflow-y: auto;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.calendar_days {
+  height: 100%;
+  position: absolute;
+  margin-top: -1px;
+}
+
+.calendar_days .cell {
+  position: relative;
+  border: 1px solid transparent !important;
+}
+
+.calendar_hours {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-top: -1px;
+}
+
+.calendar_hours .row {
+  height: 100%;
+  flex-grow: 1;
+}
+
+.calendar_hours .row :not(:first-of-type) {
+  margin-top: -1px;
+}
+
+.calendar_hours .row .cell {
+  cursor: cell;
+  min-height: 75px;
+  position: relative;
+}
+
+.calendar_hours .row .cell :first-of-type {
+  font-weight: 700;
+  cursor: default !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  word-spacing: 50px;
+  pointer-events: none;
+}
+
+.calendar_hours .row .cell {
+  background: fixed;
+}
+
+.calendar_hours .row .cell div {
+  flex-direction: column;
+  height: 100%;
+}
+
+.calendar_hours .row .cell div div {
+  height: 100%;
+  width: 100%;
+  transition: 0.25s;
+} */

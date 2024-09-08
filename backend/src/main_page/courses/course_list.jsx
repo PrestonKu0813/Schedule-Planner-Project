@@ -5,3 +5,5 @@ function CourseList() {
     </header>
   );
 }
+
+export default CourseList;
