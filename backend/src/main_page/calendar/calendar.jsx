@@ -3,10 +3,8 @@ import "./calendar.css";
 function Calendar() {
   return (
     <div className="calendar">
-      <div className="header">
-        <div className="calendar_days_first">
-          <p>Hours</p>
-        </div>
+      <div className="calendar_header">
+        <div className="calendar_days_first"></div>
         <div className="calendar_days">
           <p>Mon.</p>
         </div>
@@ -29,8 +27,9 @@ function Calendar() {
           <p>Sun.</p>
         </div>
       </div>
-      <div className="body">
+      <div className="calendar_body">
         <div className="calendar_hour_first"></div>
+        <div className="calendar_hour"></div>
         <div className="calendar_hour">
           <div className="calendar_box">
             <p>8:00 am</p>
