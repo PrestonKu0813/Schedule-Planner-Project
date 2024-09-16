@@ -1,12 +1,12 @@
 .calendar {
   border: 5px solid black;
   background-color: rgb(231, 226, 213);
-  height: 100%;
   width: 40%;
   overflow-y: hidden;
   position: absolute;
   right: 10px;
   top: 10px;
+  bottom: 10px;
   text-align: center;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;

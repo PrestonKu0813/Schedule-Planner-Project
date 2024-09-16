@@ -1,0 +1,14 @@
+.selected_courses {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  bottom: 10px;
+  border: 5px solid black;
+  width: 18%;
+  background-color: rgb(151, 161, 208);
+}
+
+.selected_courses_text {
+  font-size: large;
+  text-align: center;
+}

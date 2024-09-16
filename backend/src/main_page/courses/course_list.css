@@ -1,0 +1,31 @@
+.course_list {
+  border: 5px solid black;
+  position: absolute;
+  background-color: rgb(217, 48, 48);
+  top: 70px;
+  bottom: 10px;
+  width: 38%;
+  left: 19%;
+}
+
+.course_list_explore_button {
+  border: 5px solid black;
+  position: absolute;
+  background-color: rgb(217, 48, 48);
+  top: 10px;
+  left: 19%;
+  width: 12%;
+}
+
+.course_list_courses_button {
+  border: 5px solid black;
+  position: absolute;
+  background-color: rgb(166, 32, 68);
+  top: 10px;
+  left: 31%;
+  width: 12%;
+}
+
+.course_list_text {
+  text-align: center;
+}
