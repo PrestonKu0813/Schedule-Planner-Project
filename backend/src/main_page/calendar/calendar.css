@@ -22,6 +22,7 @@
 
 .calendar_days {
   position: relative;
+  left: 100px;
   border-right: 5px solid #303fae00;
   height: 100%;
   width: 12.8%;
