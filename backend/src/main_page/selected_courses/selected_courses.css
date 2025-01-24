@@ -1,14 +1,56 @@
 .selected_courses {
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  bottom: 10px;
-  border: 5px solid black;
-  width: 18%;
+  position: fixed; /* Keeps it in place on the side */
+  left: 10px; /* Adjust as needed to align properly */
+  top: 10px; /* Add padding from the top */
+  bottom: 10px; /* Stretches to the bottom */
+  width: 16%; /* Adjust width for your layout */
   background-color: rgb(151, 161, 208);
+  border: 5px solid black;
+  border-radius: 8px; /* Rounded corners */
+  padding: 16px; /* Space inside the container */
+  overflow-y: auto; /* Enables scrolling if content overflows */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow */
 }
 
+/* Header styling */
 .selected_courses_text {
-  font-size: large;
-  text-align: center;
+  font-size:x-large; 
+  text-align:center; 
+  color: #333;
+  margin-bottom: 16px;
 }
+.no_courses_selected_text {
+  text-align: center; 
+}
+
+/* List wrapper */
+.courses_list {
+  list-style-type: none; 
+  padding: 0; 
+  margin: 0; 
+}
+
+/* Individual course card */
+.course_card {
+  background-color: #ffffff; /* White background for contrast */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 6px; /* Rounded corners */
+  padding: 12px; /* Space inside each card */
+  margin-bottom: 12px; /* Space between cards */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+}
+
+/* Course card text styling */
+.course_card h2 {
+  font-size: 1.2rem; /* Slightly smaller than the header */
+  font-weight: bold;
+  margin: 0 0 8px 0; /* Space below the course name */
+  color: #2c3e50; /* Dark text for good readability */
+}
+
+.course_card p {
+  font-size: 1rem; /* Standard size for details */
+  margin: 4px 0; /* Space between details */
+  color: #555; /* Slightly lighter gray for details */
+}
+
