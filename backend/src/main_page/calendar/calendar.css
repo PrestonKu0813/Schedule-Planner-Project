@@ -1,125 +1,50 @@
-.calendar {
-  border: 5px solid black;
-  background-color: rgb(231, 226, 213);
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin: 0;
-  width: 40%;
-  height: 98%;
-  /* height: 100vh; */
-  text-align: center;
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  color: #000000;
-}
-.calendar_days_first {
-  position: absolute;
-  left: 0;
-  border-right: 5px solid #e04c4c;
-  height: 100%;
-  width: 15%;
-  min-width: 100px;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --calendar_width: 40%;
 }
 
-.calendar_days {
-  position: relative;
-  left: 100px;
-  border-right: 5px solid #303fae00;
-  height: 100%;
-  width: 12.8%;
-  float: left;
-}
+@layer components {
+  .calendar {
+    border: 5px solid black;
+    background-color: rgb(231, 226, 213);
+    text-align: center;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    color: #000000;
+    @apply w-[40%] h-[98%] flex flex-row fixed right-[1%] top-[1%];
+  }
 
-.calendar_hour_first {
-  border-bottom: 3px solid rgb(49, 71, 115);
-  position: absolute;
-  height: 50px;
-  width: auto;
-  text-align: left;
-}
+  .calendar_time {
+    @apply relative border-4 flex-1 flex-col; /* flex allows you to adjust the proportion */
+  }
 
-.calendar_hour {
-  border-bottom: 3px solid rgb(49, 71, 115);
-  position: relative;
-  height: 40px;
-  width: auto;
-  text-align: left;
-}
+  .calendar_hours {
+    @apply h-[90%] flex flex-col absolute bottom-0 w-full; /* takes 90% of the calendar_time class div*/
+  }
 
-.calendar_box {
-  border-right: 5px solid #606ab400;
-  height: 40px;
-  width: 100px;
-  position: absolute;
-  text-align: center;
-}
+  .calendar_hour {
+    border: 3px solid rgb(49, 71, 115);
+    width: auto;
+    text-align: left;
+    @apply flex-1 flex;
+  }
 
-/* .calendar_full {
-  height: 100%;
-  position: relative;
-  overflow-y: auto;
-  border-top: 1px solid;
-  border-bottom: 1px solid;
-}
+  .calendar_body {
+    @apply border-4 flex-[3]; /* 3 parts of the 1:3 ratio */
+  }
 
-.calendar_days {
-  height: 100%;
-  position: absolute;
-  margin-top: -1px;
-}
+  .calendar_header {
+    @apply h-[10%] flex flex-row;
+  }
 
-.calendar_days .cell {
-  position: relative;
-  border: 1px solid transparent !important;
-}
+  .calendar_days {
+    @apply flex-1 flex border-4 border-sky-500;
+  }
 
-.calendar_hours {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  margin-top: -1px;
+  .calendar_classes {
+    @apply h-[90%];
+  }
 }
-
-.calendar_hours .row {
-  height: 100%;
-  flex-grow: 1;
-}
-
-.calendar_hours .row :not(:first-of-type) {
-  margin-top: -1px;
-}
-
-.calendar_hours .row .cell {
-  cursor: cell;
-  min-height: 75px;
-  position: relative;
-}
-
-.calendar_hours .row .cell :first-of-type {
-  font-weight: 700;
-  cursor: default !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: sticky;
-  left: 0;
-  z-index: 1;
-  word-spacing: 50px;
-  pointer-events: none;
-}
-
-.calendar_hours .row .cell {
-  background: fixed;
-}
-
-.calendar_hours .row .cell div {
-  flex-direction: column;
-  height: 100%;
-}
-
-.calendar_hours .row .cell div div {
-  height: 100%;
-  width: 100%;
-  transition: 0.25s;
-} */
