@@ -1,6 +1,14 @@
 import "./course_list.css";
+import { SearchBar } from "../SearchBar/SearchBar";
+import { SearchResultsList } from "../SearchBar/SearchResultsList";
+import { useState } from 'react';
 
 function CourseList() {
+
+  const [activeTab, setActiveTab] = useState("Explore");
+
+  const [results, setResults] = useState([]);
+
   return (
     <div>
       <button
@@ -21,12 +29,26 @@ function CourseList() {
         COURSES
       </button>
 
+      {/* Tab Content */}
       <div className="course_list">
-        <h1 className="course_list_text">THIS IS MY COURSE LIST YEHAW</h1>
-        <p className="course_list_text">SEARCH BAR :D</p>
+        {activeTab === "EXPLORE" ? (
+          <div className="course_list_text">
+            <h2>Explore Tab</h2>
+            <div className="search-bar-container">
+              <SearchBar setResults={setResults} />
+              <SearchResultsList results={results}/>
+
+            </div>
+          </div>
+        ) : (
+          <div className="course_list_text">
+            <h2>Courses Tab</h2>
+            <p>Welcome to the Courses tab!</p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export default Tabs;
+export default CourseList;
