@@ -1,6 +1,12 @@
 import "./course_list.css";
+import { SearchBar } from "../SearchBar/SearchBar";
+import { SearchResultsList } from "../SearchBar/SearchResultsList";
+import { useState} from 'react';
 
 function CourseList() {
+
+  const [results, setResults] = useState([]);
+
   return (
     <>
       <div className="course_list_explore_button">
@@ -13,7 +19,10 @@ function CourseList() {
 
       <div className="course_list">
         <h1 className="course_list_text">THIS IS MY COURSE LIST YEHAW</h1>
-        <p className="course_list_text">SEARCH BAR :D</p>
+        <div className="search-bar-container">
+            <SearchBar setResults={setResults}/>
+            <SearchResultsList results={results}/>
+        </div>
       </div>
     </>
   );

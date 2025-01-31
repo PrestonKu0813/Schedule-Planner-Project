@@ -1,0 +1,11 @@
+.search-result {
+    padding: 10px 20px;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.search-result:hover {
+    background-color: lightgray;
+}
