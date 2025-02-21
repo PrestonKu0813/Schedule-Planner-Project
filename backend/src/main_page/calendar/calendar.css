@@ -26,7 +26,7 @@
   }
 
   .calendar_hour {
-    border: 3px solid rgb(49, 71, 115);
+    border-bottom: 3px solid rgb(49, 71, 115);
     width: auto;
     text-align: left;
     @apply flex-1 flex;
@@ -41,7 +41,8 @@
   }
 
   .calendar_days {
-    @apply flex-1 flex border-4 border-sky-500;
+    border-bottom: 3px solid rgb(49, 71, 115);
+    @apply flex-1 flex ;
   }
 
   .calendar_classes {
