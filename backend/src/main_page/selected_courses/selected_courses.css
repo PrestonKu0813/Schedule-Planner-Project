@@ -54,3 +54,13 @@
   color: #555; /* Slightly lighter gray for details */
 }
 
+.remove_course_button {
+  background-color: #e74c3c; /* Red background for remove button */
+  color: #fff; /* White text for contrast */
+  border: none; /* No border for cleaner look */
+  border-radius: 4px; /* Slightly rounded corners */
+  padding: 4px 8px; /* Space inside the button */
+  cursor: pointer; /* Pointer cursor for interaction */
+  margin-top: 8px; /* Space above the button */
+}
+

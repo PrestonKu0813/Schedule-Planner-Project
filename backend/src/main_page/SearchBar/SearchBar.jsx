@@ -1,35 +1,87 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import "./SearchBar.css";
+import {
+    courseByCourseNumber,
+    sectionsByCourseNumber,
+    courseSearch,
+    getAllCourses,
+    getAllSubjects,
+    subjectBySubjectCode,
+    coursesBySubjectCode,
+} from "../api";
 
-export const SearchBar = ({ setResults }) => {
+export const SearchBar = ({ setResults, selectedTag }) => {
     const [input, setInput] = useState("");
     const [tempInput, setTempInput] = useState("");
 
-    const fetchData = (value) => {
-        fetch("https://jsonplaceholder.typicode.com/users")
-            .then((response) => response.json())
-            .then((json) => {
-                let results;
-                if (value) {
-                    results = json.filter((user) => {
-                        return (
-                            user &&
-                            user.name &&
-                            user.name.toLowerCase().includes(value.toLowerCase())
-                        );
-                    });
-                } else {
-                    results = json;
-                }
-                setResults(results);
-            });
+    // const fetchData = (value) => {
+    //     fetch("https://jsonplaceholder.typicode.com/todos")
+    //         .then((response) => response.json())
+    //         .then((json) => {
+    //             let results;
+    //             if (value) {
+    //                 results = json.filter((todo) => {
+    //                     return (
+    //                         todo &&
+    //                         todo.title &&
+    //                         todo.title.toLowerCase().includes(value.toLowerCase())
+    //                     );
+    //                 });
+    //             } else {
+    //                 results = json;
+    //             }
+    //             JSON.stringify(results);
+    //             const filteredResults = selectedTag === "all"
+    //                 ? results
+    //                 : results.filter(result => result.userId === parseInt(selectedTag));
+
+    //             setResults(filteredResults);
+    //         });
+    // };
+
+    const fetchAPI = (value) => {
+        if (value === "") {
+            getAllSubjects()
+                .then((json) => {
+                    console.log("API Response:", json);
+                    if(json.message === "not result") {
+                        setResults([]);
+                        return;
+                    }
+                    const resultsArray = Object.values(json).flatMap(subject => Object.values(subject.courses));
+                    const filteredResults = selectedTag === "all"
+                        ? resultsArray
+                        : resultsArray.filter(result => {
+                            const coreCodeParts = result.course_number.split(":");
+                            return coreCodeParts[1] === selectedTag;
+                        });
+                    setResults(filteredResults);
+                });
+        } else {
+            courseSearch(value)
+                .then((json) => {
+                    console.log("API Response:", json);
+                    if(json.message === "not result") {
+                        setResults([]);
+                        return;
+                    }
+                    const resultsArray = Object.values(json); // Convert object of objects to array of values
+                    const filteredResults = selectedTag === "all"
+                        ? resultsArray
+                        : resultsArray.filter(result => {
+                            const coreCodeParts = result.course_number.split(":");
+                            return coreCodeParts[1] === selectedTag;
+                        });
+                    setResults(filteredResults);
+                });
+        }
     };
 
     useEffect(() => {
         // Fetch data initially without any filtering
-        fetchData("");
-    }, []);
+        fetchAPI(input);
+    }, [selectedTag]); // Add selectedTag as a dependency to refetch data when it changes
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
@@ -39,7 +91,7 @@ export const SearchBar = ({ setResults }) => {
 
     const handleSubmit = (value) => {
         setInput(value);
-        fetchData(value);
+        fetchAPI(value);
     };
 
     return (
@@ -47,9 +99,11 @@ export const SearchBar = ({ setResults }) => {
             <FaSearch id="search-icon" />
             <input
                 type="text"
-                placeholder="Type to search..."
+                placeholder="Search..."
                 value={tempInput}
-                onChange={(e) => setTempInput(e.target.value)}
+                onChange={(e) => {
+                    setTempInput(e.target.value);
+                }}
                 onKeyDown={(e) => handleKeyDown(e)}
                 autoComplete="off"
             />

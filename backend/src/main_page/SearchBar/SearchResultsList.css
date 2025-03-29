@@ -1,7 +1,10 @@
 .results-list {
     width: auto;
     margin: 10px;
-    height: 690px;
+    height: 100%;
     overflow-y: scroll;
-    max-height: 690px;
+    max-height: 650px;
+    background-color: transparent;
+    flex: 1 1 auto;
+    box-sizing: border-box;
 }

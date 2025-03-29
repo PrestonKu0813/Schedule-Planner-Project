@@ -1,21 +1,48 @@
 .search-result {
-    border: 1px solid black;
+    border: 2px solid lightgrey;
     background-color: white;
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
 }
 
-
 .result-header {
     display: flex;
-    justify-content: space-between;
-    align-items: left;
+    justify-content: space-between; /* Ensure space between elements */
+    align-items: center; /* Center items vertically */
     cursor: pointer;
+}
+
+.result-title {
+    flex-grow: 1; /* Allow the title to take up available space */
+    margin-right: 10px; /* Add some space between the title and the button */
+    white-space: normal; /* Allow the text to wrap */
+    overflow: visible; /* Show the overflow text */
+    text-align: left; /* Left justify the text */
+}
+
+.result-header button {
+    flex-shrink: 0; /* Prevent the button from shrinking */
+    margin-left: 10px; /* Add some space between the buttons */
+}
+
+.add-course-button {
+    background-color: rgb(77, 201, 77);
+    color: white;
+    border-radius: 5px;
+    width: 5%;
+}
+
+.remove-course-button {
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 5px;
+    width: 5%;
 }
 
 .dropdown {
     margin-top: 10px;
     padding: 10px;
     border-top: 1px solid black;
+    text-align: left;
 }

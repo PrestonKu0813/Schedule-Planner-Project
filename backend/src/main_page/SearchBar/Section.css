@@ -1,0 +1,16 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    overflow-y: auto; /* Changed to auto to enable scrolling if needed */
+    max-height: 628px;
+    background-color: transparent;
+    border-bottom: 1px solid lightgrey; /* Add a small gray borderline between sections */
+    padding: 10px; /* Add padding to ensure content does not touch the border */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.section:last-child {
+    border-bottom: none; /* Remove the border from the last section */
+}

@@ -1,0 +1,13 @@
+.section-list {
+  width: 100%; /* Ensure it takes the full width of its container */
+  max-width: 100%; /* Ensure it does not exceed the container's width */
+  margin: 10px auto; /* Center the div and add vertical margin */
+  height: auto; /* Allow the height to adjust based on content */
+  overflow-y: auto; /* Enable vertical scrolling if needed */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  max-height: 628px; /* Set a maximum height */
+  background-color: transparent; /* Ensure the background is transparent */
+  border: 2px solid lightgrey; /* Add a border */
+  border-radius: 10px; /* Add rounded corners */
+  box-sizing: border-box; /* Include border and padding in the element's total width and height */
+}

@@ -17,10 +17,15 @@ export async function sectionsByCourseNumber(courseNumber) {
   return response.data;
 }
 
-export async function courseSearch(courseNumber) {
+export async function courseSearch(courseName) {
   const response = await axios.get(
-    `${baseURL}/${apiNames.course.COURSE}/${courseNumber}/${apiNames.course.SEARCH}`
+    `${baseURL}/${apiNames.course.COURSE}/${courseName}/${apiNames.course.SEARCH}`
   );
+  return response.data;
+}
+
+export async function getAllCourses() {
+  const response = await axios.get(`${baseURL}/${apiNames.course.SEARCH}`);
   return response.data;
 }
 

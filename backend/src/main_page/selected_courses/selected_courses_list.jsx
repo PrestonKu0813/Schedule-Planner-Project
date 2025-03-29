@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "./selected_courses.css";
 
-
-function Selected_Courses({ selectedCoursesData }) {
-  const [courses, setCourses] = useState([]);
+function Selected_Courses({ courses, setCourses }) {
 
   // Update the local state whenever new data is received
-  useEffect(() => {
-    if (selectedCoursesData) {
-      setCourses(selectedCoursesData);
-    }
-  }, [selectedCoursesData]);
+  // useEffect(() => {
+  //   if (selectedCoursesData) {
+  //     setCourses(selectedCoursesData);
+  //   }
+  // }, [selectedCoursesData]);
+
+  const handleRemoveCourse = (courseNumber) => {
+    setCourses(courses.filter(course => course.course_number !== courseNumber));
+  };
 
   return (
     <div className="selected_courses">
@@ -21,9 +23,13 @@ function Selected_Courses({ selectedCoursesData }) {
         <ul className="courses_list">
           {courses.map((course, index) => (
             <li key={index} className="course_card">
-              <h2>{course.name}</h2>
-              <p>Credits: {course.credits}</p>
-              <p>Instructor: {course.instructor}</p>
+              <h2>{course.course_name}</h2>
+              <p>Course Number: {course.course_number}</p>
+              <p>Credits: {course.credit}</p>
+              <button 
+                className="remove_course_button"
+                onClick={() => handleRemoveCourse(course.course_number)}>Remove Course
+              </button>
             </li>
           ))}
         </ul>

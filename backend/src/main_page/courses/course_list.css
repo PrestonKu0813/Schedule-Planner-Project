@@ -6,6 +6,7 @@
   bottom: 10px;
   width: 38%;
   left: 19%;
+  overflow:hidden;
 }
 
 .course_list_explore_button {
@@ -31,11 +32,18 @@
 }
 
 .search_bar_container {
-  padding-top: 20vh;
-  width: 40%;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Set the desired width */
+  height: 95%; /* Set the desired height */
+  max-height: 628px; /* Set a maximum height if needed */
+  position: relative; /* Ensure the container is positioned correctly */
+  box-sizing: border-box; 
+}
+
+.subject-filter {
   margin: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-width: 200px;
+  width: 40%; /* Adjust the width to make it wider */
 }
