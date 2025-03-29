@@ -5,7 +5,7 @@ running knex migration in database folder directory
 require("dotenv").config({ path: `../env/.env.${process.env.ENV}` });
 */
 
-require("dotenv").config({ path: `./env/.env.${process.env.ENV}` });
+require("dotenv").config({ path: `./env/.env` });
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }

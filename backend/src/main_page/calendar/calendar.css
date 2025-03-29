@@ -17,6 +17,17 @@
     @apply w-[40%] h-[98%] flex flex-row fixed right-[1%] top-[1%];
   }
 
+  .calendar_grid {
+    display: grid;
+    grid-template-columns: 1fr repeat(5, 1fr); /* Time column + 5 days (Mon-Fri) */
+    grid-template-rows: 1fr repeat(14, 1fr); /* 1 header + 14 time slots (8 AM to 10 PM) */
+    height: 100%;
+    position: relative;
+  }
+  .calendar_spacer {
+    @apply h-[10%];
+  }
+  
   .calendar_time {
     @apply relative border-4 flex-1 flex-col; /* flex allows you to adjust the proportion */
   }
@@ -26,10 +37,8 @@
   }
 
   .calendar_hour {
-    border: 3px solid rgb(49, 71, 115);
-    width: auto;
-    text-align: left;
-    @apply flex-1 flex;
+    border: 5px solid rgb(0, 0, 0);
+    @apply h-[6.429%] flex items-center justify-start px-2; 
   }
 
   .calendar_body {
@@ -45,6 +54,16 @@
   }
 
   .calendar_classes {
-    @apply h-[90%];
+    @apply relative h-[90%];
+  }
+
+  .calendar_class {
+    position: absolute;
+    width: 20%;
+    background-color: rgba(100, 149, 237, 0.8); /* Light blue with transparency */
+    padding: 4px;
+    text-align: center;
+    border: 2px solid rgb(0, 0, 0);
+    overflow: hidden;
   }
 }
