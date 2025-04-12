@@ -45,11 +45,16 @@ export const SearchBar = ({ setResults, selectedTag }) => {
             getAllSubjects()
                 .then((json) => {
                     console.log("API Response:", json);
-                    if(json.message === "not result") {
+                    if (json.message === "not result") {
                         setResults([]);
                         return;
                     }
-                    const resultsArray = Object.values(json).flatMap(subject => Object.values(subject.courses));
+                    const resultsArray = Object.values(json).flatMap(subject =>
+                        Object.values(subject.courses).map(course => ({
+                            ...course,
+                            selected_sections: [], // Add selected_sections attribute
+                        }))
+                    );
                     const filteredResults = selectedTag === "all"
                         ? resultsArray
                         : resultsArray.filter(result => {
@@ -62,11 +67,14 @@ export const SearchBar = ({ setResults, selectedTag }) => {
             courseSearch(value)
                 .then((json) => {
                     console.log("API Response:", json);
-                    if(json.message === "not result") {
+                    if (json.message === "not result") {
                         setResults([]);
                         return;
                     }
-                    const resultsArray = Object.values(json); // Convert object of objects to array of values
+                    const resultsArray = Object.values(json).map(course => ({
+                        ...course,
+                        selected_sections: [], // Add selected_sections attribute
+                    })); // Convert object of objects to array of values
                     const filteredResults = selectedTag === "all"
                         ? resultsArray
                         : resultsArray.filter(result => {

@@ -2,18 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import "./SearchResult.css";
 import { SectionList } from "./SectionList";
 import {
-    courseByCourseNumber,
     sectionsByCourseNumber,
-    courseSearch,
-    getAllCourses,
-    getAllSubjects,
-    subjectBySubjectCode,
-    coursesBySubjectCode,
 } from "../api";
 
 export const SearchResult = ({ result, courses, setCourses }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [sections, setSections] = useState([]);
+    const [selectedSections, setSelectedSections] = useState(result.selected_sections || []); // Initialize from result
     const isCourseInList = courses.some(course => course.course_number === result.course_number);
     const [isCourseAdded, setIsCourseAdded] = useState(isCourseInList);
     const dropdownRef = useRef(null);
@@ -23,13 +18,13 @@ export const SearchResult = ({ result, courses, setCourses }) => {
     };
 
     const handleAddRemoveCourse = (e) => {
-        e.stopPropagation(); // Stop event propagation to prevent triggering the dropdown
+        e.stopPropagation();
         if (isCourseAdded) {
             // Remove course from selected courses
             setCourses(courses.filter(course => course.course_number !== result.course_number));
         } else {
-            // Add course to selected courses
-            setCourses([...courses, result]);
+            // Add course to selected courses with selected_sections initialized
+            setCourses([...courses, { ...result, selected_sections: selectedSections }]);
         }
         setIsCourseAdded(!isCourseAdded);
     };
@@ -42,8 +37,24 @@ export const SearchResult = ({ result, courses, setCourses }) => {
 
     useEffect(() => {
         setIsCourseAdded(courses.some(course => course.course_number === result.course_number));
-        console.log(courses);
     }, [courses, result.course_number]);
+
+    // Update result.selected_sections whenever selectedSections changes
+    useEffect(() => {
+        result.selected_sections = selectedSections;
+    }, [selectedSections, result]);
+
+    useEffect(() => {
+        if (isCourseAdded) {
+            setCourses((prevCourses) =>
+                prevCourses.map((course) =>
+                    course.course_number === result.course_number
+                        ? { ...course, selected_sections: selectedSections }
+                        : course
+                )
+            );
+        }
+    }, [selectedSections, isCourseAdded, result.course_number, setCourses]);
 
     return (
         <div className="search-result" ref={dropdownRef}>
@@ -62,8 +73,12 @@ export const SearchResult = ({ result, courses, setCourses }) => {
                     <p>Course Number: {result.course_number}</p>
                     <p>Credits: {result.credit}</p>
                     <p>Core Codes: {result.core_code}</p>
-                    <SectionList sections={sections} />
-                    {/* Add more details as needed */}
+                    <p>Selected Sections: {selectedSections.map(section => section.section_number).join(", ")}</p>
+                    <SectionList 
+                        sections={sections} 
+                        selectedSections={selectedSections} 
+                        setSelectedSections={setSelectedSections} 
+                    />
                 </div>
             )}
         </div>

@@ -7,6 +7,7 @@ export const SearchResultsList = ({results, courses, setCourses}) => {
         <div className="results-list">
             {
                 results.map((result, id) => {
+                    result.selected_sections = [];
                     return <SearchResult result={result} key={id} courses={courses} setCourses={setCourses}/>;
                 })
             }
