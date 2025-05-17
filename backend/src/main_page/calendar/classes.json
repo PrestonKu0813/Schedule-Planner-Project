@@ -3,18 +3,21 @@
       "day": "Mon",
       "start": "9:10 AM",
       "end": "11:00 AM",
-      "title": "Math 101"
+      "title": "Math 101",
+      "professor": "Michael Elgawly"
     },
     {
       "day": "Wed",
       "start": "8:00 AM",
       "end": "9:00 AM",
-      "title": "CS 201"
+      "title": "CS 201",
+      "professor": "Corey Stone"
     },
     {
       "day": "Fri",
       "start": "3:00 PM",
       "end": "4:30 PM",
-      "title": "History 202"
+      "title": "History 202",
+      "professor": "Anthony Lucas"
     }
   ]
