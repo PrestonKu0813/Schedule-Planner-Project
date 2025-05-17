@@ -1,63 +1,121 @@
+import React, { useState, useRef } from "react";
 import "./calendar.css";
 import classes from "./classes.json";
 
-// Helper: Calculate position as a percentage (8:00 AM = 0%, 10:00 PM = 100%)
-const calculatePosition = (time) => {
-  const [hour, minute, period] = time.match(/(\d+):(\d+) (AM|PM)/).slice(1);
-  let hour24 = parseInt(hour, 10) % 12 + (period === "PM" ? 12 : 0);
-  if (hour24 < 8) hour24 += 12; // Ensure morning starts at 8 AM
-
-  const totalMinutes = (hour24 - 8) * 60 + parseInt(minute, 10);
-  return (totalMinutes / (14 * 60)) * 100; // 14 hours total (8 AM - 10 PM)
-};
-
-// Helper: Map day to grid position (Mon-Fri)
+// Helper: Map day to index (Mon=0, Tue=1, …, Sun=6)
 const dayToIndex = (day) => {
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   return days.indexOf(day);
 };
 
+// Helper: Calculate vertical position (0% at 8:00 AM, 100% at 11:00 PM)
+const calculatePosition = (time) => {
+  const [hour, minute, period] = time.match(/(\d+):(\d+) (AM|PM)/).slice(1);
+  let hour24 = parseInt(hour, 10) % 12 + (period === "PM" ? 12 : 0);
+  if (hour24 < 8) hour24 += 12;
+  const totalMinutes = (hour24 - 8) * 60 + parseInt(minute, 10);
+  // 15 hours * 60 = 900 minutes
+  return (totalMinutes / 900) * 100;
+};
+
+// Array of hours from 8 AM (8) to 11 PM (23) -> 16 labels
+const hourLabels = Array.from({ length: 16 }, (_, i) => i + 8);
+
 function Calendar() {
+  const [selectedClass, setSelectedClass] = useState(null);
+  const calendarRef = useRef(null);
+
+  // When a class is clicked, calculate popup coordinates relative to the calendar container.
+  const handleClassClick = (cls, event) => {
+    if (calendarRef.current) {
+      const classRect = event.currentTarget.getBoundingClientRect();
+      const containerRect = calendarRef.current.getBoundingClientRect();
+      // Position popup 5px to the right of the class box, aligned to its top.
+      const popupX = classRect.right - containerRect.left + 5;
+      const popupY = classRect.top - containerRect.top;
+      setSelectedClass({ ...cls, popupX, popupY });
+    }
+  };
+
+  const closePopup = () => {
+    setSelectedClass(null);
+  };
+
   return (
-    <div className="calendar">
-      {/* Time Column (8 AM - 10 PM) */}
-      <div className="calendar_time">
-      <div className="calendar_spacer"></div>
-        {Array.from({ length: 14 }, (_, i) => (
-          <div key={i} className="calendar_hour">
-            <p>{(i + 8) % 12 || 12}:00 {i + 8 >= 12 ? "PM" : "AM"}</p>
-          
+    <div ref={calendarRef} className="calendar_container">
+      {/* Header row: empty cell for time + day headers */}
+      <div className="calendar_header_row">
+        <div className="time_header_cell" />
+        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+          <div key={day} className="day_header_cell">
+            {day}
           </div>
         ))}
       </div>
 
-      {/* Calendar Body (Mon-Fri) */}
+      {/* Calendar body: hour lines, time labels, and class blocks */}
       <div className="calendar_body">
-        <div className="calendar_header">
-          {["Mon", "Tue", "Wed", "Thu", "Fri"].map((day) => (
-            <div key={day} className="calendar_days">
-              <p>{day}</p>
+        {hourLabels.map((hourValue, i) => {
+          const topPercent = (i / 15) * 100;
+          const displayHour = (hourValue % 12) || 12;
+          const ampm = hourValue >= 12 ? "PM" : "AM";
+          return (
+            <div
+              key={hourValue}
+              className="hour_line"
+              style={{ top: `${topPercent}%` }}
+            >
+              <div className="time_label">
+                {displayHour}:00 {ampm}
+              </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
 
-        {/* Class Display (From JSON File) */}
-        <div className="calendar_classes">
-          {classes.map((cls, index) => (
+        {classes.map((cls, index) => {
+          const dayIndex = dayToIndex(cls.day);
+          const topPos = calculatePosition(cls.start);
+          const bottomPos = calculatePosition(cls.end);
+          const heightPos = bottomPos - topPos;
+          // The calendar has a left 10% for time labels; days occupy the rest (90%)
+          const dayLeft = 10 + dayIndex * (90 / 7);
+          return (
             <div
               key={index}
               className="calendar_class"
               style={{
-                top: `${calculatePosition(cls.start)}%`,
-                height: `${calculatePosition(cls.end) - calculatePosition(cls.start)}%`,
-                left: `${dayToIndex(cls.day) * 20}%`,
+                top: `${topPos}%`,
+                left: `${dayLeft}%`,
+                width: `${90 / 7}%`,
+                height: `${heightPos}%`,
               }}
+              onClick={(e) => handleClassClick(cls, e)}
             >
               {cls.title}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
+
+      {/* Popup positioned relative to the calendar container */}
+      {selectedClass && (
+        <div
+          className="popup"
+          style={{ top: selectedClass.popupY, left: selectedClass.popupX }}
+        >
+          <button className="popup-close" onClick={closePopup}>
+            &times;
+          </button>
+          <h2>{selectedClass.title}</h2>
+          <p>
+            <strong>Day:</strong> {selectedClass.day}
+          </p>
+          <p>
+            <strong>Time:</strong> {selectedClass.start} - {selectedClass.end}
+          </p>
+          {/* Additional information can be added here */}
+        </div>
+      )}
     </div>
   );
 }
