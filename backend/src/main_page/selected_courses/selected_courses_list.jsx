@@ -26,6 +26,10 @@ function Selected_Courses({ courses, setCourses }) {
               <h2>{course.course_name}</h2>
               <p>Course Number: {course.course_number}</p>
               <p>Credits: {course.credit}</p>
+              <p>Selected Sections: {course.selected_sections && course.selected_sections.length > 0 
+                ? course.selected_sections.map(section => section.section_number).join(", ") 
+                : "None"}
+              </p>
               <button 
                 className="remove_course_button"
                 onClick={() => handleRemoveCourse(course.course_number)}>Remove Course

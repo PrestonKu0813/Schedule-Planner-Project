@@ -33,16 +33,47 @@
     width: 5%;
 }
 
+.add-course-button:hover {
+    background-color: #5cb85c; /* Darker green on hover */
+}
+
+
 .remove-course-button {
     background-color: #e74c3c;
     color: white;
     border-radius: 5px;
     width: 5%;
 }
+.remove-course-button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
 
 .dropdown {
     margin-top: 10px;
     padding: 10px;
     border-top: 1px solid black;
     text-align: left;
+}
+
+.toggle-all-sections-button {
+    margin: 10px 0;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-all-sections-button.toggled {
+    background-color: #dc3545; /* Red for deselect state */
+}
+
+.toggle-all-sections-button:hover {
+    background-color: #0056b3;
+}
+.toggle-all-sections-button.toggled:hover {
+    background-color: #c82333; /* Darker red on hover */
 }
