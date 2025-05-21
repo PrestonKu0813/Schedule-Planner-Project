@@ -50,57 +50,57 @@
   .calendar_class {
     @apply absolute text-center text-xs 
     bg-gray-400 bg-opacity-70 
-    border-2 border-gray-950; 
-    margin-top: .5px;
-    margin-bottom: .5px;
+    border-2 border-gray-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
   }
 
   .calendar_class_busch {
     @apply absolute text-center text-xs 
     bg-blue-300 bg-opacity-80 
-    border-2 border-blue-950; 
-    margin-top: .5px;
-    margin-bottom: .5px;
+    border-2 border-blue-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
   }
 
   .calendar_class_livi {
     @apply absolute text-center text-xs 
     bg-orange-300 bg-opacity-80 
-    border-2 border-orange-950; 
-    margin-top: .5px;
-    margin-bottom: .5px;
+    border-2 border-orange-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
   }
 
   .calendar_class_CA {
     @apply absolute text-center text-xs 
     bg-yellow-200 bg-opacity-80 
-    border-2 border-yellow-950; 
-    margin-top: .5px;
-    margin-bottom: .5px;
+    border-2 border-yellow-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
   }
 
   .calendar_class_CD {
     @apply absolute text-center text-xs 
     bg-green-300 bg-opacity-70 
-    border-2 border-green-950; 
-    margin-top: .5px;
-    margin-bottom: .5px;
+    border-2 border-green-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
   }
 
   .calendar_class_downtown {
     @apply absolute text-center text-xs 
     bg-pink-300 bg-opacity-80 
-    border-2 border-pink-950; 
-    margin-top: .5px;
-    margin-bottom: .5px;
+    border-2 border-pink-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
   }
 
-   .calendar_class_online {
+  .calendar_class_online {
     @apply absolute text-center text-xs 
     bg-red-300 bg-opacity-80 
-    border-2 border-red-950; 
-    margin-top: .5px;
-    margin-bottom: .5px;
+    border-2 border-red-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
   }
 
   .popup {

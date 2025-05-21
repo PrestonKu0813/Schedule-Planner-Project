@@ -80,31 +80,6 @@ function Calendar({ courses }) {
           );
         })}
 
-<<<<<<< HEAD
-        {classes.map((cls, index) => {
-          const dayIndex = dayToIndex(cls.day);
-          const topPos = calculatePosition(cls.start);
-          const bottomPos = calculatePosition(cls.end);
-          const heightPos = bottomPos - topPos;
-          // The calendar has a left 10% for time labels; days occupy the rest (90%)
-          const dayLeft = 10 + dayIndex * (90 / 7);
-          return (
-            <div
-              key={index}
-              className="calendar_class_online"
-              style={{
-                top: `${topPos}%`,
-                left: `${dayLeft}%`,
-                width: `${90 / 7}%`,
-                height: `${heightPos}%`,
-              }}
-              onClick={(e) => handleClassClick(cls, e)}
-            >
-              {cls.title}
-            </div>
-          );
-        })}
-=======
 {(courses || []).map((course) => (
           course.selected_sections.map((section) => {
             const lectureInfoArray = Object.values(section.lecture_info);
@@ -154,7 +129,6 @@ function Calendar({ courses }) {
               });
           })
         ))}
->>>>>>> main
       </div>
 
       {/* Popup positioned relative to the calendar container */}
