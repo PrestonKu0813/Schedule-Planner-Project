@@ -1,10 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./calendar.css";
-import classes from "./classes.json";
+import "./classes.json";
 
 // Helper: Map day to index (Mon=0, Tue=1, …, Sun=6)
 const dayToIndex = (day) => {
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   return days.indexOf(day);
 };
 
@@ -21,9 +21,15 @@ const calculatePosition = (time) => {
 // Array of hours from 8 AM (8) to 11 PM (23) -> 16 labels
 const hourLabels = Array.from({ length: 16 }, (_, i) => i + 8);
 
-function Calendar() {
+function Calendar({ courses }) {
   const [selectedClass, setSelectedClass] = useState(null);
   const calendarRef = useRef(null);
+
+    // Debug: log courses prop whenever it changes
+    useEffect(() => {
+      console.log("🛠️ [Calendar] courses prop:", courses);
+    }, [courses]);
+  
 
   // When a class is clicked, calculate popup coordinates relative to the calendar container.
   const handleClassClick = (cls, event) => {
@@ -72,29 +78,55 @@ function Calendar() {
           );
         })}
 
-        {classes.map((cls, index) => {
-          const dayIndex = dayToIndex(cls.day);
-          const topPos = calculatePosition(cls.start);
-          const bottomPos = calculatePosition(cls.end);
-          const heightPos = bottomPos - topPos;
-          // The calendar has a left 10% for time labels; days occupy the rest (90%)
-          const dayLeft = 10 + dayIndex * (90 / 7);
-          return (
-            <div
-              key={index}
-              className="calendar_class"
-              style={{
-                top: `${topPos}%`,
-                left: `${dayLeft}%`,
-                width: `${90 / 7}%`,
-                height: `${heightPos}%`,
-              }}
-              onClick={(e) => handleClassClick(cls, e)}
-            >
-              {cls.title}
-            </div>
-          );
-        })}
+{(courses || []).map((course) => (
+          course.selected_sections.map((section) => {
+            const lectureInfoArray = Object.values(section.lecture_info);
+
+            return lectureInfoArray
+              .filter(lecture => lecture.lectureDay !== 'Asynchronous content' && lecture.lectureDay !== '-1' && lecture.lectureTime !== '-1')
+              .map((lecture, index) => {
+                const dayIndex = dayToIndex(lecture.lectureDay);
+                const [start, end] = lecture.lectureTime.split(' - ');
+                const topPos = calculatePosition(start);
+                const bottomPos = calculatePosition(end);
+                const heightPos = bottomPos - topPos;
+                const dayLeft = 10 + dayIndex * (90 / 7);
+
+                console.log("lecture.lectureDay:", lecture.lectureDay);  // <--- Add this
+                console.log("dayIndex:", dayIndex);                // <--- Add this
+                console.log("dayLeft:", dayLeft);                  // <--- Add this
+
+                const classDetails = {
+                  title: course.course_name,
+                  day: lecture.lectureDay,
+                  start: start,
+                  end: end,
+                  course_code: course.course_code,
+                  course_number: course.course_number,
+                  instructor: section.instructor,
+                  section_number: section.section_number,
+                  campus: lecture.campus,
+                  lectureTime: lecture.lectureTime,
+                };
+
+                return (
+                  <div
+                    key={`${course.course_code}-${section.index_number}-${index}`}
+                    className="calendar_class"
+                    style={{
+                      top: `${topPos}%`,
+                      left: `${dayLeft}%`,
+                      width: `${90 / 7}%`,
+                      height: `${heightPos}%`,
+                    }}
+                    onClick={(e) => handleClassClick(classDetails, e)}
+                  >
+                    {course.course_name}
+                  </div>
+                );
+              });
+          })
+        ))}
       </div>
 
       {/* Popup positioned relative to the calendar container */}
