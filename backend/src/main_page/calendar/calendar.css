@@ -5,7 +5,7 @@
 @layer components {
   /* Outer container to hold everything */
   .calendar_container {
-    @apply fixed top-[2%] right-[1.5%]  w-[40%] h-[96%] border-4 border-black bg-[#E7E2D5];
+    @apply fixed top-[2%] right-[1.5%]  w-[40%] h-[85%] border-4 border-black bg-[#E7E2D5];
     @apply flex flex-col text-black font-sans overflow-hidden;
   }
 
@@ -123,8 +123,62 @@
     font-size: 1rem;
     cursor: pointer;
   }
+
   .filler_text {
     color: transparent;
     user-select: none;
   }
+
+  /* CALENDAR KEY CSS SECTION */
+  .calendar_key_container {
+    @apply fixed bottom-[2%] right-[1.5%] w-[40%] h-[11%] ;
+    @apply flex flex-col;
+  }
+
+  .calendar_key_rows{
+    @apply flex flex-row h-[50%];
+    margin-top: 1%;
+  }
+
+  .calendar_key_cols{
+    @apply flex w-[34%] flex-row border-4 border-black;
+    margin-right: 1%;
+  }
+
+  .calendar_key{
+    @apply flex w-[18%]
+  }
+
+  #text{
+    @apply font-semibold;
+    align-self: center;
+    margin-left: 2%;
+    overflow-x: hidden;
+    white-space: nowrap;
+  }
+
+  #busch{
+    @apply bg-blue-300;
+  }
+
+  #livi{
+    @apply bg-orange-300;
+  }
+
+  #CA{
+    @apply bg-yellow-200;
+  }
+
+  #CD{
+    @apply bg-green-300;
+  }
+
+  #downtown{
+    @apply bg-pink-300;
+  }
+
+  #online{
+    @apply bg-red-400;
+  }
+   
 }

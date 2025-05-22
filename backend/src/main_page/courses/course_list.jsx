@@ -1,4 +1,5 @@
 import "./tabs.css";
+import "./course_list.css";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState } from 'react';

@@ -73,6 +73,7 @@ function Calendar({ courses }) {
             >
               <div className="time_label">
                 {displayHour}:00 {ampm}
+                {/* PLEASE DONT DELETE THIS */}
                 <p className="filler_text">"filler"</p>
                 <p className="filler_text">"filler"</p>
               </div>
