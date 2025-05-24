@@ -1,11 +1,10 @@
 import "./tabs.css";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 
-function CourseList({courses, setCourses}) {
-  const [activeTab, setActiveTab] = useState("EXPLORE");
+function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab}) {
   const [results, setResults] = useState([]);
   const [selectedTag, setSelectedTag] = useState({ value: "all", label: "All" });
 
@@ -15,6 +14,12 @@ function CourseList({courses, setCourses}) {
     { value: "011", label: "Administrative Studies (011)" },
   ];
 
+  // const handleTabChange = (tab) => {
+  //   setActiveTab(tab);
+  // }
+  // useEffect(() => {
+  //   handleTabChange(activeTab);
+  // }, [activeTab]);
 
 
 
@@ -54,13 +59,14 @@ function CourseList({courses, setCourses}) {
                   onChange={setSelectedTag}
                 />
               </div>
-              <SearchResultsList results={results} courses={courses} setCourses={setCourses}/>
+              <SearchResultsList results={results} courses={courses} setCourses={setCourses} setInfo={setInfo} setActiveTab={setActiveTab}/>
             </div>
           </div>
         ) : (
           <div className="course_list_text">
             <h2>Courses Tab</h2>
             <p>Welcome to the Courses tab!</p>
+            <p>Selected Info: {info.course_name}</p>
           </div>
         )}
       </div>
