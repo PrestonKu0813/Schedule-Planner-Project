@@ -1,4 +1,4 @@
-require("dotenv").config({ path: `./env/.env.${process.env.ENV}` });
+require("dotenv").config({ path: `./env/.env` });
 const auth = require("../enums/auth_profile");
 const database_names = require("../enums/database_names");
 const {
