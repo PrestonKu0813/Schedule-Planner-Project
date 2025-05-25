@@ -3,7 +3,7 @@ import "./SearchResult.css";
 import { SectionList } from "./SectionList";
 import { sectionsByCourseNumber } from "../api";
 
-export const SearchResult = ({ result, courses, setCourses }) => {
+export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTab }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [sections, setSections] = useState([]);
     const [selectedSections, setSelectedSections] = useState(result.selected_sections || []); // Initialize from result
@@ -79,6 +79,16 @@ export const SearchResult = ({ result, courses, setCourses }) => {
         <div className="search-result" ref={dropdownRef}>
             <div className="result-header" onClick={toggleDropdown}>
                 <div className="result-title">{result.course_name}</div>
+                <button
+                    className="set-info-button"
+                    onClick={e => {
+                        e.stopPropagation();
+                        setInfo(result);
+                        setActiveTab("COURSES");
+                    }}
+                >
+                    Details
+                </button>
                 <button
                     onClick={handleAddRemoveCourse}
                     className={isCourseAdded ? 'remove-course-button' : 'add-course-button'}

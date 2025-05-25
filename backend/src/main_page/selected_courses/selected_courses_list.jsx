@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./selected_courses.css";
 
-function Selected_Courses({ courses, setCourses }) {
+function Selected_Courses({ courses, setCourses, setActiveTab, setInfo }) {
 
   // Update the local state whenever new data is received
   // useEffect(() => {
@@ -30,6 +30,16 @@ function Selected_Courses({ courses, setCourses }) {
                 ? course.selected_sections.map(section => section.section_number).join(", ") 
                 : "None"}
               </p>
+              <button
+                    className="set-info-button"
+                    onClick={e => {
+                        e.stopPropagation();
+                        setInfo(course);
+                        setActiveTab("COURSES");
+                    }}
+                >
+                    Details
+              </button>
               <button 
                 className="remove_course_button"
                 onClick={() => handleRemoveCourse(course.course_number)}>Remove Course

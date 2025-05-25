@@ -1,13 +1,14 @@
 const express = require("express");
-// const passport = require("passport");
-// require("dotenv").config({ path: `./env/.env.${process.env.ENV}` });
-// require("./config/passport_setup");
-// const { ConnectSessionKnexStore } = require("connect-session-knex");
-// const db = require("./database/mysql_conn");
-// const session = require("express-session");
+const session = require("express-session");
+const passport = require("passport");
+require("./config/passport_setup");
+require("dotenv").config({ path: `./env/.env` });
+const { ConnectSessionKnexStore } = require("connect-session-knex");
+const db = require("./database/mysql_conn");
 const cors = require("cors");
 const corsOptions = {
   origin: ["http://localhost:5173"],
+  credentials: true,
 };
 
 const app = express();
@@ -17,16 +18,45 @@ const port = 3000;
 app.use(cors(corsOptions));
 
 // example
-// app.set("view engine", "ejs");
+app.set("view engine", "ejs");
 
-// app.get("/", (req, res) => {
-//   res.render("example");
-// });
+// auth route
 
-//test 
-app.get("/", (req, res) => {
-  res.send("Hello from the root path!");
+const connectSessionKnexStore = new ConnectSessionKnexStore({
+  knex: db,
+  clearInterval: 0,
+  createTable: true,
+  tableName: "sessions",
 });
+
+app.use(
+  session({
+    store: connectSessionKnexStore,
+    secret: [process.env.SESSION_COOKIE_KEY],
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 24 * an hour = a day
+      secure: false, // for http not https
+    },
+    store: connectSessionKnexStore,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get("/", (req, res) => {
+  res.render("example");
+});
+
+// auth route
+const authRouter = require("./routes/auth");
+app.use("/auth", authRouter);
+
+// profile route
+const profileRouter = require("./routes/profile");
+app.use("/profile", profileRouter);
 
 // swagger api ui
 const swaggerUi = require("swagger-ui-express");
@@ -41,46 +71,6 @@ app.use("/explore", exploreRouter);
 // course route
 const courseRouter = require("./routes/course");
 app.use("/course", courseRouter);
-
-// auth route
-
-// cookie session
-// app.use(
-//   cookieSession({
-//     maxAge: 60 * 60 * 1000, // an hour
-//     keys: [process.env.SESSION_COOKIE_KEY],
-//   })
-// );
-
-// const connectSessionKnexStore = new ConnectSessionKnexStore({
-//   knex: db,
-//   clearInterval: 0,
-//   createTable: true,
-//   tableName: "sessions",
-// });
-
-// app.use(
-//   session({
-//     resave: false,
-//     saveUninitialized: true,
-//     secret: [process.env.SESSION_COOKIE_KEY],
-//     cookie: {
-//       maxAge: 60 * 60 * 1000, // an hour
-//       secure: false, // for http not https
-//     },
-//     store: connectSessionKnexStore,
-//   })
-// );
-
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// const authRouter = require("./routes/auth");
-// app.use("/auth", authRouter);
-
-// // profile route
-// const profileRouter = require("./routes/profile");
-// app.use("/profile", profileRouter);
 
 // run server
 app.listen(port, () => {
