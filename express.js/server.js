@@ -1,10 +1,10 @@
 const express = require("express");
+const session = require("express-session");
 const passport = require("passport");
-require("dotenv").config({ path: `./env/.env` });
 require("./config/passport_setup");
+require("dotenv").config({ path: `./env/.env` });
 const { ConnectSessionKnexStore } = require("connect-session-knex");
 const db = require("./database/mysql_conn");
-const session = require("express-session");
 const cors = require("cors");
 const corsOptions = {
   origin: ["http://localhost:5173"],
@@ -20,33 +20,7 @@ app.use(cors(corsOptions));
 // example
 app.set("view engine", "ejs");
 
-app.get("/", (req, res) => {
-  res.render("example");
-});
-
-// swagger api ui
-const swaggerUi = require("swagger-ui-express");
-const YAML = require("yamljs");
-const swaggerDocument = YAML.load("./swagger.yaml");
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// explore route
-const exploreRouter = require("./routes/explore");
-app.use("/explore", exploreRouter);
-
-// course route
-const courseRouter = require("./routes/course");
-app.use("/course", courseRouter);
-
 // auth route
-
-// cookie session
-// app.use(
-//   cookieSession({
-//     maxAge: 60 * 60 * 1000, // an hour
-//     keys: [process.env.SESSION_COOKIE_KEY],
-//   })
-// );
 
 const connectSessionKnexStore = new ConnectSessionKnexStore({
   knex: db,
@@ -62,7 +36,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 60 * 60 * 1000, // an hour
+      maxAge: 24 * 60 * 60 * 1000, // 24 * an hour = a day
       secure: false, // for http not https
     },
     store: connectSessionKnexStore,
@@ -72,12 +46,31 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get("/", (req, res) => {
+  res.render("example");
+});
+
+// auth route
 const authRouter = require("./routes/auth");
 app.use("/auth", authRouter);
 
 // profile route
 const profileRouter = require("./routes/profile");
 app.use("/profile", profileRouter);
+
+// swagger api ui
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// explore route
+const exploreRouter = require("./routes/explore");
+app.use("/explore", exploreRouter);
+
+// course route
+const courseRouter = require("./routes/course");
+app.use("/course", courseRouter);
 
 // run server
 app.listen(port, () => {

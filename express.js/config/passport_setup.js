@@ -12,14 +12,14 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 passport.serializeUser((user, done) => {
   const id = database_names.user.GOOGLE.ID;
-  console.log("comfirm " + user[id]);
+  // console.log("comfirm " + user[id]);
   done(null, user[id]);
 });
 
 passport.deserializeUser((id, done) => {
-  console.log(id);
+  // console.log(id);
   getGoogleUserById(id).then((user) => {
-    console.log(user);
+    // console.log(user);
     done(null, user);
   });
 });
@@ -37,22 +37,20 @@ passport.use(
       isGoogleUserExist(profile[auth.ID]).then((currentUser) => {
         if (currentUser) {
           // already registered
-          console.log(currentUser);
+          // console.log("user already exist");
           getGoogleUserByGoogle(profile[auth.ID]).then((user) => {
-            console.log(user);
             done(null, user);
           });
         } else {
           // not yet registered
-          console.log(currentUser);
+          // console.log("new user");
           insertGoogleUser(profile[auth.ID], profile[auth.NAME]).then(
-            // add session column in the future
             function () {
               isGoogleUserExist(profile[auth.ID]).then((newUser) => {
                 if (newUser) {
                   console.log("successful registration");
                   getGoogleUserByGoogle(profile[auth.ID]).then((user) => {
-                    console.log(user);
+                    // console.log(user);
                     done(null, user);
                   });
                 } else {
