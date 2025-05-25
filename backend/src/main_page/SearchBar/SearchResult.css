@@ -77,3 +77,19 @@
 .toggle-all-sections-button.toggled:hover {
     background-color: #c82333; /* Darker red on hover */
 }
+
+.set-info-button {
+    order: 0;
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-weight: 500;
+}
+
+.set-info-button:hover {
+    background-color: #e0e0e0;
+}
