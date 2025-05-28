@@ -1,5 +1,6 @@
 import CourseList from "./main_page/courses/course_list";
 import Calendar from "./main_page/calendar/calendar";
+import Calendar_Key from "./main_page/calendar/calendar_key";
 import Selected_Courses from "./main_page/selected_courses/selected_courses_list";
 import React, { useState } from "react";
 
@@ -16,11 +17,11 @@ function App() {
 
   return (
     <>
+      <Calendar_Key/>
       <Selected_Courses courses={courses} setCourses={setCourses} setActiveTab={setActiveTab} setInfo={setInfo}/>
       <CourseList courses={courses} setCourses={setCourses} info={info} setInfo={setInfo} activeTab={activeTab} setActiveTab={setActiveTab}/>
       <Calendar courses={courses} />
     </>
   );
 }
-
 export default App;

@@ -5,51 +5,102 @@
 @layer components {
   /* Outer container to hold everything */
   .calendar_container {
-    @apply fixed top-[2%] right-[1.5%]  w-[40%] h-[96%] border-4 border-black bg-[#E7E2D5];
+    @apply fixed top-[2%] right-[1.5%]  w-[40%] h-[85%] border-4 border-black bg-[#E7E2D5];
     @apply flex flex-col text-black font-sans overflow-hidden;
   }
 
   /* HEADER ROW */
   .calendar_header_row {
-    @apply flex flex-row h-[8%] border-b border-black;
+    @apply flex flex-row h-[8%] border-b-2 border-y-blue-950;
   }
 
   /* Empty cell for time column header */
   .time_header_cell {
-    @apply w-[10%] border-r border-black;
+    @apply w-[10%] min-w-[10%] border-r-4 border-red-400;
   }
 
   /* Each day cell in the header */
   .day_header_cell {
-    @apply flex-1 border-r border-black flex items-center justify-center;
+    @apply flex-1 flex items-center justify-center;
   }
 
   /* MAIN BODY (the actual schedule area) */
   .calendar_body {
-    @apply relative flex-1; 
+    @apply relative flex-1;
     /* This is where hour lines, time labels, and classes are absolutely positioned */
     overflow: hidden;
   }
 
   /* Hour lines */
   .hour_line {
-    @apply absolute left-0 right-0 border-t border-gray-400;
+    @apply absolute left-0 right-0 border-t border-y-blue-950;
     /* 'top' is set inline via style={{ top: '...%' }} */
   }
 
   /* Time label that appears on each hour line (left side, 10% wide) */
+
   .time_label {
-    @apply absolute text-center font-bold text-xs bg-[#E7E2D5];
+    @apply absolute text-center font-bold text-xs bg-[#E7E2D5] border-r-4 border-red-400 text-opacity-0;
     width: 10%;
     left: 0;
     /* Slight vertical centering so the label hovers around the line */
-
   }
 
   /* Each scheduled class */
   .calendar_class {
-    @apply absolute bg-blue-400 bg-opacity-80 border border-black text-center text-xs;
-    /* top, left, width, height are set inline */
+    @apply absolute text-center text-xs 
+    bg-gray-400 bg-opacity-70 
+    border-2 border-gray-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
+  }
+
+  .calendar_class_busch {
+    @apply absolute text-center text-xs 
+    bg-blue-300 bg-opacity-80 
+    border-2 border-blue-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
+  }
+
+  .calendar_class_livi {
+    @apply absolute text-center text-xs 
+    bg-orange-300 bg-opacity-80 
+    border-2 border-orange-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
+  }
+
+  .calendar_class_CA {
+    @apply absolute text-center text-xs 
+    bg-yellow-200 bg-opacity-80 
+    border-2 border-yellow-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
+  }
+
+  .calendar_class_CD {
+    @apply absolute text-center text-xs 
+    bg-green-300 bg-opacity-70 
+    border-2 border-green-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
+  }
+
+  .calendar_class_downtown {
+    @apply absolute text-center text-xs 
+    bg-pink-300 bg-opacity-80 
+    border-2 border-pink-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
+  }
+
+  .calendar_class_online {
+    @apply absolute text-center text-xs 
+    bg-red-300 bg-opacity-80 
+    border-2 border-red-950;
+    margin-top: 0.5px;
+    margin-bottom: 0.5px;
   }
 
   .popup {
@@ -61,7 +112,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     max-width: 200px;
   }
-  
+
   /* Popup close button */
   .popup-close {
     position: absolute;
@@ -72,4 +123,62 @@
     font-size: 1rem;
     cursor: pointer;
   }
+
+  .filler_text {
+    color: transparent;
+    user-select: none;
+  }
+
+  /* CALENDAR KEY CSS SECTION */
+  .calendar_key_container {
+    @apply fixed bottom-[2%] right-[1.5%] w-[40%] h-[11%] ;
+    @apply flex flex-col;
+  }
+
+  .calendar_key_rows{
+    @apply flex flex-row h-[50%];
+    margin-top: 1%;
+  }
+
+  .calendar_key_cols{
+    @apply flex w-[34%] flex-row border-4 border-black;
+    margin-right: 1%;
+  }
+
+  .calendar_key{
+    @apply flex w-[18%]
+  }
+
+  #text{
+    @apply font-semibold;
+    align-self: center;
+    margin-left: 2%;
+    overflow-x: hidden;
+    white-space: nowrap;
+  }
+
+  #busch{
+    @apply bg-blue-300;
+  }
+
+  #livi{
+    @apply bg-orange-300;
+  }
+
+  #CA{
+    @apply bg-yellow-200;
+  }
+
+  #CD{
+    @apply bg-green-300;
+  }
+
+  #downtown{
+    @apply bg-pink-300;
+  }
+
+  #online{
+    @apply bg-red-400;
+  }
+   
 }

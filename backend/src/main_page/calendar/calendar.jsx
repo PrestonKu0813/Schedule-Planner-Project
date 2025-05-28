@@ -11,7 +11,7 @@ const dayToIndex = (day) => {
 // Helper: Calculate vertical position (0% at 8:00 AM, 100% at 11:00 PM)
 const calculatePosition = (time) => {
   const [hour, minute, period] = time.match(/(\d+):(\d+) (AM|PM)/).slice(1);
-  let hour24 = parseInt(hour, 10) % 12 + (period === "PM" ? 12 : 0);
+  let hour24 = (parseInt(hour, 10) % 12) + (period === "PM" ? 12 : 0);
   if (hour24 < 8) hour24 += 12;
   const totalMinutes = (hour24 - 8) * 60 + parseInt(minute, 10);
   // 15 hours * 60 = 900 minutes
@@ -63,7 +63,7 @@ function Calendar({ courses }) {
       <div className="calendar_body">
         {hourLabels.map((hourValue, i) => {
           const topPercent = (i / 15) * 100;
-          const displayHour = (hourValue % 12) || 12;
+          const displayHour = hourValue % 12 || 12;
           const ampm = hourValue >= 12 ? "PM" : "AM";
           return (
             <div
@@ -73,6 +73,9 @@ function Calendar({ courses }) {
             >
               <div className="time_label">
                 {displayHour}:00 {ampm}
+                {/* PLEASE DONT DELETE THIS */}
+                <p className="filler_text">"filler"</p>
+                <p className="filler_text">"filler"</p>
               </div>
             </div>
           );
