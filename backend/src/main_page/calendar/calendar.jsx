@@ -22,6 +22,16 @@ const calculatePosition = (time) => {
 const hourLabels = Array.from({ length: 16 }, (_, i) => i + 8);
 
 function Calendar({ courses }) {
+  // Color mapping for campus locations
+  const campusColors = {
+    Busch: "#ADD8E6",
+    Livingston: "#FFA500",
+    Online: "#F08080",
+    "College Ave": "#FFFF99",
+    "Cook/Doug": "#90EE90",
+    Downtown: "#FFB6C1"
+  };
+
   const [selectedClass, setSelectedClass] = useState(null);
   const calendarRef = useRef(null);
 
@@ -36,9 +46,30 @@ function Calendar({ courses }) {
     if (calendarRef.current) {
       const classRect = event.currentTarget.getBoundingClientRect();
       const containerRect = calendarRef.current.getBoundingClientRect();
-      // Position popup 5px to the right of the class box, aligned to its top.
-      const popupX = classRect.right - containerRect.left + 5;
-      const popupY = classRect.top - containerRect.top;
+      // Initial position: 5px to the right of the class box
+      let popupX = classRect.right - containerRect.left + 5;
+
+      // Position popup 5px below the class box by default
+      let popupY = classRect.bottom - containerRect.top + 5;
+
+      // Approximate popup dimensions (adjust to match your CSS)
+      const POPUP_WIDTH = 250;
+      const POPUP_HEIGHT = 200;
+
+      // Clamp horizontal position within container
+      if (popupX + POPUP_WIDTH > containerRect.width) {
+        // Position to the left of the class block
+        popupX = classRect.left - containerRect.left - POPUP_WIDTH - 5;
+        if (popupX < 0) popupX = 0;
+      }
+
+      // If the popup would overflow the bottom of the container, flip it above the class block
+      if (popupY + POPUP_HEIGHT > containerRect.height) {
+        popupY = classRect.top - containerRect.top - POPUP_HEIGHT - 5;
+        // Ensure it doesn't overflow above the top
+        if (popupY < 0) popupY = 0;
+      }
+
       setSelectedClass({ ...cls, popupX, popupY });
     }
   };
@@ -95,21 +126,20 @@ function Calendar({ courses }) {
                 const heightPos = bottomPos - topPos;
                 const dayLeft = 10 + dayIndex * (90 / 7);
 
-                console.log("lecture.lectureDay:", lecture.lectureDay);  // <--- Add this
-                console.log("dayIndex:", dayIndex);                // <--- Add this
-                console.log("dayLeft:", dayLeft);                  // <--- Add this
-
                 const classDetails = {
                   title: course.course_name,
                   day: lecture.lectureDay,
                   start: start,
                   end: end,
-                  course_code: course.course_code,
+                  core_code: course.core_code,
                   course_number: course.course_number,
                   instructor: section.instructor,
                   section_number: section.section_number,
                   campus: lecture.campus,
                   lectureTime: lecture.lectureTime,
+                  classroom: lecture.classroom,
+                  classroomLink: lecture.classroomLink,
+                  recitation: lecture.recitation,
                 };
 
                 return (
@@ -121,6 +151,7 @@ function Calendar({ courses }) {
                       left: `${dayLeft}%`,
                       width: `${90 / 7}%`,
                       height: `${heightPos}%`,
+                      backgroundColor: campusColors[lecture.campus] || "#ccc"
                     }}
                     onClick={(e) => handleClassClick(classDetails, e)}
                   >
@@ -148,7 +179,33 @@ function Calendar({ courses }) {
           <p>
             <strong>Time:</strong> {selectedClass.start} - {selectedClass.end}
           </p>
-          {/* Additional information can be added here */}
+          <p>
+            <strong>Core Code:</strong> {selectedClass.core_code}
+          </p>
+          <p>
+            <strong>Section:</strong> {selectedClass.section_number}
+          </p>
+          <p>
+            <strong>Instructor:</strong> {selectedClass.instructor}
+          </p>
+          <p>
+            <strong>Campus:</strong> {selectedClass.campus}
+          </p>
+          <p>
+            <strong>Classroom:</strong>{" "}
+            <a
+              href={selectedClass.classroomLink}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {selectedClass.classroom}
+            </a>
+          </p>
+          {selectedClass.recitation ? (
+            <p>
+              <strong>Recitation:</strong> {selectedClass.recitation}
+            </p>
+          ) : null}
         </div>
       )}
     </div>
