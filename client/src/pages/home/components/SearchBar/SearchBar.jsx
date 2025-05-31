@@ -11,37 +11,25 @@ import {
     coursesBySubjectCode,
 } from "../api";
 
+/**
+ * 
+ * @param {*} props
+ * @param {Function} props.setResults - Function to set the search results.
+ * @param {string} props.selectedTag - The currently selected tag for filtering results.
+ * @description A search bar component that allows users to search for courses and filter results based on a selected tag.
+ * It fetches data from an API based on the input value and updates the results accordingly.
+ * @returns 
+ */
+
 export const SearchBar = ({ setResults, selectedTag }) => {
     const [input, setInput] = useState("");
     const [tempInput, setTempInput] = useState("");
 
-    // const fetchData = (value) => {
-    //     fetch("https://jsonplaceholder.typicode.com/todos")
-    //         .then((response) => response.json())
-    //         .then((json) => {
-    //             let results;
-    //             if (value) {
-    //                 results = json.filter((todo) => {
-    //                     return (
-    //                         todo &&
-    //                         todo.title &&
-    //                         todo.title.toLowerCase().includes(value.toLowerCase())
-    //                     );
-    //                 });
-    //             } else {
-    //                 results = json;
-    //             }
-    //             JSON.stringify(results);
-    //             const filteredResults = selectedTag === "all"
-    //                 ? results
-    //                 : results.filter(result => result.userId === parseInt(selectedTag));
 
-    //             setResults(filteredResults);
-    //         });
-    // };
-
+    // Function to fetch all courses from search query
     const fetchAPI = (value) => {
         if (value === "") {
+            // If input is empty, fetch all courses
             getAllSubjects()
                 .then((json) => {
                     console.log("API Response:", json);
@@ -55,6 +43,7 @@ export const SearchBar = ({ setResults, selectedTag }) => {
                             selected_sections: [], // Add selected_sections attribute
                         }))
                     );
+                    //filtering based on selectedTag, uses course_number to filter
                     const filteredResults = selectedTag === "all"
                         ? resultsArray
                         : resultsArray.filter(result => {
@@ -74,7 +63,9 @@ export const SearchBar = ({ setResults, selectedTag }) => {
                     const resultsArray = Object.values(json).map(course => ({
                         ...course,
                         selected_sections: [], // Add selected_sections attribute
-                    })); // Convert object of objects to array of values
+                    }));
+
+                    //filtering based on selectedTag. uses course_number to filter
                     const filteredResults = selectedTag === "all"
                         ? resultsArray
                         : resultsArray.filter(result => {
@@ -97,6 +88,7 @@ export const SearchBar = ({ setResults, selectedTag }) => {
         }
     };
 
+    //runs fetchAPI and sets the input value when the user submits the search
     const handleSubmit = (value) => {
         setInput(value);
         fetchAPI(value);

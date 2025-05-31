@@ -3,6 +3,18 @@ import "./SearchResult.css";
 import { SectionList } from "./SectionList";
 import { sectionsByCourseNumber } from "../api";
 
+/**
+ * 
+ * @param {*} props
+ * @param {Object} props.result - The course result object containing course details.
+ * @param {Array} props.courses - Array of currently selected courses.
+ * @param {Function} props.setCourses - Function to update the selected courses.
+ * @param {Function} props.setInfo - Function to set the course info for details view.
+ * @param {Function} props.setActiveTab - Function to set the active tab in the UI.
+ * @description Component to display a single search result with options to view details, add/remove course, and select sections.
+ * @returns 
+ */
+
 export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTab }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [sections, setSections] = useState([]);
@@ -12,10 +24,12 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
     const [isAllSectionsSelected, setIsAllSectionsSelected] = useState(false); // Track toggle state
     const dropdownRef = useRef(null);
 
+    // toggles the dropdown visibility
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
 
+    // adds or removes the course from the selected courses list
     const handleAddRemoveCourse = (e) => {
         e.stopPropagation();
         if (isCourseAdded) {
@@ -28,6 +42,7 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
         setIsCourseAdded(!isCourseAdded);
     };
 
+    // Toggles all sections: if all are selected, deselects them; otherwise, selects all
     const handleToggleAllSections = () => {
         if (isAllSectionsSelected) {
             // Untoggle: Remove all sections
@@ -57,6 +72,18 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
     useEffect(() => {
         setIsCourseAdded(courses.some(course => course.course_number === result.course_number));
     }, [courses, result.course_number]);
+
+    useEffect(() => {
+        // Check if all sections are selected
+        setIsAllSectionsSelected(
+            sections.length > 0 &&
+            sections.every(section =>
+                selectedSections.some(selected => selected.index_number === section.index_number)
+            )
+        );
+    }
+    , [sections, selectedSections]);
+
 
     // Update result.selected_sections whenever selectedSections changes
     useEffect(() => {
