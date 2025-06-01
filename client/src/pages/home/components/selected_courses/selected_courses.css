@@ -1,9 +1,4 @@
 .selected_courses {
-  position: fixed; /* Keeps it in place on the side */
-  left: 10px; /* Adjust as needed to align properly */
-  top: 10px; /* Add padding from the top */
-  bottom: 10px; /* Stretches to the bottom */
-  width: 16%; /* Adjust width for your layout */
   background-color: rgb(151, 161, 208);
   border: 5px solid black;
   border-radius: 8px; /* Rounded corners */

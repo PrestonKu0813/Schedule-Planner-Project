@@ -1,3 +1,4 @@
+import "./layout.css";
 import CourseList from "./components/courses/course_list";
 import Calendar from "./components/calendar/calendar";
 import Calendar_Key from "./components/calendar/calendar_key";
@@ -16,23 +17,29 @@ export default function Home() {
   console.log("🛠️ [App] Current courses state:", courses); // Log the courses state in App
 
   return (
-    <>
-      <Calendar_Key />
-      <Selected_Courses
-        courses={courses}
-        setCourses={setCourses}
-        setActiveTab={setActiveTab}
-        setInfo={setInfo}
-      />
-      <CourseList
-        courses={courses}
-        setCourses={setCourses}
-        info={info}
-        setInfo={setInfo}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
-      <Calendar courses={courses} />
-    </>
+    <div className="layout_container">
+      <div className="selected_courses_container">
+        <Selected_Courses
+          courses={courses}
+          setCourses={setCourses}
+          setActiveTab={setActiveTab}
+          setInfo={setInfo}
+        />
+      </div>
+      <div className="course_list_container">
+        <CourseList
+          courses={courses}
+          setCourses={setCourses}
+          info={info}
+          setInfo={setInfo}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
+      </div>
+      <div className="calendar">
+        <Calendar courses={courses} />
+        <Calendar_Key />
+      </div>
+    </div>
   );
 }

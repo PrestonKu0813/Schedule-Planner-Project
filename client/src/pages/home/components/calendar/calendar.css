@@ -4,8 +4,9 @@
 
 @layer components {
   /* Outer container to hold everything */
+
   .calendar_container {
-    @apply fixed top-[2%] right-[1.5%]  w-[40%] h-[85%] border-4 border-black bg-[#E7E2D5];
+    @apply w-full basis-11/12 border-4 border-black bg-[#E7E2D5];
     @apply flex flex-col text-black font-sans overflow-hidden;
   }
 
@@ -22,8 +23,8 @@
   /* Each day cell in the header */
   .day_header_cell {
     @apply flex-1 flex items-center justify-center;
-    font-size: clamp(.4rem, 2vw, 1rem);
-    font-weight:500;
+    font-size: clamp(0.4rem, 2vw, 1rem);
+    font-weight: 500;
   }
 
   /* MAIN BODY (the actual schedule area) */
@@ -43,7 +44,7 @@
 
   .time_label {
     @apply absolute text-center font-bold text-xs bg-[#E7E2D5] border-r-4 border-red-400 text-opacity-0;
-    font-size: clamp(.35rem, 1vw, .6rem);
+    font-size: clamp(0.35rem, 1vw, 0.6rem);
     width: 12%;
     left: 0;
     /* Slight vertical centering so the label hovers around the line */
@@ -54,8 +55,8 @@
     @apply absolute text-center
     bg-gray-400 bg-opacity-70 
     border-2 border-gray-950;
-    font-size: clamp(.55rem, .8vw, .7rem);
-    padding:2px;
+    font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+    padding: 2px;
     overflow-x: hidden;
     overflow-y: hidden;
     text-overflow: ellipsis;
@@ -93,55 +94,54 @@
 
   /* CALENDAR KEY CSS SECTION */
   .calendar_key_container {
-    @apply fixed bottom-[2%] right-[1.5%] w-[40%] h-[11%] ;
+    @apply w-full basis-1/12;
     @apply flex flex-col;
   }
 
-  .calendar_key_rows{
-    @apply flex flex-row h-[50%];
+  .calendar_key_rows {
+    @apply flex flex-row h-full;
     margin-top: 1%;
   }
 
-  .calendar_key_cols{
-    @apply flex w-[34%] flex-row border-4 border-black;
+  .calendar_key_cols {
+    @apply flex w-full flex-row border-4 border-black;
     margin-right: 1%;
   }
 
-  .calendar_key{
-    @apply flex w-[18%]
+  .calendar_key {
+    @apply flex w-[18%];
   }
 
-  #text{
+  #text {
     @apply font-semibold;
-    font-size: clamp(.4rem, 1.5vw, 1rem);
+    font-size: clamp(0.4rem, 1.5vw, 1rem);
     align-self: center;
     margin-left: 2%;
     overflow-x: hidden;
     white-space: nowrap;
   }
 
-  #busch{
+  #busch {
     @apply bg-blue-300;
   }
 
-  #livi{
+  #livi {
     @apply bg-orange-300;
   }
 
-  #CA{
+  #CA {
     @apply bg-yellow-200;
   }
 
-  #CD{
+  #CD {
     @apply bg-green-300;
   }
 
-  #downtown{
+  #downtown {
     @apply bg-pink-300;
   }
 
-  #online{
+  #online {
     @apply bg-red-400;
   }
-   
 }
