@@ -1,4 +1,3 @@
-import "./tabs.css";
 import "./course_list.css";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
@@ -45,7 +44,7 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
       </button>
 
       {/* Tab Content */}
-      <div className="course_list">
+      <div className={`course_list ${activeTab === "EXPLORE" ? "explore-bg" : "courses-bg"}`}>
         {activeTab === "EXPLORE" ? (
           <div className="course_list_text">
             <h2>Explore Tab</h2>

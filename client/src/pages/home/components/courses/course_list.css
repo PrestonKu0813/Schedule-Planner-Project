@@ -1,12 +1,19 @@
 .course_list {
   border: 5px solid black;
   position: absolute;
-  background-color: rgb(217, 48, 48);
   top: 10%;
   bottom: 2%;
   width: 38%;
   left: 19%;
   overflow: hidden;
+}
+
+.explore-bg {
+  background-color: rgb(217, 48, 48); /* Light blue */
+}
+
+.courses-bg {
+  background-color: rgb(166, 32, 68); /* Light orange */
 }
 
 .course_list_explore_button {
@@ -16,6 +23,19 @@
   top: 2%;
   left: 19%;
   width: 12%;
+  height: 9%;
+  z-index: -1;
+}
+
+.course_list_explore_button.active {
+  border-bottom: none;
+  position: absolute;
+  background-color: rgb(217, 48, 48);
+  top: 2%;
+  left: 19%;
+  width: 12%;
+  height: 8.6%;
+  z-index: 1;
 }
 
 .course_list_courses_button {
@@ -24,11 +44,47 @@
   background-color: rgb(166, 32, 68);
   top: 2%;
   left: 31%;
+  height: 8.6%;
   width: 12%;
+  z-index: -1;
+}
+
+.course_list_courses_button.active {
+  border-bottom: none;
+  position: absolute;
+  background-color: rgb(166, 32, 68);
+  top: 2%;
+  left: 31%;
+  width: 12%;
+  height: 8.6%;
+  z-index: 1;
 }
 
 .course_list_text {
   text-align: center;
+}
+
+.search_bar_container {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Set the desired width */
+  height: 95%; /* Set the desired height */
+  max-height: 628px; /* Set a maximum height if needed */
+  position: relative; /* Ensure the container is positioned correctly */
+  box-sizing: border-box;
+}
+
+.subject-filter {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 40%; /* Adjust the width to make it wider */
+}
+
+/* Shared text styling for tab content */
+.course_list_text {
+  text-align: center;
+  color: black;
 }
 
 .search_bar_container {
