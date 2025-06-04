@@ -6,7 +6,7 @@
   /* Outer container to hold everything */
 
   .calendar_container {
-    @apply w-full basis-11/12 border-4 border-black bg-[#E7E2D5];
+    @apply w-full h-full border-4 border-black bg-[#E7E2D5];
     @apply flex flex-col text-black font-sans overflow-hidden;
   }
 
@@ -94,7 +94,7 @@
 
   /* CALENDAR KEY CSS SECTION */
   .calendar_key_container {
-    @apply w-full basis-1/12;
+    @apply w-full h-full;
     @apply flex flex-col;
   }
 

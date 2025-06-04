@@ -32,4 +32,10 @@
     @apply flex flex-col w-[40%]    /* 30% of the parent’s width */
            h-full;
   }
+  .calendar_container_full {
+    @apply h-[90%] w-full;
+  }
+  .calendar_key_container_full {
+    @apply h-[10%] w-full;
+  }
 }

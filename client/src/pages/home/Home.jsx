@@ -37,8 +37,12 @@ export default function Home() {
         />
       </div>
       <div className="calendar">
-        <Calendar courses={courses} />
-        <Calendar_Key />
+        <div className="calendar_container_full">
+          <Calendar courses={courses} />
+        </div>
+        <div className="calendar_key_container_full">
+          <Calendar_Key />
+        </div>
       </div>
     </div>
   );
