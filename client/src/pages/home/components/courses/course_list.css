@@ -1,18 +1,14 @@
 .course_list {
   border: 5px solid black;
-  top: 10%;
-  bottom: 2%;
-  width: 38%;
-  left: 19%;
   overflow: hidden;
 }
 
 .explore-bg {
-  background-color: rgb(217, 48, 48); /* Light blue */
+  background-color: rgb(217, 48, 48); /* Light red */
 }
 
 .courses-bg {
-  background-color: rgb(166, 32, 68); /* Light orange */
+  background-color: rgb(166, 32, 68); /* dark red */
 }
 
 .course_list_explore_button {
