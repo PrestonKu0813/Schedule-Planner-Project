@@ -7,27 +7,29 @@
   background-color: rgb(151, 161, 208);
   border: 5px solid black;
   border-radius: 8px; /* Rounded corners */
-  padding: 16px; /* Space inside the container */
+  padding: 16px; /* Original padding */
+  padding-top: 40px; /* Increased top padding to make space for the button */
   overflow-y: auto; /* Enables scrolling if content overflows */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow */
+  transition: all 0.3s ease-in-out;
 }
 
 /* Header styling */
 .selected_courses_text {
-  font-size:x-large; 
-  text-align:center; 
+  font-size:x-large;
+  text-align:center;
   color: #333;
   margin-bottom: 16px;
 }
 .no_courses_selected_text {
-  text-align: center; 
+  text-align: center;
 }
 
 /* List wrapper */
 .courses_list {
-  list-style-type: none; 
-  padding: 0; 
-  margin: 0; 
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Individual course card */
@@ -78,4 +80,40 @@
 
 .set-info-button:hover {
     background-color: #e0e0e0;
+}
+
+/* --- New Styles for Minimize Button and Minimized State --- */
+
+.minimize_button {
+  position: absolute; /* Position relative to the .selected_courses container */
+  top: 8px; /* Adjust to align within the new top padding */
+  right: 8px; /* Adjust to align with your right padding */
+  background: none;
+  border: none;
+  font-size: 1.5em; /* Make the arrow a good size */
+  cursor: pointer;
+  color: #333; /* Match your header text color */
+  z-index: 10; /* Ensure it sits above other content */
+}
+
+.minimize_button:hover {
+  color: #000;
+}
+
+/* Styles for the minimized state (VERTICAL BAR) */
+.selected_courses.minimized {
+  width: 40px; /* Slim vertical bar width, adjust as needed */
+  top: 10px;
+  bottom: 10px;
+  /* Adjust padding for the slim vertical bar - ensure button still fits */
+  padding: 16px 5px; /* Keep original vertical padding, less horizontal for slim bar */
+  overflow-y: hidden; /* Hide scrollbar and overflowing content vertically */
+  overflow-x: hidden; /* Hide overflowing content horizontally */
+}
+
+/* Hide other content when minimized */
+.selected_courses.minimized .selected_courses_text,
+.selected_courses.minimized .no_courses_selected_text,
+.selected_courses.minimized .courses_list {
+  display: none;
 }
