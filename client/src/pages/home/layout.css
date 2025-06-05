@@ -23,7 +23,7 @@
 
   /* 3. Middle panel: “Course Search” */
   .course_list_container {
-    @apply flex w-[40%]    /* 50% of the parent’s width */
+    @apply flex flex-col w-[40%]    /* 50% of the parent’s width */
            h-full;
   }
 
