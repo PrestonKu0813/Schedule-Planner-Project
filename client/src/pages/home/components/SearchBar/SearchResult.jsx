@@ -55,10 +55,22 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
     };
 
     useEffect(() => {
+        setIsCourseAdded(courses.some(course => course.course_number === result.course_number));
+    }, [courses, result.course_number]);
+
+    useEffect(() => {
         sectionsByCourseNumber(result.course_number).then((data) => {
             const sectionList = Object.values(data);
             setSections(sectionList);
-
+            if (!isCourseAdded) {
+                setSelectedSections(sectionList); // Reset selected sections if course is not added
+            }
+            else {
+                const matchedCourse = courses.find(course => course.course_number === result.course_number);
+                // Set selected_sections to match, or empty array if not found
+                result.selected_sections = matchedCourse.selected_sections || [];
+                setSelectedSections(result.selected_sections);
+            }
             // Check if all sections are already selected
             setIsAllSectionsSelected(
                 sectionList.length > 0 &&
@@ -67,11 +79,7 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
                 )
             );
         });
-    }, [result.course_number, selectedSections]);
-
-    useEffect(() => {
-        setIsCourseAdded(courses.some(course => course.course_number === result.course_number));
-    }, [courses, result.course_number]);
+    }, [result.course_number, isCourseAdded]);
 
     useEffect(() => {
         // Check if all sections are selected
