@@ -30,7 +30,7 @@
   /* 4. Right panel: “Calendar” */
   .calendar {
     @apply flex flex-col w-[40%]    /* 30% of the parent’s width */
-           h-full;
+           h-full gap-[5px];
   }
   .calendar_container_full {
     @apply h-[90%] w-full;

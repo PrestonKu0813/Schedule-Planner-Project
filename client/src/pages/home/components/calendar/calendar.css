@@ -12,7 +12,7 @@
 
   /* HEADER ROW */
   .calendar_header_row {
-    @apply flex flex-row h-[8%] border-b-2 border-y-blue-950;
+    @apply flex flex-row h-[8%] border-b-2  border-y-blue-950;
   }
 
   /* Empty cell for time column header */
@@ -24,7 +24,7 @@
   .day_header_cell {
     @apply flex-1 flex items-center justify-center;
     font-size: clamp(0.4rem, 2vw, 1rem);
-    font-weight: 500;
+    font-weight: 400;
   }
 
   /* MAIN BODY (the actual schedule area) */
@@ -95,17 +95,15 @@
   /* CALENDAR KEY CSS SECTION */
   .calendar_key_container {
     @apply w-full h-full;
-    @apply flex flex-col;
+    @apply flex flex-col gap-[5px];
   }
 
   .calendar_key_rows {
-    @apply flex flex-row h-full;
-    margin-top: 1%;
+    @apply flex flex-row h-full gap-[5px];
   }
 
   .calendar_key_cols {
     @apply flex w-full flex-row border-4 border-black;
-    margin-right: 1%;
   }
 
   .calendar_key {
@@ -114,10 +112,11 @@
 
   #text {
     @apply font-semibold;
-    font-size: clamp(0.4rem, 1.5vw, 1rem);
+    font-size: clamp(0.6rem, 1.5vw, 1rem);
     align-self: center;
     margin-left: 2%;
     overflow-x: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 

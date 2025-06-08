@@ -8,7 +8,7 @@
   }
 
   .course_list {
-    @apply border-4 border-black w-full h-[95%] overflow-hidden;
+    @apply bottom-0 border-4 border-black w-full h-[90%] overflow-hidden;
   }
 
   .explore-bg {
@@ -20,23 +20,26 @@
   }
 
   .button_row {
-    @apply w-full h-[5%];
+    @apply flex flex-row w-full h-[10%];
   }
 
   .course_list_explore_button {
-    @apply h-full border-[5px] border-black bg-[#D93030] z-[-1];
+    @apply relative w-[15%] h-[100%] border-4 border-black border-b-0 bg-[#D93030];
   }
 
   .course_list_explore_button.active {
-    @apply h-full border-[5px] border-black border-b-0 bg-[#D93030] z-[1];
+    @apply relative w-[15%] h-[105%] border-4 border-black border-b-0 bg-[#D93030];
+    /* z-index: 10; */
   }
 
   .course_list_courses_button {
-    @apply h-full border-[5px] border-black bg-[#A62044] z-[-1];
+    @apply relative w-[15%] h-[100%] border-4 border-black border-b-0 bg-[#A62044];
+    /* z-index: -1; */
   }
 
   .course_list_courses_button.active {
-    @apply h-full border-[5px] border-black border-b-0 bg-[#A62044] z-[1];
+    @apply relative w-[15%] h-[105%] border-4 border-black border-b-0 bg-[#A62044] z-[1];
+    /* z-index: 10; */
   }
 
   .course_list_text {
