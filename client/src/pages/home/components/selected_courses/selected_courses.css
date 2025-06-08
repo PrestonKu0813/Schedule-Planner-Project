@@ -1,76 +1,45 @@
-.selected_courses {
-  background-color: rgb(151, 161, 208);
-  border: 5px solid black;
-  border-radius: 8px; /* Rounded corners */
-  padding: 16px; /* Space inside the container */
-  overflow-y: auto; /* Enables scrolling if content overflows */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow */
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Header styling */
-.selected_courses_text {
-  font-size:x-large; 
-  text-align:center; 
-  color: #333;
-  margin-bottom: 16px;
-}
-.no_courses_selected_text {
-  text-align: center; 
-}
+@layer components {
+  .selected_courses {
+    @apply w-full h-full bg-[#97A1D0] border-[5px] border-black rounded-lg p-4 overflow-y-auto shadow-md;
+  }
 
-/* List wrapper */
-.courses_list {
-  list-style-type: none; 
-  padding: 0; 
-  margin: 0; 
-}
+  .selected_courses_text {
+    @apply text-xl text-center text-[#333333] mb-4;
+  }
 
-/* Individual course card */
-.course_card {
-  background-color: #ffffff; /* White background for contrast */
-  border: 1px solid #ccc; /* Light gray border */
-  border-radius: 6px; /* Rounded corners */
-  padding: 12px; /* Space inside each card */
-  margin-bottom: 12px; /* Space between cards */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-}
+  .no_courses_selected_text {
+    @apply text-center;
+  }
 
-/* Course card text styling */
-.course_card h2 {
-  font-size: 1.2rem; /* Slightly smaller than the header */
-  font-weight: bold;
-  margin: 0 0 8px 0; /* Space below the course name */
-  color: #2c3e50; /* Dark text for good readability */
-}
+  .courses_list {
+    @apply list-none p-0 m-0;
+  }
 
-.course_card p {
-  font-size: 1rem; /* Standard size for details */
-  margin: 4px 0; /* Space between details */
-  color: #555; /* Slightly lighter gray for details */
-}
+  .course_card {
+    @apply bg-white border border-gray-300 rounded-md p-3 mb-3 shadow-sm;
+  }
 
-.remove_course_button {
-  background-color: #e74c3c; /* Red background for remove button */
-  color: #fff; /* White text for contrast */
-  border: none; /* No border for cleaner look */
-  border-radius: 4px; /* Slightly rounded corners */
-  padding: 4px 8px; /* Space inside the button */
-  cursor: pointer; /* Pointer cursor for interaction */
-  margin-top: 8px; /* Space above the button */
-}
+  .course_card h2 {
+    @apply text-[1.2rem] font-bold m-0 mb-2 text-[#2c3e50];
+  }
 
-.set-info-button {
-    order: 0;
-    background-color: #f5f5f5;
-    color: #333;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    font-weight: 500;
-}
+  .course_card p {
+    @apply text-base my-1 text-gray-600;
+  }
 
-.set-info-button:hover {
-    background-color: #e0e0e0;
+  .remove_course_button {
+    @apply bg-red-600 text-white border-none rounded px-2 py-1 cursor-pointer mt-2;
+  }
+
+  .set-info-button {
+    @apply order-1 bg-gray-100 text-[#333] border border-gray-400 rounded px-3 py-1.5 cursor-pointer transition-colors duration-200 font-medium;
+  }
+
+  .set-info-button:hover {
+    @apply bg-gray-300;
+  }
 }

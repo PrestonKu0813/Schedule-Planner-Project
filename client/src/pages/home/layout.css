@@ -8,7 +8,7 @@
   /* 1. Parent wrapper: fills the screen, 10px padding, 10px gap, flex */
   .layout_container {
     @apply flex flex-row
-           w-full
+           w-screen
            h-screen
            p-[10px]
            gap-[10px]
@@ -23,7 +23,7 @@
 
   /* 3. Middle panel: “Course Search” */
   .course_list_container {
-    @apply flex w-[40%]    /* 50% of the parent’s width */
+    @apply flex flex-col w-[40%]    /* 50% of the parent’s width */
            h-full;
   }
 
