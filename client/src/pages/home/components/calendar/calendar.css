@@ -2,22 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* day row */
+  --dayRowHeight: 8%;
+  /* hour column */
+  --hourWidth: 12%;
+  --minHourWidth: 12%;
+  /* calendar key color */
+  --calendar-key-color-width: 18%;
+}
+
 @layer components {
   /* Outer container to hold everything */
 
   .calendar_container {
-    @apply relative w-full h-full border-4 border-black bg-[#E7E2D5];
-    @apply flex flex-col text-black font-sans overflow-hidden;
+    @apply relative w-full h-full border-4 border-black bg-[#e7e2d5];
+    @apply flex flex-col overflow-hidden;
   }
 
   /* HEADER ROW */
   .calendar_header_row {
-    @apply flex flex-row h-[8%] border-b-2  border-y-blue-950;
+    @apply flex flex-row h-[var(--dayRowHeight)] border-b-2  border-y-blue-950;
   }
 
   /* Empty cell for time column header */
   .time_header_cell {
-    @apply w-[12%] min-w-[12%] border-r-4 border-red-400;
+    @apply w-[var(--hourWidth)] min-w-[var(--minHourWidth)] border-r-4 border-red-400;
   }
 
   /* Each day cell in the header */
@@ -31,7 +41,7 @@
   .calendar_body {
     @apply relative w-full h-full flex flex-col;
     /* This is where hour lines, time labels, and classes are absolutely positioned */
-    overflow: hidden;
+    @apply overflow-hidden;
   }
 
   /* Hour lines */
@@ -43,7 +53,7 @@
   /* Time label that appears on each hour line (left side, 10% wide) */
 
   .time_label {
-    @apply border-r-4 border-red-400 w-[12%] h-full text-center font-bold text-xs text-opacity-0;
+    @apply border-r-4 border-red-400 w-[var(--hourWidth)] h-full text-center font-bold text-xs text-opacity-0;
     /* Slight vertical centering so the label hovers around the line */
   }
 
@@ -61,29 +71,12 @@
   }
 
   .popup {
-    position: absolute;
-    background: #fff;
-    border: 1px solid #000;
-    padding: 10px;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    max-width: 200px;
+    @apply absolute bg-white border border-black p-2 z-10 shadow-md max-w-[200px];
+    /* not sure if you should use px for max width */
   }
 
-  /* Popup close button */
   .popup-close {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: none;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-
-  .filler_text {
-    color: transparent;
-    user-select: none;
+    @apply absolute top-[5px] right-[5px] bg-none border-none text-[1rem] cursor-pointer;
   }
 
   /* CALENDAR KEY CSS SECTION */
@@ -101,7 +94,7 @@
   }
 
   .calendar_key {
-    @apply flex w-[18%];
+    @apply flex w-[var(--calendar-key-color-width)];
   }
 
   #text {
