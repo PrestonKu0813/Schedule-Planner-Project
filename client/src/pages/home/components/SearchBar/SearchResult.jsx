@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./SearchResult.css";
+import "./Search.css";
 import { SectionList } from "./SectionList";
 import { sectionsByCourseNumber } from "../api";
 

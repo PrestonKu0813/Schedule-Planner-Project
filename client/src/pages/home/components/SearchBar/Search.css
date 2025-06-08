@@ -1,0 +1,222 @@
+/* Search Bar  */
+
+.input-wrapper {
+    background-color: white;
+    width: auto;
+    border-radius: 10px;
+    height: 2.5rem;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    margin-left: 10px;
+    border: 2px solid lightgrey;
+}
+
+input {
+    background-color: transparent;
+    border: none;
+    height: 100%;
+    font-size: 1.25rem;
+    width: 100%;
+    margin-left: 5px;
+}
+
+input:focus {
+    outline: none;
+}
+
+#search-icon {
+    color: darkred;
+    margin-right: 5px;
+}
+
+/* Search Results */
+
+.search-result {
+    border: 2px solid lightgrey;
+    background-color: white;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between; /* Ensure space between elements */
+    align-items: center; /* Center items vertically */
+    cursor: pointer;
+}
+
+.result-title {
+    flex-grow: 1; /* Allow the title to take up available space */
+    margin-right: 10px; /* Add some space between the title and the button */
+    white-space: normal; /* Allow the text to wrap */
+    overflow: visible; /* Show the overflow text */
+    text-align: left; /* Left justify the text */
+}
+
+.result-header button {
+    flex-shrink: 0; /* Prevent the button from shrinking */
+    margin-left: 10px; /* Add some space between the buttons */
+}
+
+.add-course-button {
+    background-color: rgb(77, 201, 77);
+    color: white;
+    border-radius: 5px;
+    width: 5%;
+}
+
+.add-course-button:hover {
+    background-color: #5cb85c; /* Darker green on hover */
+}
+
+
+.remove-course-button {
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 5px;
+    width: 5%;
+}
+.remove-course-button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+
+.dropdown {
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 1px solid black;
+    text-align: left;
+}
+
+.toggle-all-sections-button {
+    margin: 10px 0;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-all-sections-button.toggled {
+    background-color: #dc3545; /* Red for deselect state */
+}
+
+.toggle-all-sections-button:hover {
+    background-color: #0056b3;
+}
+.toggle-all-sections-button.toggled:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+.set-info-button {
+    order: 0;
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-weight: 500;
+}
+
+.set-info-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Search Results List */
+
+.results-list {
+    width: auto;
+    margin: 10px;
+    height: 100%;
+    overflow-y: scroll;
+    max-height: 650px;
+    background-color: transparent;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+}
+
+/* Section */
+
+.section {
+    display: flex;
+    flex-direction: row; /* Align items horizontally */
+    justify-content: space-between; /* Space out content to push the button to the right */
+    align-items: center; /* Vertically align items in the center */
+    width: 100%;
+    height: auto;
+    background-color: transparent;
+    border-bottom: 1px solid lightgrey; /* Add a small gray borderline between sections */
+    padding: 10px; /* Add padding to ensure content does not touch the border */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.section:last-child {
+    border-bottom: none; /* Remove the border from the last section */
+}
+
+.section input[type="checkbox"] {
+    margin-right: 0; /* Remove the default margin */
+    margin-left: auto; /* Push the checkbox to the far right */
+}
+
+.section-button {
+    margin-left: auto; /* Push the button to the far right */
+    width: 20px; /* Set width to resemble a checkbox */
+    height: 20px; /* Set height to resemble a checkbox */
+    background-color: white; /* Default checkbox background */
+    border: 2px solid #007bff; /* Border color to resemble a checkbox */
+    border-radius: 3px; /* Slightly rounded corners like a checkbox */
+    cursor: pointer; /* Pointer cursor to indicate interactivity */
+    display: flex; /* Center the checkmark inside */
+    align-items: center; /* Center the checkmark vertically */
+    justify-content: center; /* Center the checkmark horizontally */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.section-button:hover {
+    border-color: #0056b3; /* Darker border color on hover */
+}
+
+.section-button.selected {
+    background-color: #007bff; /* Checkbox "checked" background color */
+    border-color: #0056b3; /* Darker border for the selected state */
+    color: white; /* White color for the checkmark */
+}
+
+.section-button::after {
+    content: "✔"; /* Checkmark symbol */
+    font-size: 14px; /* Adjust size of the checkmark */
+    display: none; /* Hide by default */
+    color: white; /* Checkmark color */
+}
+
+.section-button.selected::after {
+    display: block; /* Show checkmark when selected */
+}
+
+.section-details {
+    flex: 1; /* Allow the details to take up remaining space */
+}
+
+/* Section List */
+
+.section-list {
+  width: 100%; /* Ensure it takes the full width of its container */
+  max-width: 100%; /* Ensure it does not exceed the container's width */
+  margin: 10px auto; /* Center the div and add vertical margin */
+  height: auto; /* Allow the height to adjust based on content */
+  overflow-y: auto; /* Enable vertical scrolling if needed */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  max-height: 628px; /* Set a maximum height */
+  background-color: transparent; /* Ensure the background is transparent */
+  border: 2px solid lightgrey; /* Add a border */
+  border-radius: 10px; /* Add rounded corners */
+  box-sizing: border-box; /* Include border and padding in the element's total width and height */
+}

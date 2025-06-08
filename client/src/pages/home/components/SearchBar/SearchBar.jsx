@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
-import "./SearchBar.css";
+import "./Search.css";
 import {
     courseByCourseNumber,
     sectionsByCourseNumber,
