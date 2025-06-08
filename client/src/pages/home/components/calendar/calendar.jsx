@@ -112,14 +112,10 @@ function Calendar({ courses }) {
             >
               <div className="time_label">
                 {displayHour} {ampm}
-                {/* PLEASE DONT DELETE THIS */}
-                <p className="filler_text">"filler"</p>
-                <p className="filler_text">"filler"</p>
               </div>
             </div>
           );
         })}
-
         {(courses || []).map((course) =>
           course.selected_sections.map((section) => {
             const lectureInfoArray = Object.values(section.lecture_info);
