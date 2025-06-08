@@ -4,15 +4,19 @@
 
 @layer components {
   .selected_courses {
-    @apply w-full h-full bg-[#97A1D0] border-[5px] border-black rounded-lg p-4 overflow-y-auto shadow-md;
+    @apply w-full h-full bg-[#97A1D0] border-[5px] border-black rounded-lg p-2 overflow-y-auto overflow-x-hidden ;
   }
 
   .selected_courses_text {
-    @apply text-xl text-center text-[#333333] mb-4;
+    @apply text-xl text-center text-[#000000] font-bold mb-4;
+    font-size: clamp( 1rem ,2vw, 4.5rem);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 100%;
   }
 
   .no_courses_selected_text {
-    @apply text-center;
+    @apply text-center mt-5;
+    font-size: clamp( .6rem ,2vw, 1rem);
   }
 
   .courses_list {
@@ -20,26 +24,36 @@
   }
 
   .course_card {
-    @apply bg-white border border-gray-300 rounded-md p-3 mb-3 shadow-sm;
+    @apply w-full bg-white border border-gray-300 rounded-md p-2 mb-3 shadow-sm;
   }
 
   .course_card h2 {
-    @apply text-[1.2rem] font-bold m-0 mb-2 text-[#2c3e50];
+    @apply font-bold m-0 mb-2 text-[#2c3e50];
+    font-size: clamp( .6rem ,1vw, 2rem);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
   }
 
   .course_card p {
-    @apply text-base my-1 text-gray-600;
+    @apply text-gray-600;
+    font-size: clamp( .6rem ,1vw, 2rem);
   }
 
   .remove_course_button {
-    @apply bg-red-600 text-white border-none rounded px-2 py-1 cursor-pointer mt-2;
+    @apply bg-red-600 text-white border-none rounded px-2 py-1 cursor-pointer mt-2 transition-colors duration-200;
+    font-size: clamp( .5rem ,1vw, 2rem);
   }
 
   .set-info-button {
-    @apply order-1 bg-gray-100 text-[#333] border border-gray-400 rounded px-3 py-1.5 cursor-pointer transition-colors duration-200 font-medium;
+    @apply order-1 bg-[#ccd0e4] text-[#333] border-none border-black rounded px-2 py-1 cursor-pointer transition-colors duration-200;
+    font-size: clamp( .5rem ,1vw, 2rem);
   }
 
   .set-info-button:hover {
-    @apply bg-gray-300;
+    @apply bg-[#a4c3ee] scale-105;
+  }
+
+  .remove_course_button:hover {
+    @apply bg-[#ca2c49] scale-105;
   }
 }

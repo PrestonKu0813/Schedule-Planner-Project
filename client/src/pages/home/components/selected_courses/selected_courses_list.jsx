@@ -42,7 +42,7 @@ function Selected_Courses({ courses, setCourses, setActiveTab, setInfo }) {
               </button>
               <button 
                 className="remove_course_button"
-                onClick={() => handleRemoveCourse(course.course_number)}>Remove Course
+                onClick={() => handleRemoveCourse(course.course_number)}>Remove
               </button>
             </li>
           ))}
