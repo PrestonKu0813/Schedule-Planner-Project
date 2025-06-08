@@ -20,37 +20,44 @@
   }
 
   .button_row {
-    @apply flex flex-row w-full h-[10%];
+    @apply flex flex-row w-full h-[10%] gap-[5px];
   }
 
   .course_list_explore_button {
-    @apply relative w-[15%] h-[100%] border-4 border-black border-b-0 bg-[#D93030];
+    @apply w-[30%] h-[100%] border-4 border-black border-b-0 bg-[#D93030];
+    
   }
 
   .course_list_explore_button.active {
-    @apply relative w-[15%] h-[105%] border-4 border-black border-b-0 bg-[#D93030];
-    /* z-index: 10; */
+    @apply w-[30%] h-[105%] border-4 border-black border-b-0 bg-[#D93030];
   }
 
   .course_list_courses_button {
-    @apply relative w-[15%] h-[100%] border-4 border-black border-b-0 bg-[#A62044];
-    /* z-index: -1; */
+    @apply w-[30%] h-[100%] border-4 border-black border-b-0 bg-[#A62044];
   }
 
   .course_list_courses_button.active {
-    @apply relative w-[15%] h-[105%] border-4 border-black border-b-0 bg-[#A62044] z-[1];
-    /* z-index: 10; */
+    @apply w-[30%] h-[105%] border-4 border-black border-b-0 bg-[#A62044] z-[1];
   }
 
   .course_list_text {
     @apply text-center text-black;
+    font-size: clamp( .5rem ,1vw, 1.5rem);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
   }
 
   .search_bar_container {
-    @apply flex flex-col w-full h-[95%] max-h-[628px] relative box-border;
+    @apply flex flex-col w-full h-[100%] max-h-[628px] relative box-border;
   }
 
   .subject-filter {
     @apply mx-auto flex flex-col w-[40%];
+  }
+
+  #headerText {
+    font-size: clamp( .7rem ,2vw, 1.5rem);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
   }
 }

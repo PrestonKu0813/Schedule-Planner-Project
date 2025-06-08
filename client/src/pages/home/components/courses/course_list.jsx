@@ -38,7 +38,8 @@ function CourseList({
           className={`course_list_explore_button ${
             activeTab === "EXPLORE" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("EXPLORE")}
+          onClick={() => setActiveTab("EXPLORE")} 
+          id = "headerText"
         >
           EXPLORE
         </button>
@@ -48,6 +49,7 @@ function CourseList({
             activeTab === "COURSES" ? "active" : ""
           }`}
           onClick={() => setActiveTab("COURSES")}
+          id = "headerText"
         >
           COURSES
         </button>
