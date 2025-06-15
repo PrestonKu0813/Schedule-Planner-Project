@@ -4,6 +4,7 @@ import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState, useEffect } from "react";
 import Select from "react-select";
 
+
 function CourseList({
   courses,
   setCourses,
@@ -60,20 +61,33 @@ function CourseList({
       >
         {activeTab === "EXPLORE" ? (
           <div className="course_list_text">
-            <h2>Explore Tab</h2>
             <div className="search-bar-container">
-              <SearchBar
-                setResults={setResults}
-                selectedTag={selectedTag.value}
-              />
-              <div className="subject-filter">
-                <label htmlFor="userId">Filter by Subject:</label>
-                <Select
-                  id="subject_filter"
-                  options={tagOptions}
-                  value={selectedTag}
-                  onChange={setSelectedTag}
+              <div className="course_list_header">
+                <SearchBar
+                  setResults={setResults}
+                  selectedTag={selectedTag.value}
                 />
+                <div className="subject-filter">              
+                  <Select
+                    id="subject_filter"
+                    options={tagOptions}
+                    value={selectedTag}
+                    onChange={setSelectedTag}
+                    unstyled
+                    classNames={{
+                      control: () => "rs-control",
+                      menu: () => "rs-menu",
+                      option: ({ isFocused, isSelected }) =>
+                        `rs-option${isSelected ? " rs-option-selected" : ""}${
+                          isFocused ? " rs-option-focused" : ""
+                        }`,
+                      placeholder: () => "rs-placeholder",
+                      singleValue: () => "rs-single-value",
+                      dropdownIndicator: () => "rs-indicator",
+                      indicatorSeparator: () => "rs-separator",
+                    }}
+                  />
+                </div>
               </div>
               <SearchResultsList
                 results={results}

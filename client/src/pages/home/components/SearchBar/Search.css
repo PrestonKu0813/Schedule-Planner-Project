@@ -1,23 +1,20 @@
 /* Search Bar  */
 
 .input-wrapper {
-    background-color: white;
-    width: auto;
-    border-radius: 10px;
-    height: 2.5rem;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-    margin-left: 10px;
-    border: 2px solid lightgrey;
+    @apply flex items-center relative
+    w-[70%] h-[2.5rem] 
+    p-[5px]
+    border-l-[8px] border-[3px] rounded-[5px]
+    bg-[#ffffff] border-[#000000];
+}
+
+.input-wrapper:hover {
+    @apply top-[-2px];
 }
 
 input {
-    background-color: transparent;
-    border: none;
     height: 100%;
-    font-size: 1.25rem;
+    font-size: 2px;
     width: 100%;
     margin-left: 5px;
 }
