@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /*side binder*/
+  --side-binder-width: 10%;
+  --second-side-binder-width: 40%;
+  /*content*/
+  --content-container-width: 90%;
+}
+
+@layer components {
+  .layout_container {
+    @apply flex flex-row w-screen h-screen;
+  }
+  .side_binder {
+    @apply relative w-[var(--side-binder-width)] h-full border-4 border-red-600;
+  }
+  .second_side_binder {
+    @apply absolute right-0 w-[var(--second-side-binder-width)] h-full 
+    border-4 border-red-600;
+  }
+  .login_content {
+    @apply w-[var(--content-container-width)] h-full border-4 border-red-600;
+  }
+}
