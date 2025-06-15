@@ -3,28 +3,33 @@ import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState, useEffect } from "react";
 import Select from "react-select";
+/**
+ * 
+ * @param {*} props
+ * @param {Array} props.courses - Array of course objects.
+ * @param {Function} props.setCourses - Function to update the courses state.
+ * @param {Object} props.info - Object containing information about the selected course.
+ * @param {Function} props.setInfo - Function to update the info state.
+ * @param {string} props.activeTab - Currently active tab, either "EXPLORE" or "COURSES".
+ * @param {Function} props.setActiveTab - Function to set the active tab.
+ * @description In charge of middle section of the home page, which contains the Explore and Courses tabs.
+ * @returns
+ */
 
+function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab}) {
 
-function CourseList({
-  courses,
-  setCourses,
-  info,
-  setInfo,
-  activeTab,
-  setActiveTab,
-}) {
+  //setting the results of search bar
   const [results, setResults] = useState([]);
-  const [selectedTag, setSelectedTag] = useState({
-    value: "all",
-    label: "All",
-  });
 
+  //setting the selected tag for filtering
+  const [selectedTag, setSelectedTag] = useState({ value: "all", label: "All" });
+
+  //filter options
   const tagOptions = [
     { value: "all", label: "All" },
     { value: "010", label: "Accounting (010)" },
     { value: "011", label: "Administrative Studies (011)" },
   ];
-
   // const handleTabChange = (tab) => {
   //   setActiveTab(tab);
   // }
