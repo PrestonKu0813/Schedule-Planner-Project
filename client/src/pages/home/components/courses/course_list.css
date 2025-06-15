@@ -1,49 +1,107 @@
-.course_list {
-  border: 5px solid black;
-  position: absolute;
-  background-color: rgb(217, 48, 48);
-  top: 10%;
-  bottom: 2%;
-  width: 38%;
-  left: 19%;
-  overflow: hidden;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .course_list_inner {
+    @apply w-full h-full;
+  }
+
+  .course_list {
+    @apply bottom-0 border-4 border-black w-full h-[90%] overflow-hidden;
+  }
+
+  .explore-bg {
+    @apply bg-[#D93030];
+  }
+
+  .courses-bg {
+    @apply bg-[#A62044];
+  }
+
+  .button_row {
+    @apply flex flex-row w-full h-[10%] gap-[5px];
+  }
+
+  .course_list_explore_button {
+    @apply w-[30%] h-[100%] border-4 p-[4px] border-black border-b-0 bg-[#D93030]; 
+  }
+
+  .course_list_explore_button.active {
+    @apply w-[30%] h-[110%] border-4 p-[4px] border-black border-b-0 bg-[#D93030];
+  }
+
+  .course_list_courses_button {
+    @apply w-[30%] h-[100%] border-4 p-[4px] border-black border-b-0 bg-[#A62044];
+  }
+
+  .course_list_courses_button.active {
+    @apply w-[30%] h-[110%] border-4 p-[4px] border-black border-b-0 bg-[#A62044] z-[1];
+  }
+
+  .course_list_header {
+    @apply flex flex-row m-[10px] mt-[20px] gap-[5px];
+  }
+  .course_list_text {
+    @apply text-center text-black;
+    font-size: clamp( .5rem ,1vw, 1.5rem);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .search_bar_container {
+    @apply flex flex-col w-full h-[100%] max-h-[628px] relative box-border;
+  }
+
+  .subject-filter {
+    @apply flex flex-col w-[35%];
+  }
+
+  #headerText {
+    @apply font-semibold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp( .5rem ,2vw, 1.2rem);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
-.course_list_explore_button {
-  border: 5px solid black;
-  position: absolute;
-  background-color: rgb(217, 48, 48);
-  top: 2%;
-  left: 19%;
-  width: 12%;
+/* SELECTION DROPDOWN */
+
+.rs-control {
+  @apply h-[2.5rem] w-full p-[5px]
+  border-[3px] border-[#000000] border-r-[8px] rounded-[5px]
+   bg-white hover:top-[-2px] text-ellipsis;
 }
 
-.course_list_courses_button {
-  border: 5px solid black;
-  position: absolute;
-  background-color: rgb(166, 32, 68);
-  top: 2%;
-  left: 31%;
-  width: 12%;
+.rs-menu {
+  @apply mt-1 border border-gray-300 rounded-md bg-white shadow-lg z-50 overflow-x-hidden text-ellipsis;
 }
 
-.course_list_text {
-  text-align: center;
+.rs-option {
+  @apply px-4 py-2 cursor-pointer text-sm text-[#000000] overflow-x-hidden text-ellipsis;
 }
 
-.search_bar_container {
-  display: flex;
-  flex-direction: column;
-  width: 100%; /* Set the desired width */
-  height: 95%; /* Set the desired height */
-  max-height: 628px; /* Set a maximum height if needed */
-  position: relative; /* Ensure the container is positioned correctly */
-  box-sizing: border-box;
+.rs-option-focused {
+  @apply bg-[#bdbdbd] scale-x-105 overflow-x-hidden text-ellipsis;
 }
 
-.subject-filter {
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  width: 40%; /* Adjust the width to make it wider */
+.rs-option-selected {
+  @apply bg-[#d53348] text-white overflow-x-hidden text-ellipsis;
+}
+
+.rs-placeholder {
+  @apply text-gray-400;
+}
+
+.rs-single-value {
+  @apply text-gray-800;
+}
+
+.rs-indicator {
+  @apply px-2 text-gray-500 hover:text-gray-700;
+}
+
+.rs-separator {
+  @apply hidden;
 }

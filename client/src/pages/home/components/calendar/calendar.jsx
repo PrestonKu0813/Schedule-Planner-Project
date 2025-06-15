@@ -4,7 +4,15 @@ import "./classes.json";
 
 // Helper: Map day to index (Mon=0, Tue=1, …, Sun=6)
 const dayToIndex = (day) => {
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
   return days.indexOf(day);
 };
 
@@ -29,17 +37,16 @@ function Calendar({ courses }) {
     Online: "#F08080",
     "College Ave": "#FFFF99",
     "Cook/Doug": "#90EE90",
-    Downtown: "#FFB6C1"
+    Downtown: "#FFB6C1",
   };
 
   const [selectedClass, setSelectedClass] = useState(null);
   const calendarRef = useRef(null);
 
-    // Debug: log courses prop whenever it changes
-    useEffect(() => {
-      console.log("🛠️ [Calendar] courses prop:", courses);
-    }, [courses]);
-  
+  // Debug: log courses prop whenever it changes
+  useEffect(() => {
+    console.log("🛠️ [Calendar] courses prop:", courses);
+  }, [courses]);
 
   // When a class is clicked, calculate popup coordinates relative to the calendar container.
   const handleClassClick = (cls, event) => {
@@ -103,24 +110,25 @@ function Calendar({ courses }) {
               style={{ top: `${topPercent}%` }}
             >
               <div className="time_label">
-                {displayHour}:00 {ampm}
-                {/* PLEASE DONT DELETE THIS */}
-                <p className="filler_text">"filler"</p>
-                <p className="filler_text">"filler"</p>
+                {displayHour} {ampm}
               </div>
             </div>
           );
         })}
-
-{(courses || []).map((course) => (
+        {(courses || []).map((course) =>
           course.selected_sections.map((section) => {
             const lectureInfoArray = Object.values(section.lecture_info);
 
             return lectureInfoArray
-              .filter(lecture => lecture.lectureDay !== 'Asynchronous content' && lecture.lectureDay !== '-1' && lecture.lectureTime !== '-1')
+              .filter(
+                (lecture) =>
+                  lecture.lectureDay !== "Asynchronous content" &&
+                  lecture.lectureDay !== "-1" &&
+                  lecture.lectureTime !== "-1"
+              )
               .map((lecture, index) => {
                 const dayIndex = dayToIndex(lecture.lectureDay);
-                const [start, end] = lecture.lectureTime.split(' - ');
+                const [start, end] = lecture.lectureTime.split(" - ");
                 const topPos = calculatePosition(start);
                 const bottomPos = calculatePosition(end);
                 const heightPos = bottomPos - topPos;
@@ -151,7 +159,7 @@ function Calendar({ courses }) {
                       left: `${dayLeft}%`,
                       width: `${90 / 7}%`,
                       height: `${heightPos}%`,
-                      backgroundColor: campusColors[lecture.campus] || "#ccc"
+                      backgroundColor: campusColors[lecture.campus] || "#ccc",
                     }}
                     onClick={(e) => handleClassClick(classDetails, e)}
                   >
@@ -160,7 +168,7 @@ function Calendar({ courses }) {
                 );
               });
           })
-        ))}
+        )}
       </div>
 
       {/* Popup positioned relative to the calendar container */}

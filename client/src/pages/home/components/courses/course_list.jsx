@@ -1,10 +1,8 @@
-import "./tabs.css";
 import "./course_list.css";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
-import { useState, useEffect } from 'react';
-import Select from 'react-select';
-
+import { useState, useEffect } from "react";
+import Select from "react-select";
 /**
  * 
  * @param {*} props
@@ -32,45 +30,77 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
     { value: "010", label: "Accounting (010)" },
     { value: "011", label: "Administrative Studies (011)" },
   ];
+  // const handleTabChange = (tab) => {
+  //   setActiveTab(tab);
+  // }
+  // useEffect(() => {
+  //   handleTabChange(activeTab);
+  // }, [activeTab]);
 
   return (
-    <div>
-      {/* Tab Buttons */}
-      <button
-        className={`course_list_explore_button ${
-          activeTab === "EXPLORE" ? "active" : ""
-        }`}
-        onClick={() => setActiveTab("EXPLORE")}
-      >
-        EXPLORE
-      </button>
+    <div className="course_list_inner">
+      <div className="button_row">
+        <button
+          className={`course_list_explore_button ${
+            activeTab === "EXPLORE" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("EXPLORE")} 
+          id = "headerText"
+        >
+          EXPLORE
+        </button>
 
-      <button
-        className={`course_list_courses_button ${
-          activeTab === "COURSES" ? "active" : ""
-        }`}
-        onClick={() => setActiveTab("COURSES")}
-      >
-        COURSES
-      </button>
-
+        <button
+          className={`course_list_courses_button ${
+            activeTab === "COURSES" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("COURSES")}
+          id = "headerText"
+        >
+          COURSES
+        </button>
+      </div>
       {/* Tab Content */}
-      <div className="course_list">
+      <div
+        className={`course_list ${activeTab === "EXPLORE" ? "explore-bg" : "courses-bg"}`}
+      >
         {activeTab === "EXPLORE" ? (
           <div className="course_list_text">
-            <h2>Explore Tab</h2>
             <div className="search-bar-container">
-              <SearchBar setResults={setResults} selectedTag={selectedTag.value} />
-              <div className="subject-filter">
-                <label htmlFor="userId">Filter by Subject:</label>
-                <Select
-                  id="subject_filter"
-                  options={tagOptions}
-                  value={selectedTag}
-                  onChange={setSelectedTag}
+              <div className="course_list_header">
+                <SearchBar
+                  setResults={setResults}
+                  selectedTag={selectedTag.value}
                 />
+                <div className="subject-filter">              
+                  <Select
+                    id="subject_filter"
+                    options={tagOptions}
+                    value={selectedTag}
+                    onChange={setSelectedTag}
+                    unstyled
+                    classNames={{
+                      control: () => "rs-control",
+                      menu: () => "rs-menu",
+                      option: ({ isFocused, isSelected }) =>
+                        `rs-option${isSelected ? " rs-option-selected" : ""}${
+                          isFocused ? " rs-option-focused" : ""
+                        }`,
+                      placeholder: () => "rs-placeholder",
+                      singleValue: () => "rs-single-value",
+                      dropdownIndicator: () => "rs-indicator",
+                      indicatorSeparator: () => "rs-separator",
+                    }}
+                  />
+                </div>
               </div>
-              <SearchResultsList results={results} courses={courses} setCourses={setCourses} setInfo={setInfo} setActiveTab={setActiveTab}/>
+              <SearchResultsList
+                results={results}
+                courses={courses}
+                setCourses={setCourses}
+                setInfo={setInfo}
+                setActiveTab={setActiveTab}
+              />
             </div>
           </div>
         ) : (

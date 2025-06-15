@@ -1,119 +1,59 @@
-.selected_courses {
-  position: fixed; /* Keeps it in place on the side */
-  left: 10px; /* Adjust as needed to align properly */
-  top: 10px; /* Add padding from the top */
-  bottom: 10px; /* Stretches to the bottom */
-  width: 16%; /* Adjust width for your layout */
-  background-color: rgb(151, 161, 208);
-  border: 5px solid black;
-  border-radius: 8px; /* Rounded corners */
-  padding: 16px; /* Original padding */
-  padding-top: 40px; /* Increased top padding to make space for the button */
-  overflow-y: auto; /* Enables scrolling if content overflows */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow */
-  transition: all 0.3s ease-in-out;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Header styling */
-.selected_courses_text {
-  font-size:x-large;
-  text-align:center;
-  color: #333;
-  margin-bottom: 16px;
-}
-.no_courses_selected_text {
-  text-align: center;
-}
+@layer components {
+  .selected_courses {
+    @apply w-full h-full bg-[#97A1D0] border-[5px] border-black rounded-lg p-2 overflow-y-auto overflow-x-hidden ;
+  }
 
-/* List wrapper */
-.courses_list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
+  .selected_courses_text {
+    @apply text-xl text-center text-[#000000] font-bold mb-4;
+    font-size: clamp( 1rem ,2vw, 4.5rem);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 100%;
+  }
 
-/* Individual course card */
-.course_card {
-  background-color: #ffffff; /* White background for contrast */
-  border: 1px solid #ccc; /* Light gray border */
-  border-radius: 6px; /* Rounded corners */
-  padding: 12px; /* Space inside each card */
-  margin-bottom: 12px; /* Space between cards */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-}
+  .no_courses_selected_text {
+    @apply text-center mt-5;
+    font-size: clamp( .6rem ,2vw, 1rem);
+  }
 
-/* Course card text styling */
-.course_card h2 {
-  font-size: 1.2rem; /* Slightly smaller than the header */
-  font-weight: bold;
-  margin: 0 0 8px 0; /* Space below the course name */
-  color: #2c3e50; /* Dark text for good readability */
-}
+  .courses_list {
+    @apply list-none p-0 m-0;
+  }
 
-.course_card p {
-  font-size: 1rem; /* Standard size for details */
-  margin: 4px 0; /* Space between details */
-  color: #555; /* Slightly lighter gray for details */
-}
+  .course_card {
+    @apply w-full bg-white border border-gray-300 rounded-md p-2 mb-3 shadow-sm;
+  }
 
-.remove_course_button {
-  background-color: #e74c3c; /* Red background for remove button */
-  color: #fff; /* White text for contrast */
-  border: none; /* No border for cleaner look */
-  border-radius: 4px; /* Slightly rounded corners */
-  padding: 4px 8px; /* Space inside the button */
-  cursor: pointer; /* Pointer cursor for interaction */
-  margin-top: 8px; /* Space above the button */
-}
+  .course_card h2 {
+    @apply font-bold m-0 mb-2 text-[#2c3e50];
+    font-size: clamp( .6rem ,1vw, 2rem);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
 
-.set-info-button {
-    order: 0;
-    background-color: #f5f5f5;
-    color: #333;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    font-weight: 500;
-}
+  .course_card p {
+    @apply text-gray-600;
+    font-size: clamp( .6rem ,1vw, 2rem);
+  }
 
-.set-info-button:hover {
-    background-color: #e0e0e0;
-}
+  .remove_course_button {
+    @apply bg-red-600 text-white border-none rounded px-2 py-1 cursor-pointer mt-2 transition-colors duration-200;
+    font-size: clamp( .5rem ,1vw, 2rem);
+  }
 
-/* --- New Styles for Minimize Button and Minimized State --- */
+  .set-info-button {
+    @apply order-1 bg-[#ccd0e4] text-[#333] border-none border-black rounded px-2 py-1 cursor-pointer transition-colors duration-200;
+    font-size: clamp( .5rem ,1vw, 2rem);
+  }
 
-.minimize_button {
-  position: absolute; /* Position relative to the .selected_courses container */
-  top: 8px; /* Adjust to align within the new top padding */
-  right: 8px; /* Adjust to align with your right padding */
-  background: none;
-  border: none;
-  font-size: 1.5em; /* Make the arrow a good size */
-  cursor: pointer;
-  color: #333; /* Match your header text color */
-  z-index: 10; /* Ensure it sits above other content */
-}
+  .set-info-button:hover {
+    @apply bg-[#a4c3ee] scale-105;
+  }
 
-.minimize_button:hover {
-  color: #000;
-}
-
-/* Styles for the minimized state (VERTICAL BAR) */
-.selected_courses.minimized {
-  width: 40px; /* Slim vertical bar width, adjust as needed */
-  top: 10px;
-  bottom: 10px;
-  /* Adjust padding for the slim vertical bar - ensure button still fits */
-  padding: 16px 5px; /* Keep original vertical padding, less horizontal for slim bar */
-  overflow-y: hidden; /* Hide scrollbar and overflowing content vertically */
-  overflow-x: hidden; /* Hide overflowing content horizontally */
-}
-
-/* Hide other content when minimized */
-.selected_courses.minimized .selected_courses_text,
-.selected_courses.minimized .no_courses_selected_text,
-.selected_courses.minimized .courses_list {
-  display: none;
+  .remove_course_button:hover {
+    @apply bg-[#ca2c49] scale-105;
+  }
 }

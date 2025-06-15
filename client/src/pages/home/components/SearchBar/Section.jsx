@@ -1,5 +1,5 @@
 import React from 'react';
-import "./Section.css";
+import "./Search.css";
 
 export const Section = ({ section, selectedSections, setSelectedSections }) => {
     const isSelected = selectedSections.some(
