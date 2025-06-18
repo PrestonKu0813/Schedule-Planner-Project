@@ -4,24 +4,34 @@
 
 :root {
   /*side binder*/
-  --side-binder-width: 10%;
-  --second-side-binder-width: 40%;
+  --side-binder-width: 5%;
+  --second-side-binder-width: 25%;
   /*content*/
-  --content-container-width: 90%;
+  --content-container-width: 95%;
+  --title-container-height: 40%;
+  --title-container-width: 60%;
 }
 
 @layer components {
-  .layout_container {
+  .login_layout_container {
     @apply flex flex-row w-screen h-screen;
+    background: rgb(51, 118, 94);
   }
   .side_binder {
-    @apply relative w-[var(--side-binder-width)] h-full border-4 border-red-600;
+    @apply relative w-[var(--side-binder-width)] h-full border-r-4 border-black;
+    background: #ba2d46;
   }
   .second_side_binder {
-    @apply absolute right-0 w-[var(--second-side-binder-width)] h-full 
-    border-4 border-red-600;
+    @apply absolute right-0 w-[var(--second-side-binder-width)] h-full border-l-4 border-black;
+    background: #f5da79;
   }
   .login_content {
-    @apply w-[var(--content-container-width)] h-full border-4 border-red-600;
+    @apply flex w-[var(--content-container-width)] h-full border-4 border-red-600;
+  }
+  .title_container {
+    @apply flex flex-col border-4 w-[var(--title-container-width)] h-[var(--title-container-height)] border-red-400 ml-auto mr-auto mt-40;
+  }
+  .title_rows {
+    @apply flex border-4 border-red-600 h-[50%];
   }
 }
