@@ -1,4 +1,5 @@
 import "./login_layout.css";
+import Buttons from "./components/login_buttons/login_buttons";
 import React, { useState } from "react";
 
 export default function Login() {
@@ -8,10 +9,13 @@ export default function Login() {
         <div className="second_side_binder"></div>
       </div>
       <div className="login_content">
-        <div className="title_container">
-          <div className="title_rows">
+        <div className="title_button_container">
+          <div className="title_container">
+            <div className="title_rows"></div>
+            <div className="title_rows"></div>
           </div>
-          <div className="title_rows">
+          <div className="login_button_container">
+            <Buttons></Buttons>
           </div>
         </div>
       </div>

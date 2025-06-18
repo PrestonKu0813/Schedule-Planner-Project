@@ -8,8 +8,12 @@
   --second-side-binder-width: 25%;
   /*content*/
   --content-container-width: 95%;
-  --title-container-height: 40%;
-  --title-container-width: 60%;
+  --title-button-width: 60%;
+  --title-button-height: 60%;
+  /*title*/
+  --title-container-height: 70%;
+  /*button*/
+  --button-container-height: 30%;
 }
 
 @layer components {
@@ -28,10 +32,20 @@
   .login_content {
     @apply flex w-[var(--content-container-width)] h-full border-4 border-red-600;
   }
+
+  .title_button_container {
+    @apply flex flex-col border-4 border-blue-600 
+    w-[var(--title-button-width)] h-[var(--title-button-height)]
+    ml-auto mr-auto mt-40;
+  }
+
   .title_container {
-    @apply flex flex-col border-4 w-[var(--title-container-width)] h-[var(--title-container-height)] border-red-400 ml-auto mr-auto mt-40;
+    @apply flex flex-col border-4 w-full h-[var(--title-container-height)] border-red-400;
   }
   .title_rows {
     @apply flex border-4 border-red-600 h-[50%];
+  }
+  .login_button_container {
+    @apply relative flex flex-row border-4 border-red-600 h-[var(--button-container-height)] items-center;
   }
 }
