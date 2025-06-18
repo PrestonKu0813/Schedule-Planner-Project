@@ -1,4 +1,4 @@
-import "./layout.css";
+import "./home_layout.css";
 import CourseList from "./components/courses/course_list";
 import Calendar from "./components/calendar/calendar";
 import Calendar_Key from "./components/calendar/calendar_key";
