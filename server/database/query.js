@@ -43,13 +43,15 @@ async function courseSearch(courseName) {
     .whereILike(database_names.course.NAME, `%${upperCaseCourseName}%`);
 
   if (coursesArray.length === 0) {
-    return { message: "not result" };
+    return { message: "no result" };
   }
 
   for (let i = 0; i < coursesArray.length; i++) {
     courseNumber = coursesArray[i][database_names.course.NUMBER];
     delete coursesArray[i][database_names.subject.CODE];
+    const sectionObject = await sectionsByCourseNumber(courseNumber);
     coursesObject[courseNumber] = coursesArray[i];
+    coursesObject[courseNumber].sections = sectionObject;
   }
 
   return coursesObject;
