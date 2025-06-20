@@ -4,9 +4,50 @@
 
 @layer components {
   .selected_courses {
-    @apply w-full h-full bg-[#97A1D0] border-[5px] border-black rounded-lg p-2 overflow-y-auto overflow-x-hidden ;
+    /* Main container. Keep w-full h-full, but max-width will control its collapse */
+    @apply w-full h-full bg-[#97A1D0] border-[5px] border-black rounded-lg overflow-x-hidden relative; /* overflow-x-hidden for horizontal clipping */
+
+    /* --- MINIMIZATION CORE STYLES (Horizontal) --- */
+    /* Base/Expanded State */
+    max-width: 400px; /* Adjust this to your desired *expanded* width */
+    overflow-y: auto; /* Keep vertical scroll for content when expanded */
+    transition: max-width 0.3s ease-out, padding 0.3s ease-out; /* Transition max-width and padding */
+
+    /* Custom Padding for Expanded State - still need to push top content down for the button */
+    padding-top: 2.5rem;    /* 40px - gives space for the button at the top */
+    padding-left: 0.5rem;   /* 8px */
+    padding-right: 0.5rem;  /* 8px */
+    padding-bottom: 0.5rem; /* 8px */
   }
 
+  .selected_courses.minimized {
+    /* Minimized State (Thin Bar to the left) */
+    max-width: 60px; /* Adjust this to your desired *minimized* width (thin bar) */
+    overflow-x: hidden; /* Crucial: hide horizontal overflow when collapsed */
+    overflow-y: hidden; /* Hide vertical scrollbar and content when very narrow */
+
+    /* Adjust padding for the thin bar state */
+    padding-top: 0.5rem;    /* Keep minimal top padding */
+    padding-bottom: 0.5rem; /* Keep minimal bottom padding */
+    padding-left: 0.25rem;  /* Very small side padding for the thin bar */
+    padding-right: 0.25rem; /* Very small side padding for the thin bar */
+  }
+
+
+  /* Minimize Button Styling */
+  .minimize_button {
+    /* Button position relative to the current panel (top-right of the shrinking panel) */
+    @apply absolute top-2 right-2 text-2xl cursor-pointer text-black p-1 leading-none;
+    background: none;
+    border: none;
+  }
+
+  .minimize_button:hover {
+    @apply scale-110;
+  }
+
+
+  /* Original styles for text and cards remain untouched below */
   .selected_courses_text {
     @apply text-xl text-center text-[#000000] font-bold mb-4;
     font-size: clamp( 1rem ,2vw, 4.5rem);
@@ -30,7 +71,7 @@
   .course_card h2 {
     @apply font-bold m-0 mb-2 text-[#2c3e50];
     font-size: clamp( .6rem ,1vw, 2rem);
-    overflow-x: hidden;
+    overflow-x: hidden; /* Keep this to handle long titles within the card */
     text-overflow: ellipsis;
   }
 
