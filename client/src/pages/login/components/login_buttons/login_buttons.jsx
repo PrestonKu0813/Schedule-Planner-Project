@@ -1,11 +1,9 @@
 import "./login_buttons.css";
-import { useState, useEffect } from "react";
-
-// const backendURL = "http://localhost:3000";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 function LoginButtons() {
   const handleLogin = () => {
-    window.location.href = "/auth/login";
+    window.location.href = backendURL + "/auth/login";
   };
   return (
     <div>

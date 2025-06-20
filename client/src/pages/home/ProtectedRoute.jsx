@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 export default function ProtectedRoute({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/profile", {
+    fetch(backendURL + "/profile", {
       credentials: "include",
     })
       .then((res) => {

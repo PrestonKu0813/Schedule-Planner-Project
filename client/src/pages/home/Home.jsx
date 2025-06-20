@@ -6,10 +6,6 @@ import Selected_Courses from "./components/selected_courses/selected_courses_lis
 import LogoutButton from "./components/logout/logout_button";
 import React, { useState } from "react";
 
-// fetch("http://localhost:3000/profile", {
-//   credentials: "include",
-// });
-
 export default function Home() {
   const [courses, setCourses] = useState([]);
   const [info, setInfo] = useState({}); // Initialize info state
