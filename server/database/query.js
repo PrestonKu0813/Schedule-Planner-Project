@@ -103,6 +103,22 @@ async function coursesBySubjectCode(subjectCode) {
   return coursesObject;
 }
 
+async function subjectSearch(subjectCode) {
+  const coursesObject = {};
+  coursesArray = await db
+    .table(database_names.table.COURSE)
+    .where(database_names.subject.CODE, subjectCode);
+
+  for (let i = 0; i < coursesArray.length; i++) {
+    courseNumber = coursesArray[i][database_names.course.NUMBER];
+    delete coursesArray[i][database_names.subject.CODE];
+    const sectionObject = await sectionsByCourseNumber(courseNumber);
+    coursesObject[courseNumber] = coursesArray[i];
+    coursesObject[courseNumber].sections = sectionObject;
+  }
+  return coursesObject;
+}
+
 // google user query
 async function isGoogleUserExist(googleId) {
   const idArray = await db
@@ -172,6 +188,7 @@ module.exports = {
   getAllSubjects,
   subjectBySubjectCode,
   coursesBySubjectCode,
+  subjectSearch,
   // google users
   isGoogleUserExist,
   getGoogleUserByGoogle,
