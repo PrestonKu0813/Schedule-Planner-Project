@@ -7,7 +7,7 @@ const { ConnectSessionKnexStore } = require("connect-session-knex");
 const db = require("./database/mysql_conn");
 const cors = require("cors");
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: [process.env.FRONTEND_URL],
   credentials: true,
 };
 
@@ -16,9 +16,6 @@ const port = 3000;
 
 // frontend api
 app.use(cors(corsOptions));
-
-// example
-app.set("view engine", "ejs");
 
 // auth route
 
@@ -45,10 +42,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.get("/", (req, res) => {
-  res.render("example");
-});
 
 // auth route
 const authRouter = require("./routes/auth");

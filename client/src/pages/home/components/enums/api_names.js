@@ -7,5 +7,6 @@ export default {
   subject: {
     EXPLORE: "explore",
     COURSES: "courses",
+    SEARCH: "search",
   },
 };

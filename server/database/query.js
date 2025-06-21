@@ -43,13 +43,15 @@ async function courseSearch(courseName) {
     .whereILike(database_names.course.NAME, `%${upperCaseCourseName}%`);
 
   if (coursesArray.length === 0) {
-    return { message: "not result" };
+    return { message: "no result" };
   }
 
   for (let i = 0; i < coursesArray.length; i++) {
     courseNumber = coursesArray[i][database_names.course.NUMBER];
     delete coursesArray[i][database_names.subject.CODE];
+    const sectionObject = await sectionsByCourseNumber(courseNumber);
     coursesObject[courseNumber] = coursesArray[i];
+    coursesObject[courseNumber].sections = sectionObject;
   }
 
   return coursesObject;
@@ -98,6 +100,46 @@ async function coursesBySubjectCode(subjectCode) {
     delete coursesArray[i][database_names.subject.CODE];
     coursesObject[courseNumber] = coursesArray[i];
   }
+  return coursesObject;
+}
+
+async function subjectSearch(subjectCode) {
+  const coursesObject = {};
+  coursesArray = await db
+    .table(database_names.table.COURSE)
+    .where(database_names.subject.CODE, subjectCode);
+
+  for (let i = 0; i < coursesArray.length; i++) {
+    courseNumber = coursesArray[i][database_names.course.NUMBER];
+    delete coursesArray[i][database_names.subject.CODE];
+    const sectionObject = await sectionsByCourseNumber(courseNumber);
+    coursesObject[courseNumber] = coursesArray[i];
+    coursesObject[courseNumber].sections = sectionObject;
+  }
+  return coursesObject;
+}
+
+async function subjectCourseSearch(subjectCode, courseName) {
+  const coursesObject = {};
+  const upperCaseCourseName = courseName.toUpperCase();
+
+  coursesArray = await db
+    .table(database_names.table.COURSE)
+    .where(database_names.subject.CODE, subjectCode)
+    .whereILike(database_names.course.NAME, `%${upperCaseCourseName}%`);
+
+  if (coursesArray.length === 0) {
+    return { message: "no result" };
+  }
+
+  for (let i = 0; i < coursesArray.length; i++) {
+    courseNumber = coursesArray[i][database_names.course.NUMBER];
+    delete coursesArray[i][database_names.subject.CODE];
+    const sectionObject = await sectionsByCourseNumber(courseNumber);
+    coursesObject[courseNumber] = coursesArray[i];
+    coursesObject[courseNumber].sections = sectionObject;
+  }
+
   return coursesObject;
 }
 
@@ -170,6 +212,8 @@ module.exports = {
   getAllSubjects,
   subjectBySubjectCode,
   coursesBySubjectCode,
+  subjectSearch,
+  subjectCourseSearch,
   // google users
   isGoogleUserExist,
   getGoogleUserByGoogle,
