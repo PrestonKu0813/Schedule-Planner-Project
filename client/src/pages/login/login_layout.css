@@ -18,8 +18,7 @@
 
 @layer components {
   .login_layout_container {
-    @apply flex flex-row w-screen h-screen;
-    background: rgb(51, 118, 94);
+    @apply flex flex-row w-screen h-screen bg-[#E8BE8C];
   }
   .side_binder {
     @apply relative w-[var(--side-binder-width)] h-full border-r-4 border-black;
@@ -43,7 +42,15 @@
     @apply flex flex-col border-4 w-full h-[var(--title-container-height)] border-red-400;
   }
   .title_rows {
-    @apply flex border-4 border-red-600 h-[50%];
+    @apply flex border-4 border-red-600 h-[100%];
+  }
+  .title_rows svg {
+    width: 100%;
+  height: 110%;
+  flex-shrink: 0;
+  }
+  .subtitle {
+    @apply flex border-4 border-red-600 h-[15%];
   }
   .login_button_container {
     @apply relative flex flex-row border-4 border-red-600 h-[var(--button-container-height)] items-center;
