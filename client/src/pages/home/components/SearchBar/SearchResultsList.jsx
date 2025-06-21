@@ -2,7 +2,7 @@ import React from 'react';
 import "./Search.css";
 import { SearchResult } from './SearchResult';
 
-export const SearchResultsList = ({results, courses, setCourses, setInfo, setActiveTab}) => {
+export const SearchResultsList = ({results, courses, setCourses, setInfo, setActiveTab, setPreviewSection}) => {
     return (
         <div className="results-list">
             {
@@ -19,6 +19,7 @@ export const SearchResultsList = ({results, courses, setCourses, setInfo, setAct
                             setCourses={setCourses}
                             setInfo={setInfo}
                             setActiveTab={setActiveTab}
+                            setPreviewSection={setPreviewSection}
                         />
                     );
                 })

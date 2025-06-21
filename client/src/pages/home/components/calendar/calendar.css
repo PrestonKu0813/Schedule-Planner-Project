@@ -70,6 +70,121 @@
     line-height: 1;
   }
 
+  /* Preview class for hover effects */
+  .preview-class {
+    @apply absolute text-center;
+    font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+    padding: 2px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-overflow: ellipsis;
+    line-height: 1;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Handle very short class blocks */
+  .calendar_class.short-block,
+  .preview-class.short-block {
+    font-size: clamp(0.5rem, 0.8vw, 0.6rem);
+    padding: 1px;
+    min-height: 15px;
+  }
+
+  /* Handle medium height blocks */
+  .calendar_class.medium-block,
+  .preview-class.medium-block {
+    font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+    padding: 2px;
+    min-height: 18px;
+  }
+
+  /* Enhanced text visibility without overriding campus colors */
+  .calendar_class,
+  .preview-class {
+    /* Keep campus colors but ensure text is readable */
+    font-weight: bold;
+  }
+
+  /* Add a subtle border to make text stand out more */
+  .calendar_class::after,
+  .preview-class::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Enhanced conflict styles */
+  .preview-class.conflict {
+    border-width: 4px !important;
+    border-style: solid !important;
+    border-color: #ff0000 !important; /* Bright red */
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.6), inset 0 0 10px rgba(255, 0, 0, 0.2); /* Red glow */
+    animation: conflictPulse 1.5s ease-in-out infinite; /* Pulsing animation */
+    background: linear-gradient(45deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.2)) !important; /* Red gradient background */
+  }
+
+  .preview-class.no-conflict {
+    border-width: 4px !important;
+    border-style: solid !important;
+    border-color: #00ff00 !important; /* Bright green */
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.6), inset 0 0 10px rgba(0, 255, 0, 0.2); /* Green glow */
+    animation: successPulse 2s ease-in-out infinite; /* Gentle pulse */
+    background: linear-gradient(45deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.2)) !important; /* Green gradient background */
+  }
+
+  /* Pulsing animation for conflicts */
+  @keyframes conflictPulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.6), inset 0 0 10px rgba(255, 0, 0, 0.2);
+    }
+    50% {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), inset 0 0 15px rgba(255, 0, 0, 0.3);
+    }
+  }
+
+  /* Gentle pulse for no conflicts */
+  @keyframes successPulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.6), inset 0 0 10px rgba(0, 255, 0, 0.2);
+    }
+    50% {
+      transform: scale(1.01);
+      box-shadow: 0 0 18px rgba(0, 255, 0, 0.7), inset 0 0 12px rgba(0, 255, 0, 0.25);
+    }
+  }
+
+  /* Additional visual indicators */
+  .preview-class::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0.3;
+  }
+
+  .preview-class.conflict::before {
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, transparent 70%);
+  }
+
+  .preview-class.no-conflict::before {
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.3) 0%, transparent 70%);
+  }
+
   .popup {
     @apply absolute bg-white border border-black p-2 z-10 shadow-md max-w-[200px];
     /* not sure if you should use px for max width */

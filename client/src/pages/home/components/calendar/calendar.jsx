@@ -29,7 +29,7 @@ const calculatePosition = (time) => {
 // Array of hours from 8 AM (8) to 11 PM (23) -> 16 labels
 const hourLabels = Array.from({ length: 16 }, (_, i) => i + 8);
 
-function Calendar({ courses }) {
+function Calendar({ courses, previewSection }) {
   // Color mapping for campus locations
   const campusColors = {
     Busch: "#ADD8E6",
@@ -47,6 +47,41 @@ function Calendar({ courses }) {
   useEffect(() => {
     console.log("🛠️ [Calendar] courses prop:", courses);
   }, [courses]);
+
+  // Function to check for time conflicts
+  const checkTimeConflict = (newLecture, existingLectures) => {
+    const newStart = newLecture.lectureTime.split(" - ")[0];
+    const newEnd = newLecture.lectureTime.split(" - ")[1];
+    const newDay = newLecture.lectureDay;
+
+    return existingLectures.some(existingLecture => {
+      if (existingLecture.lectureDay !== newDay) return false;
+      
+      const existingStart = existingLecture.lectureTime.split(" - ")[0];
+      const existingEnd = existingLecture.lectureTime.split(" - ")[1];
+      
+      // Check for overlap
+      return (newStart < existingEnd && newEnd > existingStart);
+    });
+  };
+
+  // Get all existing lectures from selected courses
+  const getExistingLectures = () => {
+    const lectures = [];
+    (courses || []).forEach(course => {
+      course.selected_sections.forEach(section => {
+        const lectureInfoArray = Object.values(section.lecture_info);
+        lectureInfoArray.forEach(lecture => {
+          if (lecture.lectureDay !== "Asynchronous content" && 
+              lecture.lectureDay !== "-1" && 
+              lecture.lectureTime !== "-1") {
+            lectures.push(lecture);
+          }
+        });
+      });
+    });
+    return lectures;
+  };
 
   // When a class is clicked, calculate popup coordinates relative to the calendar container.
   const handleClassClick = (cls, event) => {
@@ -115,6 +150,8 @@ function Calendar({ courses }) {
             </div>
           );
         })}
+        
+        {/* Render existing selected courses */}
         {(courses || []).map((course) =>
           course.selected_sections.map((section) => {
             const lectureInfoArray = Object.values(section.lecture_info);
@@ -169,6 +206,49 @@ function Calendar({ courses }) {
               });
           })
         )}
+
+        {/* Render preview section if hovering */}
+        {previewSection && (() => {
+          const existingLectures = getExistingLectures();
+          const lectureInfoArray = Object.values(previewSection.section.lecture_info);
+          
+          return lectureInfoArray
+            .filter(
+              (lecture) =>
+                lecture.lectureDay !== "Asynchronous content" &&
+                lecture.lectureDay !== "-1" &&
+                lecture.lectureTime !== "-1"
+            )
+            .map((lecture, index) => {
+              const dayIndex = dayToIndex(lecture.lectureDay);
+              const [start, end] = lecture.lectureTime.split(" - ");
+              const topPos = calculatePosition(start);
+              const bottomPos = calculatePosition(end);
+              const heightPos = bottomPos - topPos;
+              const dayLeft = 10 + dayIndex * (90 / 7);
+              
+              // Check for conflicts
+              const hasConflict = checkTimeConflict(lecture, existingLectures);
+              
+              return (
+                <div
+                  key={`preview-${previewSection.section.index_number}-${index}`}
+                  className={`calendar_class preview-class ${hasConflict ? 'conflict' : 'no-conflict'}`}
+                  style={{
+                    top: `${topPos}%`,
+                    left: `${dayLeft}%`,
+                    width: `${90 / 7}%`,
+                    height: `${heightPos}%`,
+                    backgroundColor: campusColors[lecture.campus] || "#ccc",
+                    opacity: 0.7, // Slightly higher opacity for better visibility
+                    zIndex: 1000, // Ensure preview appears on top
+                  }}
+                >
+                  {previewSection.course.course_name}
+                </div>
+              );
+            });
+        })()}
       </div>
 
       {/* Popup positioned relative to the calendar container */}

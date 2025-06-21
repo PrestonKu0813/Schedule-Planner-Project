@@ -12,11 +12,12 @@ import Select from "react-select";
  * @param {Function} props.setInfo - Function to update the info state.
  * @param {string} props.activeTab - Currently active tab, either "EXPLORE" or "COURSES".
  * @param {Function} props.setActiveTab - Function to set the active tab.
+ * @param {Function} props.setPreviewSection - Function to set the preview section.
  * @description In charge of middle section of the home page, which contains the Explore and Courses tabs.
  * @returns
  */
 
-function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab}) {
+function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab, setPreviewSection}) {
 
   //setting the results of search bar
   const [results, setResults] = useState([]);
@@ -100,6 +101,7 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
                 setCourses={setCourses}
                 setInfo={setInfo}
                 setActiveTab={setActiveTab}
+                setPreviewSection={setPreviewSection}
               />
             </div>
           </div>

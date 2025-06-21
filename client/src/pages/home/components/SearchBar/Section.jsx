@@ -1,7 +1,7 @@
 import React from 'react';
 import "./Search.css";
 
-export const Section = ({ section, selectedSections, setSelectedSections }) => {
+export const Section = ({ section, selectedSections, setSelectedSections, setPreviewSection, courseInfo }) => {
     const isSelected = selectedSections.some(
         (selected) => selected.index_number === section.index_number
     );
@@ -18,8 +18,26 @@ export const Section = ({ section, selectedSections, setSelectedSections }) => {
         }
     };
 
+    const handleMouseEnter = () => {
+        // Create preview data with course info and section
+        const previewData = {
+            course: courseInfo,
+            section: section,
+            isConflict: false // Will be determined by calendar
+        };
+        setPreviewSection(previewData);
+    };
+
+    const handleMouseLeave = () => {
+        setPreviewSection(null);
+    };
+
     return (
-        <div className="section">
+        <div 
+            className="section"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
             <div className="section-details">
                 <p>Section Number: {section.section_number}</p>
                 <p>Index Number: {section.index_number}</p>

@@ -13,6 +13,7 @@ export default function Home() {
   const [courses, setCourses] = useState([]);
   const [info, setInfo] = useState({}); // Initialize info state
   const [activeTab, setActiveTab] = useState("EXPLORE");
+  const [previewSection, setPreviewSection] = useState(null); // Preview section for calendar hover
 
   console.log("🛠️ [App] Current courses state:", courses); // Log the courses state in App
 
@@ -34,11 +35,12 @@ export default function Home() {
           setInfo={setInfo}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
+          setPreviewSection={setPreviewSection}
         />
       </div>
       <div className="calendar">
         <div className="calendar_container_full">
-          <Calendar courses={courses} />
+          <Calendar courses={courses} previewSection={previewSection} />
         </div>
         <div className="calendar_key_container_full">
           <Calendar_Key />

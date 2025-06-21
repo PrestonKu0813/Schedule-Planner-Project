@@ -11,11 +11,12 @@ import { sectionsByCourseNumber } from "../api";
  * @param {Function} props.setCourses - Function to update the selected courses.
  * @param {Function} props.setInfo - Function to set the course info for details view.
  * @param {Function} props.setActiveTab - Function to set the active tab in the UI.
+ * @param {Function} props.setPreviewSection - Function to set the preview section for details view.
  * @description Component to display a single search result with options to view details, add/remove course, and select sections.
  * @returns 
  */
 
-export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTab }) => {
+export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTab, setPreviewSection }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [sections, setSections] = useState([]);
     const [selectedSections, setSelectedSections] = useState(result.selected_sections || []); // Initialize from result
@@ -63,7 +64,7 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
             const sectionList = Object.values(data);
             setSections(sectionList);
             if (!isCourseAdded) {
-                setSelectedSections(sectionList); // Reset selected sections if course is not added
+                setSelectedSections([]); // No sections selected by default when course is not added
             }
             else {
                 const matchedCourse = courses.find(course => course.course_number === result.course_number);
@@ -147,7 +148,9 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
                     <SectionList 
                         sections={sections} 
                         selectedSections={selectedSections} 
-                        setSelectedSections={setSelectedSections} 
+                        setSelectedSections={setSelectedSections}
+                        setPreviewSection={setPreviewSection}
+                        courseInfo={result}
                     />
                 </div>
             )}
