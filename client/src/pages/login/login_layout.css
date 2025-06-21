@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /*side binder*/
+  --side-binder-width: 5%;
+  --second-side-binder-width: 25%;
+  /*content*/
+  --content-container-width: 95%;
+  --title-button-width: 60%;
+  --title-button-height: 60%;
+  /*title*/
+  --title-container-height: 70%;
+  /*button*/
+  --button-container-height: 30%;
+}
+
+@layer components {
+  .login_layout_container {
+    @apply flex flex-row w-screen h-screen bg-[#E8BE8C];
+  }
+  .side_binder {
+    @apply relative w-[var(--side-binder-width)] h-full border-r-4 border-black;
+    background: #ba2d46;
+  }
+  .second_side_binder {
+    @apply absolute right-0 w-[var(--second-side-binder-width)] h-full border-l-4 border-black;
+    background: #f5da79;
+  }
+  .login_content {
+    @apply flex w-[var(--content-container-width)] h-full border-4 border-red-600;
+  }
+
+  .title_button_container {
+    @apply flex flex-col border-4 border-blue-600 
+    w-[var(--title-button-width)] h-[var(--title-button-height)]
+    ml-auto mr-auto mt-40;
+  }
+
+  .title_container {
+    @apply flex flex-col border-4 w-full h-[var(--title-container-height)] border-red-400;
+  }
+  .title_rows {
+    @apply flex border-4 border-red-600 h-[100%];
+  }
+  .title_rows svg {
+    width: 100%;
+  height: 110%;
+  flex-shrink: 0;
+  }
+  .subtitle {
+    @apply flex border-4 border-red-600 h-[15%];
+  }
+  .login_button_container {
+    @apply relative flex flex-row border-4 border-red-600 h-[var(--button-container-height)] items-center;
+  }
+}

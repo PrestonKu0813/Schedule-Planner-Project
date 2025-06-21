@@ -1,13 +1,10 @@
-import "./layout.css";
+import "./home_layout.css";
 import CourseList from "./components/courses/course_list";
 import Calendar from "./components/calendar/calendar";
 import Calendar_Key from "./components/calendar/calendar_key";
 import Selected_Courses from "./components/selected_courses/selected_courses_list";
+import LogoutButton from "./components/logout/logout_button";
 import React, { useState } from "react";
-
-// fetch("http://localhost:3000/profile", {
-//   credentials: "include",
-// });
 
 export default function Home() {
   const [courses, setCourses] = useState([]);
@@ -18,6 +15,7 @@ export default function Home() {
 
   return (
     <div className="layout_container">
+      <LogoutButton></LogoutButton>
       <div className="selected_courses_container">
         <Selected_Courses
           courses={courses}

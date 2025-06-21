@@ -1,10 +1,11 @@
 const router = require("express").Router();
 const passport = require("passport");
+require("dotenv").config({ path: `./env/.env` });
 
 router.get("/login", (req, res) => {
   const loginError = req.query.error;
   if (req.isAuthenticated()) {
-    res.redirect("/profile");
+    res.redirect(process.env.FRONTEND_URL + "/home");
   } else {
     res.redirect("/auth/google");
   }
@@ -18,7 +19,7 @@ router.get(
     failureRedirect: "/auth/login?error=login_failed", // include failed message
   }),
   (req, res) => {
-    res.redirect("/profile");
+    res.redirect(process.env.FRONTEND_URL + "/home");
   }
 );
 
@@ -32,7 +33,7 @@ router.get("/logout", (req, res, next) => {
       if (err) return next(err);
 
       res.clearCookie("connect.sid"); // clear the session cookie
-      res.redirect("/");
+      res.status(200).json({ message: "Logged out" });
     });
   });
 });
