@@ -4,6 +4,7 @@ const {
   subjectBySubjectCode,
   coursesBySubjectCode,
   subjectSearch,
+  subjectCourseSearch,
 } = require("../database/query");
 
 router.get("/", async (req, res) => {
@@ -51,6 +52,21 @@ router.get("/:subject_code/search", async (req, res) => {
   const subjectCode = req.params.subject_code;
   try {
     const courses = await subjectSearch(subjectCode);
+    res.status(200).json(courses);
+  } catch (err) {
+    console.error(err.stack);
+    res.status(err.status || 500).json({
+      status: 0,
+      error_message: err.message || "Internal Server Error",
+    });
+  }
+});
+
+router.get("/:subject_code/course/:course_name/search", async (req, res) => {
+  const subjectCode = req.params.subject_code;
+  const course_name = req.params.course_name;
+  try {
+    const courses = await subjectCourseSearch(subjectCode, course_name);
     res.status(200).json(courses);
   } catch (err) {
     console.error(err.stack);
