@@ -49,6 +49,20 @@ export async function coursesBySubjectCode(subjectCode) {
   return response.data;
 }
 
+export async function subjectSearch(subjectCode) {
+  const response = await axios.get(
+    `${backendURL}/${apiNames.subject.EXPLORE}/${subjectCode}/${apiNames.subject.SEARCH}`
+  );
+  return response.data;
+}
+
+export async function subjectCourseSearch(subjectCode, courseName) {
+  const response = await axios.get(
+    `${backendURL}/${apiNames.subject.EXPLORE}/${subjectCode}/${apiNames.course.COURSE}/${courseName}/${apiNames.subject.SEARCH}`
+  );
+  return response.data;
+}
+
 // how to call API
 // function(param).then((data) => {
 //     do something with data;
