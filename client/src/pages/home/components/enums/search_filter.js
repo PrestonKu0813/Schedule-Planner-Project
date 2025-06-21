@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   school: {
     SAS: "School of Arts & Sciences",
     MS: "Military Science",
@@ -36,13 +36,18 @@ module.exports = {
     LI: "Livingston",
     CA: "College Avenue",
     CD: "C/D",
+    DOWN: "Downtown New Brunswick",
+    OFF: "Off Campus",
     ON: "Online",
+    SA: "Study Abroad",
     NA: "N/A",
   },
   credit: {
     ONE: "1",
+    TWO: "2",
     THREE: "3",
     FOUR: "4",
+    CBA: "Credits by arrangement",
     NA: "N/A",
   },
   coreCode: {
