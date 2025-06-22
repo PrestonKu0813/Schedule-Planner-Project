@@ -8,6 +8,10 @@ module.exports = {
       GOOGLE: "google_user",
     },
   },
+  message: {
+    success: "success",
+    failure: "failure",
+  },
   subject: {
     CODE: "subject_code",
     NAME: "subject_name",

@@ -63,6 +63,22 @@ export async function subjectCourseSearch(subjectCode, courseName) {
   return response.data;
 }
 
+//profile
+export async function savedScheudle(userId, scheduleName, scheduleIndices) {
+  try {
+    const response = await axios.patch(
+      `${backendURL}/${apiNames.profile.PROFILE}/${apiNames.profile.SAVED_SCHEDULE}/${userId}`,
+      { scheduleName, scheduleIndices }
+    );
+    console.log(response.data);
+  } catch (error) {
+    const message =
+      error.response?.data || error.message || "Unknown error occurred";
+    console.error(message);
+    throw new Error(message);
+  }
+}
+
 // how to call API
 // function(param).then((data) => {
 //     do something with data;

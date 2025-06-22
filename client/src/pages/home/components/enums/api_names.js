@@ -9,4 +9,8 @@ export default {
     COURSES: "courses",
     SEARCH: "search",
   },
+  profile: {
+    PROFILE: "profile",
+    SAVED_SCHEDULE: "save",
+  },
 };

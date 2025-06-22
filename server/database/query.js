@@ -143,6 +143,24 @@ async function subjectCourseSearch(subjectCode, courseName) {
   return coursesObject;
 }
 
+// profile
+async function saveSchedule(id, scheduleName, scheduleIndices) {
+  await db
+    .table(database_names.table.USER.GOOGLE)
+    .where(database_names.user.GOOGLE.ID, id)
+    .update({
+      saved_schedule: db.raw(
+        `JSON_INSERT(COALESCE(${
+          database_names.user.GOOGLE.SAVED_SCHEDULE
+        }, JSON_OBJECT()), ?, JSON_ARRAY(${scheduleIndices
+          .map(() => "?")
+          .join(", ")}))`,
+        [`$.${scheduleName}`, ...scheduleIndices]
+      ),
+    });
+  return database_names.message.success;
+}
+
 // google user query
 async function isGoogleUserExist(googleId) {
   const idArray = await db
@@ -214,6 +232,8 @@ module.exports = {
   coursesBySubjectCode,
   subjectSearch,
   subjectCourseSearch,
+  //profile
+  saveSchedule,
   // google users
   isGoogleUserExist,
   getGoogleUserByGoogle,
