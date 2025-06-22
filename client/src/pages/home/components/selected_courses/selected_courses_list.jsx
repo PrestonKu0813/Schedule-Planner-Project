@@ -36,12 +36,12 @@ function Selected_Courses({ courses, setCourses, setActiveTab, setInfo }) {
     <div className={`selected_courses ${isMinimized ? "minimized" : ""}`}>
       {/* Minimize Button - positioned at the top right */}
       <button className="minimize_button" onClick={toggleMinimize}>
-        {isMinimized ? "▶" : "✖"} {/* Right arrow when minimized, left arrow when expanded */}
+        {isMinimized ? ">" : "<"} {/* Right arrow when minimized, left arrow when expanded */}
       </button>
 
       {/* Content only renders if not minimized AND showContent is true */}
       {!isMinimized && showContent && (
-        <>
+        <div className="content_box">
           <h1 className="selected_courses_text">Selected Courses</h1>
           {courses.length === 0 ? (
             <p className="no_courses_selected_text">No courses selected yet!</p>
@@ -74,7 +74,7 @@ function Selected_Courses({ courses, setCourses, setActiveTab, setInfo }) {
               ))}
             </ul>
           )}
-        </>
+        </div>
       )}
     </div>
   );

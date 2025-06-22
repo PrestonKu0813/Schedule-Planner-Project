@@ -25,6 +25,7 @@
 
   .course_list_explore_button {
     @apply w-[30%] h-[100%] border-4 p-[4px] border-black border-b-0 bg-[#D93030]; 
+
   }
 
   .course_list_explore_button.active {

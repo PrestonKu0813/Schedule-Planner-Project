@@ -17,14 +17,18 @@
 
   /* 2. Left panel: “Selected Courses” */
   .selected_courses_container {
-    @apply flex w-[20%]    /* 20% of the parent’s width */
-           h-full     /* full height of the parent */;
+    @apply fixed flex w-[50%]    /* 20% of the parent’s width */
+           h-auto
+           top-0 bottom-0 left-0  /* full height of the parent */
+           z-10;
+           pointer-events:none;
   }
 
   /* 3. Middle panel: “Course Search” */
   .course_list_container {
-    @apply flex flex-col w-[40%]    /* 50% of the parent’s width */
+    @apply flex flex-col w-[60%]
            h-full;
+           margin-left: 20px;
   }
 
   /* 4. Right panel: “Calendar” */
