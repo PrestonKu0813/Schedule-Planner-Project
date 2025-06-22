@@ -2,6 +2,7 @@ import "./course_list.css";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState, useEffect } from "react";
+import LogoutButton from "../buttons/logout_button";
 import Select from "react-select";
 /**
  * 
@@ -41,30 +42,41 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
     <div className="course_list_inner">
       <div className="button_row">
         <button
-          className={`course_list_explore_button ${
-            activeTab === "EXPLORE" ? "active" : ""
+          className={`course_list_search_button ${
+            activeTab === "SEARCH" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("EXPLORE")} 
+          onClick={() => setActiveTab("SEARCH")} 
           id = "headerText"
         >
-          EXPLORE
+          SEARCH
         </button>
 
         <button
-          className={`course_list_courses_button ${
-            activeTab === "COURSES" ? "active" : ""
+          className={`course_list_section_button ${
+            activeTab === "SECTION" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("COURSES")}
+          onClick={() => setActiveTab("SECTION")}
           id = "headerText"
         >
-          COURSES
+          SECTION
         </button>
+        <button
+          className={`course_list_schedule_button ${
+            activeTab === "SCHEDULE" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("SCHEDULE")}
+          id = "headerText"
+        >
+          SCHEDULE
+        </button>
+
+        <LogoutButton/>
       </div>
       {/* Tab Content */}
       <div
-        className={`course_list ${activeTab === "EXPLORE" ? "explore-bg" : "courses-bg"}`}
+        className={`course_list ${activeTab === "SEARCH" ? "search-bg" : activeTab === "SECTION" ? "section-bg" : "schedule-bg"}`}
       >
-        {activeTab === "EXPLORE" ? (
+        {activeTab === "SEARCH" ? (
           <div className="course_list_text">
             <div className="search-bar-container">
               <div className="course_list_header">
@@ -103,11 +115,20 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
               />
             </div>
           </div>
-        ) : (
+        ) : 
+        
+         activeTab === "SECTION" ?
+        (
           <div className="course_list_text">
             <h2>Courses Tab</h2>
             <p>Welcome to the Courses tab!</p>
             <p>Selected Info: {info.course_name}</p>
+          </div>
+        ) : 
+        (
+          <div className="schedule_container">
+            <div className="randomizer_container"> randomizer + schedule next and behind generator put here</div>
+            <div className="saved_schedule_container">saved list goes here </div>
           </div>
         )}
       </div>

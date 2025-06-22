@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logout_button {
+    @apply relative top-[10%] h-[80%] border-4 p-[5px] pl-[10px] pr-[10px] border-black rounded-[10px] bg-[#6c89c7];
+    transition-duration: 100ms;
+    transition-property: background-color;
+}
+
+.logout_button:hover {
+    @apply bg-[#e0e5f0] top-[7%];
+}
