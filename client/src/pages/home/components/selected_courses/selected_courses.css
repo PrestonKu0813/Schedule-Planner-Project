@@ -5,63 +5,72 @@
 @layer components {
   .selected_courses {
     /* Main container. Keep w-full h-full, but max-width will control its collapse */
-    @apply w-full h-full bg-[#97A1D0] border-[5px] border-black rounded-lg overflow-x-hidden relative; /* overflow-x-hidden for horizontal clipping */
+    @apply w-full h-full bg-[#97A1D0] border-r-[5px] border-black overflow-x-hidden relative; /* overflow-x-hidden for horizontal clipping */
 
     /* --- MINIMIZATION CORE STYLES (Horizontal) --- */
     /* Base/Expanded State */
-    max-width: 400px; /* Adjust this to your desired *expanded* width */
-    overflow-y: auto; /* Keep vertical scroll for content when expanded */
-    transition: max-width 0.3s ease-out, padding 0.3s ease-out; /* Transition max-width and padding */
+    max-width: 20rem; /* Adjust this to your desired *expanded* width */
+    transition:
+      max-width 0.3s ease-out,
+      padding 0.3s ease-out; /* Transition max-width and padding */
 
     /* Custom Padding for Expanded State - still need to push top content down for the button */
-    padding-top: 2.5rem;    /* 40px - gives space for the button at the top */
-    padding-left: 0.5rem;   /* 8px */
-    padding-right: 0.5rem;  /* 8px */
-    padding-bottom: 0.5rem; /* 8px */
+    padding: 0 0.5rem 0 0.5rem;
+    overflow-y: hidden;
+    pointer-events: none;
   }
 
   .selected_courses.minimized {
     /* Minimized State (Thin Bar to the left) */
-    max-width: 60px; /* Adjust this to your desired *minimized* width (thin bar) */
+    max-width: 1.8rem; /* Adjust this to your desired *minimized* width (thin bar) */
     overflow-x: hidden; /* Crucial: hide horizontal overflow when collapsed */
     overflow-y: hidden; /* Hide vertical scrollbar and content when very narrow */
 
     /* Adjust padding for the thin bar state */
-    padding-top: 0.5rem;    /* Keep minimal top padding */
+    padding-top: 0.5rem; /* Keep minimal top padding */
     padding-bottom: 0.5rem; /* Keep minimal bottom padding */
-    padding-left: 0.25rem;  /* Very small side padding for the thin bar */
+    padding-left: 0.25rem; /* Very small side padding for the thin bar */
     padding-right: 0.25rem; /* Very small side padding for the thin bar */
   }
-
 
   /* Minimize Button Styling */
   .minimize_button {
     /* Button position relative to the current panel (top-right of the shrinking panel) */
-    @apply absolute top-2 right-2 text-2xl cursor-pointer text-black p-1 leading-none;
-    background: none;
-    border: none;
+    @apply absolute top-0 bottom-0 right-0 h-auto text-2xl cursor-pointer text-black p-1 bg-[#6c89c7];
+    pointer-events: auto;
+    transition-duration: 100ms;
+    transition-property: background-color;
   }
 
   .minimize_button:hover {
-    @apply scale-110;
+    @apply bg-[#e0e5f0];
   }
 
+  .content_box{
+    @apply absolute top-[10px] bottom-[10px];
+    width: calc(100% - 2.6rem);
+    display: flex;
+    flex-direction:column;
+  }
 
   /* Original styles for text and cards remain untouched below */
   .selected_courses_text {
     @apply text-xl text-center text-[#000000] font-bold mb-4;
-    font-size: clamp( 1rem ,2vw, 4.5rem);
+    font-size: clamp(1.3rem, 2vw, 4.5rem);
     font-family: Arial, Helvetica, sans-serif;
     line-height: 100%;
   }
 
   .no_courses_selected_text {
     @apply text-center mt-5;
-    font-size: clamp( .6rem ,2vw, 1rem);
+    font-size: clamp(0.6rem, 2vw, 1rem);
   }
 
   .courses_list {
-    @apply list-none p-0 m-0;
+    @apply list-none p-0;
+    flex: auto;
+    overflow-y: auto;
+    pointer-events: auto;
   }
 
   .course_card {
@@ -70,31 +79,36 @@
 
   .course_card h2 {
     @apply font-bold m-0 mb-2 text-[#2c3e50];
-    font-size: clamp( .6rem ,1vw, 2rem);
+    font-size: clamp(0.6rem, 1vw, 2rem);
     overflow-x: hidden; /* Keep this to handle long titles within the card */
     text-overflow: ellipsis;
   }
 
   .course_card p {
     @apply text-gray-600;
-    font-size: clamp( .6rem ,1vw, 2rem);
+    font-size: clamp(0.6rem, 1vw, 2rem);
   }
 
   .remove_course_button {
     @apply bg-red-600 text-white border-none rounded px-2 py-1 cursor-pointer mt-2 transition-colors duration-200;
-    font-size: clamp( .5rem ,1vw, 2rem);
+    font-size: clamp(0.5rem, 1vw, 2rem);
+    margin-left: 10px;
+    pointer-events: auto;
   }
 
   .set-info-button {
     @apply order-1 bg-[#ccd0e4] text-[#333] border-none border-black rounded px-2 py-1 cursor-pointer transition-colors duration-200;
-    font-size: clamp( .5rem ,1vw, 2rem);
+    font-size: clamp(0.5rem, 1vw, 2rem);
+    pointer-events: auto;
   }
 
   .set-info-button:hover {
     @apply bg-[#a4c3ee] scale-105;
+    pointer-events: auto;
   }
 
   .remove_course_button:hover {
     @apply bg-[#ca2c49] scale-105;
+    pointer-events: auto;
   }
 }

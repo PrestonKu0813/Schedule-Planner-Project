@@ -1,10 +1,11 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL;
+import "./buttons.css";
 
 function LogoutButton() {
   return (
     <div>
       <button
-        className="absolute top-0 right-[45%]"
+        className="logout_button"
         onClick={() => {
           fetch(backendURL + "/auth/logout", {
             method: "GET",
