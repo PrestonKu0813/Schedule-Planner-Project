@@ -9,6 +9,7 @@ exports.up = function (knex) {
     table.string(database_names.user.GOOGLE.ID).primary();
     table.string(database_names.user.GOOGLE.GOOGLE_ID);
     table.string(database_names.user.GOOGLE.NAME);
+    table.string(database_names.user.GOOGLE.SAVED_SCHEDULE);
     table.datetime(database_names.user.GOOGLE.SESSION);
   });
 };
