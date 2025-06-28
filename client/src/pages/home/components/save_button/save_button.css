@@ -13,4 +13,47 @@
     transform: translateY(-3px);
 }
 
+.save-input-container {
+    @apply flex flex-col gap-[5px] w-full;
+}
+
+.schedule-name-input {
+    @apply border-2 border-black rounded-[5px] p-[5px] text-sm;
+    background-color: white;
+}
+
+.schedule-name-input:focus {
+    @apply outline-none border-[#6c89c7];
+}
+
+.save-actions {
+    @apply flex gap-[5px];
+}
+
+.save-confirm-button {
+    @apply flex-1 border-2 border-black rounded-[5px] p-[3px] text-sm bg-[#6c89c7] text-white;
+    transition-duration: 100ms;
+}
+
+.save-confirm-button:hover:not(:disabled) {
+    @apply bg-[#e0e5f0] text-black;
+}
+
+.save-confirm-button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
+.save-cancel-button {
+    @apply flex-1 border-2 border-black rounded-[5px] p-[3px] text-sm bg-gray-300;
+    transition-duration: 100ms;
+}
+
+.save-cancel-button:hover:not(:disabled) {
+    @apply bg-gray-400;
+}
+
+.save-cancel-button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
  
