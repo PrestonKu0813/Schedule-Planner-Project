@@ -3,7 +3,8 @@ import CourseList from "./components/courses/course_list";
 import Calendar from "./components/calendar/calendar";
 import Calendar_Key from "./components/calendar/calendar_key";
 import Selected_Courses from "./components/selected_courses/selected_courses_list";
-import React, { useState } from "react";
+import SaveButton from "./components/save_button/save_button";
+import React, { useState, useEffect } from "react";
 
 export default function Home() {
   const [courses, setCourses] = useState([]);
@@ -35,6 +36,9 @@ export default function Home() {
         />
       </div>
       <div className="calendar">
+        <div className="save-button-area">
+          <SaveButton />
+        </div>
         <div className="calendar_container_full">
           <Calendar courses={courses} previewSection={previewSection} />
         </div>
