@@ -129,13 +129,10 @@ input:focus {
 /* Search Results List */
 
 .results-list {
+    @apply flex-1 overflow-y-scroll;
     width: auto;
-    margin: 10px;
-    height: 100%;
-    overflow-y: scroll;
-    max-height: 650px;
+    max-height: 90vh;
     background-color: transparent;
-    flex: 1 1 auto;
     box-sizing: border-box;
 }
 

@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 export default function Home() {
   const [courses, setCourses] = useState([]);
   const [info, setInfo] = useState({}); // Initialize info state
-  const [activeTab, setActiveTab] = useState("EXPLORE");
+  const [activeTab, setActiveTab] = useState("SEARCH");
   const [previewSection, setPreviewSection] = useState(null); // Preview section for calendar hover
   const [user, setUser] = useState(null);
 

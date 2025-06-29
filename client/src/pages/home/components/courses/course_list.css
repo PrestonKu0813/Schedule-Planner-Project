@@ -8,7 +8,7 @@
   }
 
   .course_list {
-    @apply border-4 border-black w-full h-[90%] p-[10px] overflow-hidden;
+    @apply flex flex-col border-4 border-black w-full h-[90%] p-[10px] box-border;
   }
 
   .search-bg {
@@ -61,8 +61,8 @@
     text-overflow: ellipsis;
   }
 
-  .search_bar_container {
-    @apply flex flex-col w-full h-[100%] max-h-[628px] relative box-border;
+  .search-bar-container {
+    @apply flex flex-col max-w-full max-h-full box-border overflow-hidden;
   }
 
   .subject-filter {

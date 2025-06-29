@@ -28,7 +28,7 @@
   .course_list_container {
     @apply flex flex-col w-[60%]
            h-full;
-           margin-left: 20px;
+           margin-left: 30px;
   }
 
   /* 4. Right panel: “Calendar” */
