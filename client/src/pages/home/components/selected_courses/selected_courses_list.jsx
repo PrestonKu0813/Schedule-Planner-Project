@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./selected_courses.css";
 
 function Selected_Courses({ courses, setCourses, setActiveTab, setInfo }) {
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
   // New state to control when the content is actually rendered/visible
   const [showContent, setShowContent] = useState(true);
 

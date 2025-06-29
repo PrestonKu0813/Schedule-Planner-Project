@@ -28,7 +28,7 @@
   .course_list_container {
     @apply flex flex-col w-[60%]
            h-full;
-           margin-left: 20px;
+           margin-left: 30px;
   }
 
   /* 4. Right panel: “Calendar” */
@@ -36,15 +36,6 @@
     @apply flex flex-col w-[40%]    /* 30% of the parent’s width */
            h-full gap-[5px];
   }
-  
-  .save-button-area {
-    @apply flex justify-start items-center
-           h-[12%] w-[30%]
-           p-[5px]
-           absolute top-0 left-[50.5%]
-           z-20;
-  }
-  
   .calendar_container_full {
     @apply h-[90%] w-full;
   }

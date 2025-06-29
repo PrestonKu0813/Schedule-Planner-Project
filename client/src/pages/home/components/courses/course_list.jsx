@@ -1,11 +1,13 @@
 import "./course_list.css";
+import { useUser } from "../../../../contexts/UserContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState, useEffect } from "react";
 import LogoutButton from "../buttons/logout_button";
+import SaveButton from "../save_button/save_button";
 import Select from "react-select";
 /**
- * 
+ *
  * @param {*} props
  * @param {Array} props.courses - Array of course objects.
  * @param {Function} props.setCourses - Function to update the courses state.
@@ -18,13 +20,25 @@ import Select from "react-select";
  * @returns
  */
 
-function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab, setPreviewSection}) {
+function CourseList({
+  courses,
+  setCourses,
+  info,
+  setInfo,
+  activeTab,
+  setActiveTab,
+  setPreviewSection,
+}) {
+  const { user } = useUser();
 
   //setting the results of search bar
   const [results, setResults] = useState([]);
 
   //setting the selected tag for filtering
-  const [selectedTag, setSelectedTag] = useState({ value: "all", label: "All" });
+  const [selectedTag, setSelectedTag] = useState({
+    value: "all",
+    label: "All",
+  });
 
   //filter options
   const tagOptions = [
@@ -46,8 +60,8 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
           className={`course_list_search_button ${
             activeTab === "SEARCH" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("SEARCH")} 
-          id = "headerText"
+          onClick={() => setActiveTab("SEARCH")}
+          id="headerText"
         >
           SEARCH
         </button>
@@ -57,7 +71,7 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
             activeTab === "SECTION" ? "active" : ""
           }`}
           onClick={() => setActiveTab("SECTION")}
-          id = "headerText"
+          id="headerText"
         >
           SECTION
         </button>
@@ -66,12 +80,13 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
             activeTab === "SCHEDULE" ? "active" : ""
           }`}
           onClick={() => setActiveTab("SCHEDULE")}
-          id = "headerText"
+          id="headerText"
         >
           SCHEDULE
         </button>
 
-        <LogoutButton/>
+        <LogoutButton />
+        <SaveButton courses={courses} user={user} />
       </div>
       {/* Tab Content */}
       <div
@@ -85,7 +100,7 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
                   setResults={setResults}
                   selectedTag={selectedTag.value}
                 />
-                <div className="subject-filter">              
+                <div className="subject-filter">
                   <Select
                     id="subject_filter"
                     options={tagOptions}
@@ -117,20 +132,21 @@ function CourseList({courses, setCourses, info, setInfo, activeTab, setActiveTab
               />
             </div>
           </div>
-        ) : 
-        
-         activeTab === "SECTION" ?
-        (
+        ) : activeTab === "SECTION" ? (
           <div className="course_list_text">
             <h2>Courses Tab</h2>
             <p>Welcome to the Courses tab!</p>
             <p>Selected Info: {info.course_name}</p>
           </div>
-        ) : 
-        (
+        ) : (
           <div className="schedule_container">
-            <div className="randomizer_container"> randomizer + schedule next and behind generator put here</div>
-            <div className="saved_schedule_container">saved list goes here </div>
+            <div className="randomizer_container">
+              {" "}
+              randomizer + schedule next and behind generator put here
+            </div>
+            <div className="saved_schedule_container">
+              saved list goes here{" "}
+            </div>
           </div>
         )}
       </div>
