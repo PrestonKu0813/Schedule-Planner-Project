@@ -51,9 +51,6 @@ export default function Home() {
         />
       </div>
       <div className="calendar">
-        <div className="save-button-area">
-          <SaveButton courses={courses} user={user} />
-        </div>
         <div className="calendar_container_full">
           <Calendar courses={courses} previewSection={previewSection} />
         </div>
