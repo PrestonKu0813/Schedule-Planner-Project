@@ -1,4 +1,6 @@
 import "./home_layout.css";
+import { useSchedule } from "../../contexts/ScheduleContext.jsx";
+import { useUser } from "../../contexts/UserContext";
 import CourseList from "./components/courses/course_list";
 import Calendar from "./components/calendar/calendar";
 import Calendar_Key from "./components/calendar/calendar_key";
@@ -7,35 +9,23 @@ import SaveButton from "./components/save_button/save_button";
 import React, { useState, useEffect } from "react";
 
 export default function Home() {
-  const [courses, setCourses] = useState([]);
-  const [info, setInfo] = useState({}); // Initialize info state
-  const [activeTab, setActiveTab] = useState("SEARCH");
-  const [previewSection, setPreviewSection] = useState(null); // Preview section for calendar hover
-  const [user, setUser] = useState(null);
+  const {
+    courses,
+    setCourses,
+    info,
+    setInfo,
+    activeTab,
+    setActiveTab,
+    previewSection,
+    setPreviewSection,
+  } = useSchedule();
 
-  // Get user information when component mounts
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        console.log("🛠️ [Home] Fetching user data...");
-        const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/profile", {
-          credentials: "include",
-        });
-        console.log("🛠️ [Home] Response status:", response.status);
-        if (response.ok) {
-          const userData = await response.json();
-          console.log("🛠️ [Home] User data received:", userData);
-          setUser(userData);
-        } else {
-          console.log("🛠️ [Home] Response not ok, status:", response.status);
-        }
-      } catch (error) {
-        console.error("🛠️ [Home] Error fetching user:", error);
-      }
-    };
-    
-    fetchUser();
-  }, []);
+  const { user } = useUser();
+  // const [courses, setCourses] = useState([]);
+  // const [info, setInfo] = useState({}); // Initialize info state
+  // const [activeTab, setActiveTab] = useState("EXPLORE");
+  // const [previewSection, setPreviewSection] = useState(null); // Preview section for calendar hover
+  // const [user, setUser] = useState(null);
 
   console.log("🛠️ [App] Current courses state:", courses); // Log the courses state in App
 
@@ -61,9 +51,6 @@ export default function Home() {
         />
       </div>
       <div className="calendar">
-        <div className="save-button-area">
-          <SaveButton courses={courses} user={user} />
-        </div>
         <div className="calendar_container_full">
           <Calendar courses={courses} previewSection={previewSection} />
         </div>

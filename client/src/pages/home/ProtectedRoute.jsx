@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useUser } from "../../contexts/UserContext";
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 export default function ProtectedRoute({ children }) {
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useUser();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
