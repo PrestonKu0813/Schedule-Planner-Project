@@ -16,13 +16,13 @@ import { sectionsByCourseNumber } from "../api";
  * @returns 
  */
 
-export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTab, setPreviewSection }) => {
+export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTab, setPreviewSection, specialFilters }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [sections, setSections] = useState([]);
     const [selectedSections, setSelectedSections] = useState(result.selected_sections || []); // Initialize from result
     const isCourseInList = courses.some(course => course.course_number === result.course_number);
     const [isCourseAdded, setIsCourseAdded] = useState(isCourseInList);
-    const [isAllSectionsSelected, setIsAllSectionsSelected] = useState(false); // Track toggle state
+    const [isAllSectionsSelected, setIsAllSectionsSelected] = useState(true); // Track toggle state
     const dropdownRef = useRef(null);
 
     // toggles the dropdown visibility
@@ -64,7 +64,7 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
             const sectionList = Object.values(data);
             setSections(sectionList);
             if (!isCourseAdded) {
-                setSelectedSections([]); // No sections selected by default when course is not added
+                setSelectedSections(sectionList);
             }
             else {
                 const matchedCourse = courses.find(course => course.course_number === result.course_number);
@@ -151,6 +151,7 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
                         setSelectedSections={setSelectedSections}
                         setPreviewSection={setPreviewSection}
                         courseInfo={result}
+                        specialFilters={specialFilters}
                     />
                 </div>
             )}

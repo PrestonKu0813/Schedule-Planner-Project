@@ -33,7 +33,7 @@ export const SearchBar = ({ setResults, selectedTag }) => {
             getAllSubjects()
                 .then((json) => {
                     console.log("API Response:", json);
-                    if (json.message === "not result") {
+                    if (json.message === "no result") {
                         setResults([]);
                         return;
                     }
@@ -56,7 +56,7 @@ export const SearchBar = ({ setResults, selectedTag }) => {
             courseSearch(value)
                 .then((json) => {
                     console.log("API Response:", json);
-                    if (json.message === "not result") {
+                    if (json.message === "no result") {
                         setResults([]);
                         return;
                     }
