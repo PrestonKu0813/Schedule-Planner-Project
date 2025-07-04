@@ -33,6 +33,7 @@ function CourseList({
 
   //setting the results of search bar
   const [results, setResults] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
 
   //setting the selected tag for filtering
   const [selectedTag, setSelectedTag] = useState({
@@ -46,12 +47,6 @@ function CourseList({
     { value: "010", label: "Accounting (010)" },
     { value: "011", label: "Administrative Studies (011)" },
   ];
-  // const handleTabChange = (tab) => {
-  //   setActiveTab(tab);
-  // }
-  // useEffect(() => {
-  //   handleTabChange(activeTab);
-  // }, [activeTab]);
 
   return (
     <div className="course_list_inner">
@@ -99,6 +94,8 @@ function CourseList({
                 <SearchBar
                   setResults={setResults}
                   selectedTag={selectedTag.value}
+                  searchInput={searchInput}
+                  setSearchInput={setSearchInput}
                 />
                 <div className="subject-filter">
                   <Select
