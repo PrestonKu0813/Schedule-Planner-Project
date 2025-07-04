@@ -17,32 +17,59 @@ import {
  * @returns
  */
 
-export const SearchBar = ({
-  setResults,
-  selectedTag,
-  searchInput,
-  setSearchInput,
-}) => {
-  // Function to fetch all courses from search query
-  const fetchAPI = (value) => {
-    let resultsArray;
-    if (value === "" && selectedTag === "all") {
-      // if subject option is all -> show nothing
-      setResults([]);
-      return;
-    } else if (value === "" && selectedTag !== "all") {
-      subjectSearch(selectedTag).then((json) => {
-        resultsArray = Object.values(json).map((course) => ({
-          ...course,
-          selected_sections: [], // Add selected_sections attribute
-        }));
-        setResults(resultsArray);
-      });
-    } else if (value !== "" && selectedTag === "all") {
-      courseSearch(value).then((json) => {
-        if (json.message === "no result") {
-          setResults([]);
-          return;
+export const SearchBar = ({ setResults, selectedTag }) => {
+    const [input, setInput] = useState("");
+    const [tempInput, setTempInput] = useState("");
+
+
+    // Function to fetch all courses from search query
+    const fetchAPI = (value) => {
+        if (value === "") {
+            // If input is empty, fetch all courses
+            getAllSubjects()
+                .then((json) => {
+                    console.log("API Response:", json);
+                    if (json.message === "no result") {
+                        setResults([]);
+                        return;
+                    }
+                    const resultsArray = Object.values(json).flatMap(subject =>
+                        Object.values(subject.courses).map(course => ({
+                            ...course,
+                            selected_sections: [], // Add selected_sections attribute
+                        }))
+                    );
+                    //filtering based on selectedTag, uses course_number to filter
+                    const filteredResults = selectedTag === "all"
+                        ? resultsArray
+                        : resultsArray.filter(result => {
+                            const coreCodeParts = result.course_number.split(":");
+                            return coreCodeParts[1] === selectedTag;
+                        });
+                    setResults(filteredResults);
+                });
+        } else {
+            courseSearch(value)
+                .then((json) => {
+                    console.log("API Response:", json);
+                    if (json.message === "no result") {
+                        setResults([]);
+                        return;
+                    }
+                    const resultsArray = Object.values(json).map(course => ({
+                        ...course,
+                        selected_sections: [], // Add selected_sections attribute
+                    }));
+
+                    //filtering based on selectedTag. uses course_number to filter
+                    const filteredResults = selectedTag === "all"
+                        ? resultsArray
+                        : resultsArray.filter(result => {
+                            const coreCodeParts = result.course_number.split(":");
+                            return coreCodeParts[1] === selectedTag;
+                        });
+                    setResults(filteredResults);
+                });
         }
         resultsArray = Object.values(json).map((course) => ({
           ...course,

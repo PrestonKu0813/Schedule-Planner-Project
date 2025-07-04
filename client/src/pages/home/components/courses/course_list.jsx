@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import LogoutButton from "../buttons/logout_button";
 import SaveButton from "../save_button/save_button";
 import Select from "react-select";
+import searchFilter from "../enums/search_filter.js";
 /**
  *
  * @param {*} props
@@ -30,6 +31,7 @@ function CourseList({
   setPreviewSection,
 }) {
   const { user } = useUser();
+  const { campus } = searchFilter;
 
   //setting the results of search bar
   const [results, setResults] = useState([]);
@@ -47,6 +49,55 @@ function CourseList({
     { value: "010", label: "Accounting (010)" },
     { value: "011", label: "Administrative Studies (011)" },
   ];
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  const [specialFilters, setSpecialFilters] = useState({
+    campus: [campus.BU, campus.LI, campus.CA, campus.CD],
+    time: [],
+    day: [],
+    credits: [],
+  });
+
+  const addCampus = (campus) => {
+    setSpecialFilters((prev) => ({
+      ...prev,
+      campus: [...prev.campus, campus],
+    }));
+  };
+
+  const removeCampus = (campus) => {
+    setSpecialFilters((prev) => ({
+      ...prev,
+      campus: prev.campus.filter((c) => c !== campus),
+    }));
+  };
+
+  //specialFilters = {"campus": [], "time": [], "day": []};
+  // const handleTabChange = (tab) => {
+  //   setActiveTab(tab);
+  // }
+  // useEffect(() => {
+  //   handleTabChange(activeTab);
+  // }, [activeTab]);
+
+  const Checkbox = ({ label, isChecked, onClick }) => {
+    return (
+      <label className="filter-checkbox">
+        {label}
+        <button
+          className={`filter-button ${isChecked ? "selected" : ""}`}
+          onClick={onClick}
+        ></button>
+      </label>
+    );
+  };
+
+  useEffect(() => {
+    // This effect runs whenever specialFilters changes
+    // You can add any logic here that needs to run when filters change
+    console.log("Special Filters Updated:", specialFilters);
+  }, [specialFilters]);
 
   return (
     <div className="course_list_inner">
@@ -118,6 +169,71 @@ function CourseList({
                     }}
                   />
                 </div>
+
+                {/* Additional Filters Dropdown */}
+                <div
+                  className="additional-filters-dropdown"
+                  style={{ position: "relative", marginLeft: "1rem" }}
+                >
+                  <button
+                    onClick={() => setShowFilters((prev) => !prev)}
+                    className="additional-filters-toggle"
+                    style={{ padding: "0.5rem 1rem" }}
+                  >
+                    Additional Filters ▼
+                  </button>
+                  {showFilters && (
+                    <div className="additional-filters-menu">
+                      <div className="filter-section">
+                        <h4>Campus</h4>
+                        <Checkbox
+                          label="Busch"
+                          isChecked={specialFilters.campus.includes(campus.BU)}
+                          onClick={() => {
+                            if (specialFilters.campus.includes(campus.BU)) {
+                              removeCampus(campus.BU);
+                            } else {
+                              addCampus(campus.BU);
+                            }
+                          }}
+                        />
+                        <Checkbox
+                          label="Livingston"
+                          isChecked={specialFilters.campus.includes(campus.LI)}
+                          onClick={() => {
+                            if (specialFilters.campus.includes(campus.LI)) {
+                              removeCampus(campus.LI);
+                            } else {
+                              addCampus(campus.LI);
+                            }
+                          }}
+                        />
+                        <Checkbox
+                          label="College Avenue"
+                          isChecked={specialFilters.campus.includes(campus.CA)}
+                          onClick={() => {
+                            if (specialFilters.campus.includes(campus.CA)) {
+                              removeCampus(campus.CA);
+                            } else {
+                              addCampus(campus.CA);
+                            }
+                          }}
+                        />
+                        <Checkbox
+                          label="Cook/Douglass"
+                          isChecked={specialFilters.campus.includes(campus.CD)}
+                          onClick={() => {
+                            if (specialFilters.campus.includes(campus.CD)) {
+                              removeCampus(campus.CD);
+                            } else {
+                              addCampus(campus.CD);
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
               <SearchResultsList
                 results={results}
@@ -126,6 +242,8 @@ function CourseList({
                 setInfo={setInfo}
                 setActiveTab={setActiveTab}
                 setPreviewSection={setPreviewSection}
+                selectedTag={selectedTag.value}
+                specialFilters={specialFilters}
               />
             </div>
           </div>
