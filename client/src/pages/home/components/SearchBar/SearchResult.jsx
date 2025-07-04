@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Search.css";
 import { SectionList } from "./SectionList";
-import { sectionsByCourseNumber } from "../api";
 
 /**
  * 
@@ -60,26 +59,24 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
     }, [courses, result.course_number]);
 
     useEffect(() => {
-        sectionsByCourseNumber(result.course_number).then((data) => {
-            const sectionList = Object.values(data);
-            setSections(sectionList);
-            if (!isCourseAdded) {
-                setSelectedSections([]); // No sections selected by default when course is not added
-            }
-            else {
-                const matchedCourse = courses.find(course => course.course_number === result.course_number);
-                // Set selected_sections to match, or empty array if not found
-                result.selected_sections = matchedCourse.selected_sections || [];
-                setSelectedSections(result.selected_sections);
-            }
-            // Check if all sections are already selected
-            setIsAllSectionsSelected(
-                sectionList.length > 0 &&
-                sectionList.every(section =>
-                    selectedSections.some(selected => selected.index_number === section.index_number)
-                )
-            );
-        });
+        const sectionList = Object.values(result.sections);
+        setSections(sectionList);
+        if (!isCourseAdded) {
+            setSelectedSections([]); // No sections selected by default when course is not added
+        }
+        else {
+            const matchedCourse = courses.find(course => course.course_number === result.course_number);
+            // Set selected_sections to match, or empty array if not found
+            result.selected_sections = matchedCourse.selected_sections || [];
+            setSelectedSections(result.selected_sections);
+        }
+        // Check if all sections are already selected
+        setIsAllSectionsSelected(
+            sectionList.length > 0 &&
+            sectionList.every(section =>
+                selectedSections.some(selected => selected.index_number === section.index_number)
+            )
+        );
     }, [result.course_number, isCourseAdded]);
 
     useEffect(() => {
