@@ -23,7 +23,6 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
     const [isCourseAdded, setIsCourseAdded] = useState(isCourseInList);
     const [isAllSectionsSelected, setIsAllSectionsSelected] = useState(true); // Track toggle state
     const dropdownRef = useRef(null);
-
     // toggles the dropdown visibility
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -62,7 +61,7 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
         const sectionList = Object.values(result.sections);
         setSections(sectionList);
         if (!isCourseAdded) {
-            setSelectedSections([]); // No sections selected by default when course is not added
+            setSelectedSections(sectionList); // No sections selected by default when course is not added
         }
         else {
             const matchedCourse = courses.find(course => course.course_number === result.course_number);
