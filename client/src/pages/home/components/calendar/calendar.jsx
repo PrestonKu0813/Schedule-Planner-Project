@@ -18,12 +18,17 @@ const dayToIndex = (day) => {
 
 // Helper: Calculate vertical position (0% at 8:00 AM, 100% at 11:00 PM)
 const calculatePosition = (time) => {
-  const [hour, minute, period] = time.match(/(\d+):(\d+) (AM|PM)/).slice(1);
-  let hour24 = (parseInt(hour, 10) % 12) + (period === "PM" ? 12 : 0);
-  if (hour24 < 8) hour24 += 12;
+  const [_, hour, minute, period] = time.match(/(\d+):(\d+) (AM|PM)/);
+  let hour24 = parseInt(hour, 10);
+  if (period === "AM") {
+    if (hour24 === 12) hour24 = 0; // 12 AM is 0
+  } else {
+    if (hour24 !== 12) hour24 += 12; // 12 PM is 12
+  }
+  // Calendar starts at 8 AM, ends at 11 PM (16 hours = 960 minutes)
   const totalMinutes = (hour24 - 8) * 60 + parseInt(minute, 10);
-  // 15 hours * 60 = 900 minutes
-  return (totalMinutes / 900) * 100;
+  const clampedMinutes = Math.max(0, Math.min(960, totalMinutes));
+  return (clampedMinutes / 960) * 100;
 };
 
 // Array of hours from 8 AM (8) to 11 PM (23) -> 16 labels
@@ -169,7 +174,7 @@ function Calendar({ courses, previewSection }) {
                 const topPos = calculatePosition(start);
                 const bottomPos = calculatePosition(end);
                 const heightPos = bottomPos - topPos;
-                const dayLeft = 10 + dayIndex * (90 / 7);
+                const dayLeft = 12 + dayIndex * (90 / 7);
 
                 const classDetails = {
                   title: course.course_name,
@@ -225,7 +230,7 @@ function Calendar({ courses, previewSection }) {
               const topPos = calculatePosition(start);
               const bottomPos = calculatePosition(end);
               const heightPos = bottomPos - topPos;
-              const dayLeft = 10 + dayIndex * (90 / 7);
+              const dayLeft = 12 + dayIndex * (90 / 7);
               
               // Check for conflicts
               const hasConflict = checkTimeConflict(lecture, existingLectures);
@@ -244,7 +249,7 @@ function Calendar({ courses, previewSection }) {
                     zIndex: 1000, // Ensure preview appears on top
                   }}
                 >
-                  {previewSection.course.course_name}
+                  {!hasConflict && previewSection.course.course_name}
                 </div>
               );
             });
