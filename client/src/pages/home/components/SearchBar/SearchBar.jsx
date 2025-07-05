@@ -17,7 +17,7 @@ import {
  * @returns
  */
 
-export const SearchBar = ({ setResults, selectedTag }) => {
+export const SearchBar = ({ setResults, selectedTag, searchInput, setSearchInput }) => {
     const [input, setInput] = useState("");
     const [tempInput, setTempInput] = useState("");
 
@@ -26,7 +26,7 @@ export const SearchBar = ({ setResults, selectedTag }) => {
     const fetchAPI = (value) => {
         if (value === "") {
             // If input is empty, fetch all courses
-            getAllSubjects()
+            courseSearch("")
                 .then((json) => {
                     console.log("API Response:", json);
                     if (json.message === "no result") {
@@ -71,14 +71,7 @@ export const SearchBar = ({ setResults, selectedTag }) => {
                     setResults(filteredResults);
                 });
         }
-        resultsArray = Object.values(json).map((course) => ({
-          ...course,
-          selected_sections: [], // Add selected_sections attribute
-        }));
-        setResults(resultsArray);
-      });
     }
-  };
 
   //   useEffect(() => {
   //     // Fetch data initially without any filtering
