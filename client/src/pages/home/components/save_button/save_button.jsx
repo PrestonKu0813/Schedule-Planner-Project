@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './save_button.css';
-import { savedScheudle } from '../api';
+import { savedScheudle, getSavedSchedules } from '../api';
 
 const SaveButton = ({ courses, user }) => {
   const [scheduleName, setScheduleName] = useState('');
@@ -51,6 +51,28 @@ const SaveButton = ({ courses, user }) => {
       return;
     }
 
+    // Check if any courses have selected sections
+    const hasSelectedSections = courses.some(course => 
+      course.selected_sections && course.selected_sections.length > 0
+    );
+
+    if (!hasSelectedSections) {
+      alert('No sections selected to save. Please select at least one section from your courses.');
+      return;
+    }
+
+    // Check if schedule name already exists
+    try {
+      const existingSchedules = await getSavedSchedules(user.user_id);
+      if (existingSchedules && existingSchedules[jsonKeyName]) {
+        alert('A schedule with this name already exists. Please choose a different name.');
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to check existing schedules:', error);
+      // Continue with save even if check fails
+    }
+
     setIsSaving(true);
     
     try {
@@ -80,6 +102,17 @@ const SaveButton = ({ courses, user }) => {
       alert('No courses selected to save');
       return;
     }
+
+    // Check if any courses have selected sections
+    const hasSelectedSections = courses.some(course => 
+      course.selected_sections && course.selected_sections.length > 0
+    );
+
+    if (!hasSelectedSections) {
+      alert('No sections selected to save. Please select at least one section from your courses.');
+      return;
+    }
+
     setShowInput(true);
   };
 

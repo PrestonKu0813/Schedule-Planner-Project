@@ -161,6 +161,65 @@ async function saveSchedule(id, scheduleName, scheduleIndices) {
   return database_names.message.success;
 }
 
+async function getSavedSchedules(id) {
+  const user = await db
+    .table(database_names.table.USER.GOOGLE)
+    .select(database_names.user.GOOGLE.SAVED_SCHEDULE)
+    .where(database_names.user.GOOGLE.ID, id)
+    .first();
+  
+  if (!user || !user.saved_schedule) {
+    return {};
+  }
+  
+  return user.saved_schedule;
+}
+
+async function getCoursesBySectionIndices(sectionIndices) {
+  if (!sectionIndices || sectionIndices.length === 0) {
+    return [];
+  }
+
+  // Get all sections with their course information
+  const sections = await db
+    .table(database_names.table.SECTION)
+    .select(
+      `${database_names.table.SECTION}.*`,
+      `${database_names.table.COURSE}.*`
+    )
+    .join(
+      database_names.table.COURSE,
+      `${database_names.table.SECTION}.${database_names.course.NUMBER}`,
+      `${database_names.table.COURSE}.${database_names.course.NUMBER}`
+    )
+    .whereIn(database_names.section.INDEX, sectionIndices);
+
+  // Group sections by course
+  const coursesMap = {};
+  sections.forEach(section => {
+    const courseNumber = section[database_names.course.NUMBER];
+    if (!coursesMap[courseNumber]) {
+      coursesMap[courseNumber] = {
+        course_number: courseNumber,
+        course_name: section[database_names.course.NAME],
+        credit: section[database_names.course.CREDIT],
+        core_code: section[database_names.course.CORE_CODE],
+        selected_sections: []
+      };
+    }
+    
+    // Add section to the course
+    coursesMap[courseNumber].selected_sections.push({
+      index_number: section[database_names.section.INDEX],
+      section_number: section[database_names.section.NUMBER],
+      instructor: section[database_names.section.INSTRUCTOR],
+      lecture_info: JSON.parse(section[database_names.section.INFO] || '{}')
+    });
+  });
+
+  return Object.values(coursesMap);
+}
+
 // google user query
 async function isGoogleUserExist(googleId) {
   const idArray = await db
@@ -234,6 +293,8 @@ module.exports = {
   subjectCourseSearch,
   //profile
   saveSchedule,
+  getSavedSchedules,
+  getCoursesBySectionIndices,
   // google users
   isGoogleUserExist,
   getGoogleUserByGoogle,

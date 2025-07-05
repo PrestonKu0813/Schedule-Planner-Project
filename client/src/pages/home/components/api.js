@@ -68,10 +68,65 @@ export async function savedScheudle(userId, scheduleName, scheduleIndices) {
   try {
     const response = await axios.patch(
       `${backendURL}/${apiNames.profile.PROFILE}/${apiNames.profile.SAVED_SCHEDULE}/${userId}`,
-      { scheduleName, scheduleIndices }
+      { scheduleName, scheduleIndices },
+      { withCredentials: true }
     );
     console.log(response.data);
   } catch (error) {
+    const message =
+      error.response?.data || error.message || "Unknown error occurred";
+    console.error(message);
+    throw new Error(message);
+  }
+}
+
+export async function getSavedSchedules(userId) {
+  try {
+    console.log("🛠️ [getSavedSchedules] Calling API with userId:", userId);
+    console.log("🛠️ [getSavedSchedules] Full URL:", `${backendURL}/${apiNames.profile.PROFILE}/schedules/${userId}`);
+    
+    const response = await axios.get(
+      `${backendURL}/${apiNames.profile.PROFILE}/schedules/${userId}`,
+      { withCredentials: true }
+    );
+    
+    console.log("🛠️ [getSavedSchedules] Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("🛠️ [getSavedSchedules] Error details:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      statusText: error.response?.statusText
+    });
+    
+    const message =
+      error.response?.data || error.message || "Unknown error occurred";
+    console.error(message);
+    throw new Error(message);
+  }
+}
+
+export async function loadScheduleByIndices(sectionIndices) {
+  try {
+    console.log("🛠️ [loadScheduleByIndices] Calling API with sectionIndices:", sectionIndices);
+    
+    const response = await axios.post(
+      `${backendURL}/${apiNames.profile.PROFILE}/load-schedule`,
+      { sectionIndices },
+      { withCredentials: true }
+    );
+    
+    console.log("🛠️ [loadScheduleByIndices] Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("🛠️ [loadScheduleByIndices] Error details:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      statusText: error.response?.statusText
+    });
+    
     const message =
       error.response?.data || error.message || "Unknown error occurred";
     console.error(message);

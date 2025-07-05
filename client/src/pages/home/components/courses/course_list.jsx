@@ -5,6 +5,7 @@ import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState, useEffect } from "react";
 import LogoutButton from "../buttons/logout_button";
 import SaveButton from "../save_button/save_button";
+import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";
 /**
  *
@@ -145,7 +146,7 @@ function CourseList({
               randomizer + schedule next and behind generator put here
             </div>
             <div className="saved_schedule_container">
-              saved list goes here{" "}
+              <SavedSchedules user={user} setCourses={setCourses} courses={courses} />
             </div>
           </div>
         )}
