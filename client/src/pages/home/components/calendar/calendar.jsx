@@ -37,6 +37,21 @@ const calculatePosition = (time) => {
 // Array of hours from 8 AM (8) to 11 PM (23) -> 16 labels
 const hourLabels = Array.from({ length: 16 }, (_, i) => i + 8);
 
+// Helper: Convert time string to minutes since midnight
+const timeToMinutes = (timeStr) => {
+  if (!timeStr || timeStr === '-1') return 0;
+  const match = timeStr.match(/(\d+):(\d+) (AM|PM)/);
+  if (!match) return 0;
+  const [_, hour, minute, period] = match;
+  let hour24 = parseInt(hour, 10);
+  if (period === "AM") {
+    if (hour24 === 12) hour24 = 0; // 12 AM is 0
+  } else {
+    if (hour24 !== 12) hour24 += 12; // 12 PM is 12
+  }
+  return hour24 * 60 + parseInt(minute, 10);
+};
+
 function Calendar({ courses, previewSection }) {
   // Color mapping for campus locations
   const campusColors = {
@@ -62,14 +77,22 @@ function Calendar({ courses, previewSection }) {
     const newEnd = newLecture.lectureTime.split(" - ")[1];
     const newDay = newLecture.lectureDay;
 
+    // Convert new lecture times to minutes
+    const newStartMinutes = timeToMinutes(newStart);
+    const newEndMinutes = timeToMinutes(newEnd);
+
     return existingLectures.some(existingLecture => {
       if (existingLecture.lectureDay !== newDay) return false;
       
       const existingStart = existingLecture.lectureTime.split(" - ")[0];
       const existingEnd = existingLecture.lectureTime.split(" - ")[1];
       
-      // Check for overlap
-      return (newStart < existingEnd && newEnd > existingStart);
+      // Convert existing lecture times to minutes
+      const existingStartMinutes = timeToMinutes(existingStart);
+      const existingEndMinutes = timeToMinutes(existingEnd);
+      
+      // Check for overlap using minute values
+      return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
     });
   };
 
