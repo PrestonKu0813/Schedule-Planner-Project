@@ -1,91 +1,40 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./calendar.css";
-import "./classes.json";
+
+import { 
+  parseTimeString, 
+  timeToMinutes, 
+  calculatePosition, 
+  dayToIndex, 
+  isValidLecture, 
+  isOnlineSection, 
+  getOnlineSections, 
+  createClassDetails,
+  calculateLecturePosition
+} from "./calendarUtils";
+import ClassPopup from "./ClassPopup";
 
 // Constants
-const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const DAY_ABBREVIATIONS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const HOUR_LABELS = Array.from({ length: 16 }, (_, i) => i + 8);
 
-// Helper: Parse time string to 24-hour format
-const parseTimeString = (timeStr) => {
-  if (!timeStr || timeStr === '-1') return null;
-  const match = timeStr.match(/(\d+):(\d+) (AM|PM)/);
-  if (!match) return null;
-  const [_, hour, minute, period] = match;
-  let hour24 = parseInt(hour, 10);
-  if (period === "AM") {
-    if (hour24 === 12) hour24 = 0; // 12 AM is 0
-  } else {
-    if (hour24 !== 12) hour24 += 12; // 12 PM is 12
-  }
-  return { hour: hour24, minute: parseInt(minute, 10) };
-};
-
-// Helper: Convert time string to minutes since midnight
-const timeToMinutes = (timeStr) => {
-  const parsed = parseTimeString(timeStr);
-  if (!parsed) return 0;
-  return parsed.hour * 60 + parsed.minute;
-};
-
-// Helper: Calculate vertical position (0% at 8:00 AM, 100% at 11:00 PM)
-const calculatePosition = (time) => {
-  const parsed = parseTimeString(time);
-  if (!parsed) return 0;
-  // Calendar starts at 8 AM, ends at 11 PM (16 hours = 960 minutes)
-  const totalMinutes = (parsed.hour - 8) * 60 + parsed.minute;
-  const clampedMinutes = Math.max(0, Math.min(960, totalMinutes));
-  return (clampedMinutes / 960) * 100;
-};
-
-// Helper: Map day to index
-const dayToIndex = (day) => DAYS.indexOf(day);
-
-// Helper: Check if lecture should be displayed
-const isValidLecture = (lecture) => {
-  return lecture.lectureDay !== "Asynchronous content" &&
-         lecture.lectureDay !== "-1" &&
-         typeof lecture.lectureTime === "string" &&
-         lecture.lectureTime !== "-1" &&
-         lecture.lectureTime.includes(" - ");
-};
-
-// Helper: Calculate lecture positioning
-const calculateLecturePosition = (lecture) => {
-  const dayIndex = dayToIndex(lecture.lectureDay);
-  const [start, end] = lecture.lectureTime.split(" - ");
-  const topPos = calculatePosition(start);
-  const bottomPos = calculatePosition(end);
-  const heightPos = bottomPos - topPos;
-  const dayLeft = 12 + dayIndex * (90 / 7);
+// Helper: Render online section item
+const renderOnlineSectionItem = ({ course, section }, index, handleClick) => {
+  // Create unified class details for online section
+  const classDetails = createClassDetails(course, section, null, null, null);
   
-  return {
-    topPos,
-    bottomPos,
-    heightPos,
-    dayLeft,
-    start,
-    end
-  };
-};
+  return (
+    <div 
+      key={index} 
+      className="online-section-item"
+      onClick={(e) => handleClick(classDetails, e)}
+      style={{ cursor: 'pointer' }}
+    >
+      <p><strong>{course.course_name}</strong></p>
 
-// Helper: Create class details object
-const createClassDetails = (course, section, lecture, start, end) => ({
-  title: course.course_name,
-  day: lecture.lectureDay,
-  start,
-  end,
-  core_code: course.core_code,
-  course_number: course.course_number,
-  instructor: section.instructor,
-  section_number: section.section_number,
-  campus: lecture.campus,
-  lectureTime: lecture.lectureTime,
-  classroom: lecture.classroom,
-  classroomLink: lecture.classroomLink,
-  recitation: lecture.recitation,
-});
+    </div>
+  );
+};
 
 function Calendar({ courses, previewSection }) {
   // Color mapping for campus locations
@@ -99,12 +48,23 @@ function Calendar({ courses, previewSection }) {
   };
 
   const [selectedClass, setSelectedClass] = useState(null);
+  const [isOnlinePopupVisible, setIsOnlinePopupVisible] = useState(false);
+  const [onlinePopupHeight, setOnlinePopupHeight] = useState(0);
   const calendarRef = useRef(null);
+  const onlinePopupRef = useRef(null);
 
   // Debug: log courses prop whenever it changes
   useEffect(() => {
     console.log("🛠️ [Calendar] courses prop:", courses);
   }, [courses]);
+
+  // Measure online popup height when it becomes visible
+  useEffect(() => {
+    if (isOnlinePopupVisible && onlinePopupRef.current) {
+      const height = onlinePopupRef.current.offsetHeight;
+      setOnlinePopupHeight(height);
+    }
+  }, [isOnlinePopupVisible]);
 
   // Function to check for time conflicts
   const checkTimeConflict = (newLecture, existingLectures) => {
@@ -182,6 +142,10 @@ function Calendar({ courses, previewSection }) {
 
   const closePopup = () => {
     setSelectedClass(null);
+  };
+
+  const toggleOnlinePopup = () => {
+    setIsOnlinePopupVisible(!isOnlinePopupVisible);
   };
 
   // Helper: Render a single lecture
@@ -275,50 +239,39 @@ function Calendar({ courses, previewSection }) {
       </div>
 
       {/* Popup positioned relative to the calendar container */}
-      {selectedClass && (
-        <div
-          className="popup"
-          style={{ top: selectedClass.popupY, left: selectedClass.popupX }}
-        >
-          <button className="popup-close" onClick={closePopup}>
-            &times;
-          </button>
-          <h2>{selectedClass.title}</h2>
-          <p>
-            <strong>Day:</strong> {selectedClass.day}
-          </p>
-          <p>
-            <strong>Time:</strong> {selectedClass.start} - {selectedClass.end}
-          </p>
-          <p>
-            <strong>Core Code:</strong> {selectedClass.core_code}
-          </p>
-          <p>
-            <strong>Section:</strong> {selectedClass.section_number}
-          </p>
-          <p>
-            <strong>Instructor:</strong> {selectedClass.instructor}
-          </p>
-          <p>
-            <strong>Campus:</strong> {selectedClass.campus}
-          </p>
-          <p>
-            <strong>Classroom:</strong>{" "}
-            <a
-              href={selectedClass.classroomLink}
-              target="_blank"
-              rel="noreferrer"
+      <ClassPopup selectedClass={selectedClass} onClose={closePopup} />
+
+      {/* Online Sections Popup at bottom */}
+      {(() => {
+        const onlineSections = getOnlineSections(courses);
+        if (onlineSections.length === 0) return null;
+        
+        return (
+          <>
+            {/* Toggle Button */}
+            <button 
+              className={`online-popup-toggle ${isOnlinePopupVisible ? 'expanded' : 'collapsed'}`}
+              onClick={toggleOnlinePopup}
+              style={{
+                bottom: isOnlinePopupVisible ? `${onlinePopupHeight}px` : '0'
+              }}
             >
-              {selectedClass.classroom}
-            </a>
-          </p>
-          {selectedClass.recitation ? (
-            <p>
-              <strong>Recitation:</strong> {selectedClass.recitation}
-            </p>
-          ) : null}
-        </div>
-      )}
+              {isOnlinePopupVisible ? '▼' : '▲'} Online Classes ({onlineSections.length})
+            </button>
+            
+            {/* Collapsible Popup */}
+            {isOnlinePopupVisible && (
+              <div ref={onlinePopupRef} className="online-sections-popup">
+                <div className="online-sections-list">
+                  {onlineSections.map((item, index) => 
+                    renderOnlineSectionItem(item, index, handleClassClick)
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }

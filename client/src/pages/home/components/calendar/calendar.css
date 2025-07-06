@@ -245,4 +245,82 @@
   #online {
     @apply bg-red-400;
   }
+
+  /* Online Sections Popup */
+  .online-sections-popup {
+    @apply absolute bottom-0 left-0 right-0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-top: 3px solid #e74c3c;
+    padding: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    animation: slideUp 0.3s ease-out;
+    transform-origin: bottom;
+  }
+
+  .online-sections-list {
+    @apply space-y-3;
+  }
+
+  .online-section-item {
+    @apply p-2 rounded-lg;
+    background-color: #e74c3c;
+    border: 2px solid #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .online-section-item p {
+    @apply mb-1;
+  }
+
+  .online-section-item p:last-child {
+    @apply mb-0;
+  }
+
+  /* Toggle Button */
+  .online-popup-toggle {
+    @apply font-bold text-sm ;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+    padding: 8px 16px;
+    background-color: #e74c3c;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 20px 20px 0 0;
+    cursor: pointer;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    transition: bottom 0.3s ease-out, background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .online-popup-toggle.expanded {
+    /* bottom positioning handled dynamically */
+  }
+
+  .online-popup-toggle.collapsed {
+    bottom: 0 !important;
+  }
+
+  .online-popup-toggle:hover {
+    background-color: #c0392b !important;
+    transform: translateX(-50%) scale(1.05);
+  }
+
+  .online-popup-toggle:active {
+    transform: translateX(-50%) scale(0.95);
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 }
