@@ -18,7 +18,10 @@ const dayToIndex = (day) => {
 
 // Helper: Calculate vertical position (0% at 8:00 AM, 100% at 11:00 PM)
 const calculatePosition = (time) => {
-  const [_, hour, minute, period] = time.match(/(\d+):(\d+) (AM|PM)/);
+  if (!time || time === '-1') return 0; // Guard for invalid or online classes
+  const match = time.match(/(\d+):(\d+) (AM|PM)/);
+  if (!match) return 0; // Guard for malformed time strings
+  const [_, hour, minute, period] = match;
   let hour24 = parseInt(hour, 10);
   if (period === "AM") {
     if (hour24 === 12) hour24 = 0; // 12 AM is 0
@@ -79,7 +82,9 @@ function Calendar({ courses, previewSection }) {
         lectureInfoArray.forEach(lecture => {
           if (lecture.lectureDay !== "Asynchronous content" && 
               lecture.lectureDay !== "-1" && 
-              lecture.lectureTime !== "-1") {
+              typeof lecture.lectureTime === "string" &&
+              lecture.lectureTime !== "-1" &&
+              lecture.lectureTime.includes(" - ")) {
             lectures.push(lecture);
           }
         });
@@ -166,7 +171,9 @@ function Calendar({ courses, previewSection }) {
                 (lecture) =>
                   lecture.lectureDay !== "Asynchronous content" &&
                   lecture.lectureDay !== "-1" &&
-                  lecture.lectureTime !== "-1"
+                  typeof lecture.lectureTime === "string" &&
+                  lecture.lectureTime !== "-1" &&
+                  lecture.lectureTime.includes(" - ")
               )
               .map((lecture, index) => {
                 const dayIndex = dayToIndex(lecture.lectureDay);
@@ -222,7 +229,9 @@ function Calendar({ courses, previewSection }) {
               (lecture) =>
                 lecture.lectureDay !== "Asynchronous content" &&
                 lecture.lectureDay !== "-1" &&
-                lecture.lectureTime !== "-1"
+                typeof lecture.lectureTime === "string" &&
+                lecture.lectureTime !== "-1" &&
+                lecture.lectureTime.includes(" - ")
             )
             .map((lecture, index) => {
               const dayIndex = dayToIndex(lecture.lectureDay);
