@@ -149,7 +149,7 @@ async function saveSchedule(id, scheduleName, scheduleIndices) {
     .table(database_names.table.USER.GOOGLE)
     .where(database_names.user.GOOGLE.ID, id)
     .update({
-      saved_schedule: db.raw(
+      [database_names.user.GOOGLE.SAVED_SCHEDULE]: db.raw(
         `JSON_INSERT(COALESCE(${
           database_names.user.GOOGLE.SAVED_SCHEDULE
         }, JSON_OBJECT()), ?, JSON_ARRAY(${scheduleIndices
@@ -168,11 +168,11 @@ async function getSavedSchedules(id) {
     .where(database_names.user.GOOGLE.ID, id)
     .first();
 
-  if (!user || !user.saved_schedule) {
+  if (!user || !user[database_names.user.GOOGLE.SAVED_SCHEDULE]) {
     return {};
   }
 
-  return user.saved_schedule;
+  return user[database_names.user.GOOGLE.SAVED_SCHEDULE];
 }
 
 async function deleteSavedSchedules(id, scheduleName) {
