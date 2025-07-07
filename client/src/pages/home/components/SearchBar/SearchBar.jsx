@@ -18,9 +18,6 @@ import {
  */
 
 export const SearchBar = ({ setResults, selectedTag, searchInput, setSearchInput }) => {
-    const [input, setInput] = useState("");
-    const [tempInput, setTempInput] = useState("");
-
 
     // Function to fetch all courses from search query
     const fetchAPI = (value) => {
