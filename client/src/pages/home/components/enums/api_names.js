@@ -12,6 +12,8 @@ export default {
   profile: {
     PROFILE: "profile",
     SAVED_SCHEDULE: "save",
+    LOAD_SCHEDULE: "load-schedule",
+    GET_SCHEDULE: "schedules",
     DELETE_SCHEDULE: "delete",
   },
 };

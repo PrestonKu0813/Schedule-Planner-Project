@@ -86,7 +86,7 @@ export async function getSavedSchedules(userId) {
     // console.log("🛠️ [getSavedSchedules] Full URL:", `${backendURL}/${apiNames.profile.PROFILE}/schedules/${userId}`);
 
     const response = await axios.get(
-      `${backendURL}/${apiNames.profile.PROFILE}/schedules/${userId}`,
+      `${backendURL}/${apiNames.profile.PROFILE}/${apiNames.profile.GET_SCHEDULE}/${userId}`,
       { withCredentials: true }
     );
 
@@ -112,7 +112,7 @@ export async function loadScheduleByIndices(sectionIndices) {
     // console.log("🛠️ [loadScheduleByIndices] Calling API with sectionIndices:", sectionIndices);
 
     const response = await axios.post(
-      `${backendURL}/${apiNames.profile.PROFILE}/load-schedule`,
+      `${backendURL}/${apiNames.profile.PROFILE}/${apiNames.profile.LOAD_SCHEDULE}`,
       { sectionIndices },
       { withCredentials: true }
     );
