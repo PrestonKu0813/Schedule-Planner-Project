@@ -9,26 +9,26 @@ const SavedSchedules = ({ user, setCourses, courses }) => {
   const [currentSchedule, setCurrentSchedule] = useState(null);
 
   useEffect(() => {
-    console.log("🛠️ [SavedSchedules] User data:", user);
-    console.log("🛠️ [SavedSchedules] User keys:", user ? Object.keys(user) : 'No user');
+    // console.log("🛠️ [SavedSchedules] User data:", user);
+    // console.log("🛠️ [SavedSchedules] User keys:", user ? Object.keys(user) : 'No user');
     
     if (user && user.user_id) {
-      console.log("🛠️ [SavedSchedules] Loading schedules for user:", user.user_id);
+      // console.log("🛠️ [SavedSchedules] Loading schedules for user:", user.user_id);
       loadSavedSchedules();
     } else if (user && user.id) {
-      console.log("🛠️ [SavedSchedules] Loading schedules for user (using id):", user.id);
+      // console.log("🛠️ [SavedSchedules] Loading schedules for user (using id):", user.id);
       loadSavedSchedules();
     } else {
-      console.log("🛠️ [SavedSchedules] No user or user_id found");
-      console.log("🛠️ [SavedSchedules] User object:", user);
+      // console.log("🛠️ [SavedSchedules] No user or user_id found");
+      // console.log("🛠️ [SavedSchedules] User object:", user);
     }
   }, [user]);
 
   const loadSavedSchedules = async () => {
     const userId = user?.user_id || user?.id;
     if (!user || !userId) {
-      console.log("🛠️ [SavedSchedules] No user or userId found in loadSavedSchedules");
-      console.log("🛠️ [SavedSchedules] User object:", user);
+      // console.log("🛠️ [SavedSchedules] No user or userId found in loadSavedSchedules");
+      // console.log("🛠️ [SavedSchedules] User object:", user);
       return;
     }
     
@@ -36,14 +36,14 @@ const SavedSchedules = ({ user, setCourses, courses }) => {
     setError(null);
     
     try {
-      console.log("🛠️ [SavedSchedules] Calling getSavedSchedules with userId:", userId);
-      console.log("🛠️ [SavedSchedules] User authentication status:", user);
+      // console.log("🛠️ [SavedSchedules] Calling getSavedSchedules with userId:", userId);
+      // console.log("🛠️ [SavedSchedules] User authentication status:", user);
       const schedules = await getSavedSchedules(userId);
-      console.log("🛠️ [SavedSchedules] Received schedules:", schedules);
+      // console.log("🛠️ [SavedSchedules] Received schedules:", schedules);
       setSavedSchedules(schedules);
     } catch (err) {
-      console.error('🛠️ [SavedSchedules] Failed to load saved schedules:', err);
-      console.error('🛠️ [SavedSchedules] Error details:', err);
+      // console.error('🛠️ [SavedSchedules] Failed to load saved schedules:', err);
+      // console.error('🛠️ [SavedSchedules] Error details:', err);
       setError('Failed to load saved schedules');
     } finally {
       setLoading(false);
@@ -52,11 +52,11 @@ const SavedSchedules = ({ user, setCourses, courses }) => {
 
   const handleScheduleClick = async (scheduleName, scheduleIndices) => {
     try {
-      console.log('🛠️ [SavedSchedules] Loading schedule:', scheduleName, scheduleIndices);
+      // console.log('🛠️ [SavedSchedules] Loading schedule:', scheduleName, scheduleIndices);
       
       // Load the schedule from the server
       const courses = await loadScheduleByIndices(scheduleIndices);
-      console.log('🛠️ [SavedSchedules] Loaded courses:', courses);
+      // console.log('🛠️ [SavedSchedules] Loaded courses:', courses);
       
       // Set the courses in the main state to display on calendar
       setCourses(courses);
@@ -64,7 +64,7 @@ const SavedSchedules = ({ user, setCourses, courses }) => {
       // Set current schedule
       setCurrentSchedule(scheduleName);
     } catch (err) {
-      console.error('🛠️ [SavedSchedules] Failed to load schedule:', err);
+      // console.error('🛠️ [SavedSchedules] Failed to load schedule:', err);
       alert('Failed to load schedule. Please try again.');
     }
   };
