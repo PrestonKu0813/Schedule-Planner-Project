@@ -150,6 +150,10 @@ function CourseList({
                 />
                 <div className="subject-filter">
                   <Select
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
                     id="subject_filter"
                     options={tagOptions}
                     value={selectedTag}
