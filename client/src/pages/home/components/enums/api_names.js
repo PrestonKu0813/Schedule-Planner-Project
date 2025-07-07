@@ -12,5 +12,6 @@ export default {
   profile: {
     PROFILE: "profile",
     SAVED_SCHEDULE: "save",
+    DELETE_SCHEDULE: "delete",
   },
 };

@@ -84,12 +84,12 @@ export async function getSavedSchedules(userId) {
   try {
     // console.log("🛠️ [getSavedSchedules] Calling API with userId:", userId);
     // console.log("🛠️ [getSavedSchedules] Full URL:", `${backendURL}/${apiNames.profile.PROFILE}/schedules/${userId}`);
-    
+
     const response = await axios.get(
       `${backendURL}/${apiNames.profile.PROFILE}/schedules/${userId}`,
       { withCredentials: true }
     );
-    
+
     // console.log("🛠️ [getSavedSchedules] Response:", response.data);
     return response.data;
   } catch (error) {
@@ -97,9 +97,9 @@ export async function getSavedSchedules(userId) {
       message: error.message,
       response: error.response?.data,
       status: error.response?.status,
-      statusText: error.response?.statusText
+      statusText: error.response?.statusText,
     });
-    
+
     const message =
       error.response?.data || error.message || "Unknown error occurred";
     console.error(message);
@@ -110,13 +110,13 @@ export async function getSavedSchedules(userId) {
 export async function loadScheduleByIndices(sectionIndices) {
   try {
     // console.log("🛠️ [loadScheduleByIndices] Calling API with sectionIndices:", sectionIndices);
-    
+
     const response = await axios.post(
       `${backendURL}/${apiNames.profile.PROFILE}/load-schedule`,
       { sectionIndices },
       { withCredentials: true }
     );
-    
+
     // console.log("🛠️ [loadScheduleByIndices] Response:", response.data);
     return response.data;
   } catch (error) {
@@ -124,9 +124,25 @@ export async function loadScheduleByIndices(sectionIndices) {
       message: error.message,
       response: error.response?.data,
       status: error.response?.status,
-      statusText: error.response?.statusText
+      statusText: error.response?.statusText,
     });
-    
+
+    const message =
+      error.response?.data || error.message || "Unknown error occurred";
+    console.error(message);
+    throw new Error(message);
+  }
+}
+
+export async function deleteScheudle(userId, scheduleName) {
+  try {
+    const response = await axios.post(
+      `${backendURL}/${apiNames.profile.PROFILE}/${apiNames.profile.DELETE_SCHEDULE}/${userId}`,
+      { scheduleName },
+      { withCredentials: true }
+    );
+    console.log(response.data);
+  } catch (error) {
     const message =
       error.response?.data || error.message || "Unknown error occurred";
     console.error(message);
