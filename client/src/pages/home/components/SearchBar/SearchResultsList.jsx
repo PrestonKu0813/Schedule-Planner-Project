@@ -16,7 +16,6 @@ export const SearchResultsList = ({results, courses, setCourses, setInfo, setAct
                         // Set selected_sections to match, or empty array if not found
                         result.selected_sections = matchedCourse ? matchedCourse.selected_sections : [];
 
-
                         return (
                             <SearchResult
                                 result={result}
