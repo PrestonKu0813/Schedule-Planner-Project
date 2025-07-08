@@ -185,12 +185,12 @@ async function deleteSavedSchedules(id, scheduleName) {
   if (!data) {
     throw new Error("User not found");
   }
-  // parse it safely
+  // Properly parse the saved_schedule JSON string
   let obj;
-  if (typeof data === "string") {
-    obj = JSON.parse(data);
-  } else if (data && typeof data === "object") {
-    obj = data;
+  if (data && typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "string") {
+    obj = JSON.parse(data[database_names.user.GOOGLE.SAVED_SCHEDULE]);
+  } else if (data && typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "object") {
+    obj = data[database_names.user.GOOGLE.SAVED_SCHEDULE];
   } else {
     obj = {};
   }
@@ -205,7 +205,7 @@ async function deleteSavedSchedules(id, scheduleName) {
     .update({
       [database_names.user.GOOGLE.SAVED_SCHEDULE]: db.raw(
         "JSON_REMOVE(??, ?)",
-        [database_names.user.GOOGLE.SAVED_SCHEDULE, `$."${scheduleName}"`]
+        [database_names.user.GOOGLE.SAVED_SCHEDULE, `$.${scheduleName}`]
       ),
     });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getSavedSchedules, loadScheduleByIndices } from '../api';
+import { getSavedSchedules, loadScheduleByIndices, deleteScheudle } from '../api';
 import './saved_schedules.css';
 
 const SavedSchedules = ({ user, setCourses, courses }) => {
@@ -7,6 +7,7 @@ const SavedSchedules = ({ user, setCourses, courses }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentSchedule, setCurrentSchedule] = useState(null);
+  const [deletingSchedule, setDeletingSchedule] = useState(null);
 
   useEffect(() => {
     // console.log("🛠️ [SavedSchedules] User data:", user);
@@ -69,9 +70,27 @@ const SavedSchedules = ({ user, setCourses, courses }) => {
     }
   };
 
+  const handleDeleteSchedule = async (scheduleName) => {
+    const userId = user?.user_id || user?.id;
+    if (!userId) return;
+    setDeletingSchedule(scheduleName);
+    setError(null);
+    try {
+      await deleteScheudle(userId, scheduleName);
+      await loadSavedSchedules();
+    } catch (err) {
+      setError('Failed to delete schedule: ' + (err?.message || 'Unknown error'));
+    } finally {
+      setDeletingSchedule(null);
+    }
+  };
+
   const formatScheduleName = (name) => {
     return name.replace(/_/g, ' ');
   };
+
+  // Helper to get the actual key for a schedule (in case display formatting changes)
+  const getScheduleKey = (scheduleName) => scheduleName;
 
   if (loading) {
     return (
@@ -86,7 +105,7 @@ const SavedSchedules = ({ user, setCourses, courses }) => {
     return (
       <div className="saved-schedules-container">
         <h3>Saved Schedules</h3>
-        <div className="error">{error}</div>
+        <div className="error" style={{ color: 'red', marginBottom: '8px' }}>{error}</div>
         <button onClick={loadSavedSchedules} className="retry-button">
           Retry
         </button>
@@ -118,6 +137,17 @@ const SavedSchedules = ({ user, setCourses, courses }) => {
               <div className="schedule-info">
                 {savedSchedules[scheduleName].length} sections
               </div>
+              <button
+                className="delete-schedule-button"
+                onClick={e => {
+                  e.stopPropagation();
+                  handleDeleteSchedule(getScheduleKey(scheduleName));
+                }}
+                style={{ marginTop: '4px', color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}
+                disabled={deletingSchedule === scheduleName}
+              >
+                {deletingSchedule === scheduleName ? 'Deleting...' : 'Delete'}
+              </button>
               {currentSchedule === scheduleName }
             </div>
           ))}
