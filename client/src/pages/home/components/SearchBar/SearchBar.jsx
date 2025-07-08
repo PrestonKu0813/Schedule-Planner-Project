@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import "./Search.css";
-import {
-  courseSearch,
-  subjectSearch,
-  subjectCourseSearch,
-} from "../api";
+import { SearchAPI } from "./SearchAPI";
 
 /**
  *
@@ -17,77 +13,24 @@ import {
  * @returns
  */
 
-export const SearchBar = ({ setResults, selectedTag, searchInput, setSearchInput }) => {
-
-    // Function to fetch all courses from search query
-    const fetchAPI = (value) => {
-        if (value === "") {
-            // If input is empty, fetch all courses
-            courseSearch("")
-                .then((json) => {
-                    console.log("API Response:", json);
-                    if (json.message === "no result") {
-                        setResults([]);
-                        return;
-                    }
-                    const resultsArray = Object.values(json).flatMap(subject =>
-                        Object.values(subject.courses).map(course => ({
-                            ...course,
-                            selected_sections: [], // Add selected_sections attribute
-                        }))
-                    );
-                    //filtering based on selectedTag, uses course_number to filter
-                    const filteredResults = selectedTag === "all"
-                        ? resultsArray
-                        : resultsArray.filter(result => {
-                            const coreCodeParts = result.course_number.split(":");
-                            return coreCodeParts[1] === selectedTag;
-                        });
-                    setResults(filteredResults);
-                });
-        } else {
-            courseSearch(value)
-                .then((json) => {
-                    console.log("API Response:", json);
-                    if (json.message === "no result") {
-                        setResults([]);
-                        return;
-                    }
-                    const resultsArray = Object.values(json).map(course => ({
-                        ...course,
-                        selected_sections: [], // Add selected_sections attribute
-                    }));
-
-                    //filtering based on selectedTag. uses course_number to filter
-                    const filteredResults = selectedTag === "all"
-                        ? resultsArray
-                        : resultsArray.filter(result => {
-                            const coreCodeParts = result.course_number.split(":");
-                            return coreCodeParts[1] === selectedTag;
-                        });
-                    setResults(filteredResults);
-                });
-        }
-    }
-
-  //   useEffect(() => {
-  //     // Fetch data initially without any filtering
-  //     fetchAPI(input);
-  //   }, [selectedTag]); // Add selectedTag as a dependency to refetch data when it changes
+export const SearchBar = ({
+  setResults,
+  selectedTag,
+  searchInput,
+  setSearchInput,
+}) => {
+  const fetchAPI = async (searchInput, selectedTag) => {
+    const data = await SearchAPI(searchInput, selectedTag);
+    setResults(data);
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       setSearchInput(searchInput);
-      fetchAPI(searchInput);
+      fetchAPI(searchInput, selectedTag);
     }
   };
-
-  //runs fetchAPI and sets the input value when the user submits the search
-  //   const handleSubmit = (value) => {
-  //     setInput(value);
-  //     fetchAPI(value);
-  //   };
 
   return (
     <div className="input-wrapper">

@@ -3,6 +3,7 @@ import { useUser } from "../../../../contexts/UserContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState, useEffect } from "react";
+import { SearchAPI } from "../SearchBar/SearchAPI.js";
 import LogoutButton from "../buttons/logout_button";
 import SaveButton from "../save_button/save_button";
 import Select from "react-select";
@@ -49,6 +50,11 @@ function CourseList({
     { value: "010", label: "Accounting (010)" },
     { value: "011", label: "Administrative Studies (011)" },
   ];
+
+  const fetchAPI = async (searchInput, selectedTag) => {
+    const data = await SearchAPI(searchInput, selectedTag);
+    setResults(data);
+  };
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -157,7 +163,10 @@ function CourseList({
                     id="subject_filter"
                     options={tagOptions}
                     value={selectedTag}
-                    onChange={setSelectedTag}
+                    onChange={(option) => {
+                      setSelectedTag(option);
+                      fetchAPI(searchInput, option.value);
+                    }}
                     unstyled
                     classNames={{
                       control: () => "rs-control",
