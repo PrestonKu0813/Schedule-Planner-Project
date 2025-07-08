@@ -9,7 +9,7 @@
   --hourWidth: 12%;
   --minHourWidth: 12%;
   /* calendar key color */
-  --calendar-key-color-width: 18%;
+  --calendar-key-color-width: 100%;
 }
 
 @layer components {
@@ -110,7 +110,7 @@
   /* Add a subtle border to make text stand out more */
   .calendar_class::after,
   .preview-class::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -126,47 +126,69 @@
     border-width: 4px !important;
     border-style: solid !important;
     border-color: #ff0000 !important; /* Bright red */
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.6), inset 0 0 10px rgba(255, 0, 0, 0.2); /* Red glow */
+    box-shadow:
+      0 0 15px rgba(255, 0, 0, 0.6),
+      inset 0 0 10px rgba(255, 0, 0, 0.2); /* Red glow */
     animation: conflictPulse 1.5s ease-in-out infinite; /* Pulsing animation */
-    background: linear-gradient(45deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.2)) !important; /* Red gradient background */
+    background: linear-gradient(
+      45deg,
+      rgba(255, 0, 0, 0.1),
+      rgba(255, 0, 0, 0.2)
+    ) !important; /* Red gradient background */
   }
 
   .preview-class.no-conflict {
     border-width: 4px !important;
     border-style: solid !important;
     border-color: #00ff00 !important; /* Bright green */
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.6), inset 0 0 10px rgba(0, 255, 0, 0.2); /* Green glow */
+    box-shadow:
+      0 0 15px rgba(0, 255, 0, 0.6),
+      inset 0 0 10px rgba(0, 255, 0, 0.2); /* Green glow */
     animation: successPulse 2s ease-in-out infinite; /* Gentle pulse */
-    background: linear-gradient(45deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.2)) !important; /* Green gradient background */
+    background: linear-gradient(
+      45deg,
+      rgba(0, 255, 0, 0.1),
+      rgba(0, 255, 0, 0.2)
+    ) !important; /* Green gradient background */
   }
 
   /* Pulsing animation for conflicts */
   @keyframes conflictPulse {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1);
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.6), inset 0 0 10px rgba(255, 0, 0, 0.2);
+      box-shadow:
+        0 0 15px rgba(255, 0, 0, 0.6),
+        inset 0 0 10px rgba(255, 0, 0, 0.2);
     }
     50% {
       transform: scale(1.02);
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), inset 0 0 15px rgba(255, 0, 0, 0.3);
+      box-shadow:
+        0 0 20px rgba(255, 0, 0, 0.8),
+        inset 0 0 15px rgba(255, 0, 0, 0.3);
     }
   }
 
   /* Gentle pulse for no conflicts */
   @keyframes successPulse {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1);
-      box-shadow: 0 0 15px rgba(0, 255, 0, 0.6), inset 0 0 10px rgba(0, 255, 0, 0.2);
+      box-shadow:
+        0 0 15px rgba(0, 255, 0, 0.6),
+        inset 0 0 10px rgba(0, 255, 0, 0.2);
     }
     50% {
       transform: scale(1.01);
-      box-shadow: 0 0 18px rgba(0, 255, 0, 0.7), inset 0 0 12px rgba(0, 255, 0, 0.25);
+      box-shadow:
+        0 0 18px rgba(0, 255, 0, 0.7),
+        inset 0 0 12px rgba(0, 255, 0, 0.25);
     }
   }
 
   /* Additional visual indicators */
   .preview-class::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -2px;
     left: -2px;
@@ -178,11 +200,19 @@
   }
 
   .preview-class.conflict::before {
-    background: radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 0, 0, 0.3) 0%,
+      transparent 70%
+    );
   }
 
   .preview-class.no-conflict::before {
-    background: radial-gradient(circle, rgba(0, 255, 0, 0.3) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(0, 255, 0, 0.3) 0%,
+      transparent 70%
+    );
   }
 
   .popup {
@@ -196,27 +226,40 @@
 
   /* CALENDAR KEY CSS SECTION */
   .calendar_key_container {
-    @apply w-full h-full;
-    @apply flex flex-col gap-[5px];
+    @apply w-full h-full flex flex-row gap-[5px];
+  }
+
+  .calendar_key_left {
+    @apply flex flex-col gap-[5px] flex-[4];
+  }
+
+  .calendar_key_right {
+    @apply flex flex-[1];
   }
 
   .calendar_key_rows {
-    @apply flex flex-row h-full gap-[5px];
-  }
-
-  .calendar_key_cols {
-    @apply flex w-full flex-row border-4 border-black;
+    @apply flex flex-row h-full gap-[5px] w-full;
   }
 
   .calendar_key {
-    @apply flex w-[var(--calendar-key-color-width)];
+    @apply flex flex-1;
   }
 
+  .other-popup-button {
+    @apply bg-gray-400 h-[90%] w-full border-4 border-black ;
+    transition: background-color 0.3s ease;
+    transition:ease-in;
+  }
+
+  .other-popup-button:hover {
+    @apply bg-gray-300 h-[90%] w-full border-4 border-black;
+    transform: translateY(-3px)
+  }
   #text {
     @apply font-semibold;
-    font-size: clamp(0.6rem, 1.5vw, 1rem);
+    font-size: clamp(0.5rem, 1.5vw, 1rem);
     align-self: center;
-    margin-left: 2%;
+    margin-left: 5%;
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
