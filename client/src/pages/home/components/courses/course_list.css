@@ -54,6 +54,7 @@
   .course_list_header {
     @apply flex flex-row mt-[10px] gap-[5px];
   }
+  
   .course_list_text {
     @apply text-center text-black;
     font-size: clamp(0.5rem, 1vw, 1.5rem);

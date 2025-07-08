@@ -149,7 +149,7 @@ async function saveSchedule(id, scheduleName, scheduleIndices) {
     .table(database_names.table.USER.GOOGLE)
     .where(database_names.user.GOOGLE.ID, id)
     .update({
-      saved_schedule: db.raw(
+      [database_names.user.GOOGLE.SAVED_SCHEDULE]: db.raw(
         `JSON_INSERT(COALESCE(${
           database_names.user.GOOGLE.SAVED_SCHEDULE
         }, JSON_OBJECT()), ?, JSON_ARRAY(${scheduleIndices
@@ -167,12 +167,49 @@ async function getSavedSchedules(id) {
     .select(database_names.user.GOOGLE.SAVED_SCHEDULE)
     .where(database_names.user.GOOGLE.ID, id)
     .first();
-  
-  if (!user || !user.saved_schedule) {
+
+  if (!user || !user[database_names.user.GOOGLE.SAVED_SCHEDULE]) {
     return {};
   }
-  
-  return user.saved_schedule;
+
+  return user[database_names.user.GOOGLE.SAVED_SCHEDULE];
+}
+
+async function deleteSavedSchedules(id, scheduleName) {
+  const data = await db
+    .table(database_names.table.USER.GOOGLE)
+    .select(database_names.user.GOOGLE.SAVED_SCHEDULE)
+    .where(database_names.user.GOOGLE.ID, id)
+    .first();
+
+  if (!data) {
+    throw new Error("User not found");
+  }
+  // parse it safely
+  let obj;
+  if (typeof data === "string") {
+    obj = JSON.parse(data);
+  } else if (data && typeof data === "object") {
+    obj = data;
+  } else {
+    obj = {};
+  }
+
+  if (!(scheduleName in obj)) {
+    return database_names.message.no_schedule;
+  }
+
+  await db
+    .table(database_names.table.USER.GOOGLE)
+    .where(database_names.user.GOOGLE.ID, id)
+    .update({
+      [database_names.user.GOOGLE.SAVED_SCHEDULE]: db.raw(
+        "JSON_REMOVE(??, ?)",
+        [database_names.user.GOOGLE.SAVED_SCHEDULE, `$."${scheduleName}"`]
+      ),
+    });
+
+  return database_names.message.success;
 }
 
 async function getCoursesBySectionIndices(sectionIndices) {
@@ -196,7 +233,7 @@ async function getCoursesBySectionIndices(sectionIndices) {
 
   // Group sections by course
   const coursesMap = {};
-  sections.forEach(section => {
+  sections.forEach((section) => {
     const courseNumber = section[database_names.course.NUMBER];
     if (!coursesMap[courseNumber]) {
       coursesMap[courseNumber] = {
@@ -204,16 +241,16 @@ async function getCoursesBySectionIndices(sectionIndices) {
         course_name: section[database_names.course.NAME],
         credit: section[database_names.course.CREDIT],
         core_code: section[database_names.course.CORE_CODE],
-        selected_sections: []
+        selected_sections: [],
       };
     }
-    
+
     // Add section to the course
     coursesMap[courseNumber].selected_sections.push({
       index_number: section[database_names.section.INDEX],
       section_number: section[database_names.section.NUMBER],
       instructor: section[database_names.section.INSTRUCTOR],
-      lecture_info: JSON.parse(section[database_names.section.INFO] || '{}')
+      lecture_info: JSON.parse(section[database_names.section.INFO] || "{}"),
     });
   });
 
@@ -295,6 +332,7 @@ module.exports = {
   saveSchedule,
   getSavedSchedules,
   getCoursesBySectionIndices,
+  deleteSavedSchedules,
   // google users
   isGoogleUserExist,
   getGoogleUserByGoogle,

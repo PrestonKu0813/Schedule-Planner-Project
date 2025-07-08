@@ -1,6 +1,11 @@
 const router = require("express").Router();
 const auth = require("../enums/auth_profile");
-const { saveSchedule, getSavedSchedules, getCoursesBySectionIndices } = require("../database/query");
+const {
+  saveSchedule,
+  getSavedSchedules,
+  getCoursesBySectionIndices,
+  deleteSavedSchedules,
+} = require("../database/query");
 
 const authCheck = async (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -52,6 +57,22 @@ router.post("/load-schedule", authCheck, async (req, res) => {
   try {
     const courses = await getCoursesBySectionIndices(sectionIndices);
     res.json(courses);
+  } catch (err) {
+    console.error(err.stack);
+    res.status(err.status || 500).json({
+      status: 0,
+      error_message: err.message || "Internal Server Error",
+    });
+  }
+});
+
+router.post("/delete/:id", authCheck, async (req, res) => {
+  const { id } = req.params;
+  const { scheduleName: key } = req.body;
+
+  try {
+    const result = await deleteSavedSchedules(id, key);
+    res.send(result); //send "success", database_names.message.success
   } catch (err) {
     console.error(err.stack);
     res.status(err.status || 500).json({

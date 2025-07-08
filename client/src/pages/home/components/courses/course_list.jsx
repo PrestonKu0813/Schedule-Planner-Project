@@ -146,7 +146,11 @@ function CourseList({
               randomizer + schedule next and behind generator put here
             </div>
             <div className="saved_schedule_container">
-              <SavedSchedules user={user} setCourses={setCourses} courses={courses} />
+              <SavedSchedules
+                user={user}
+                setCourses={setCourses}
+                courses={courses}
+              />
             </div>
           </div>
         )}
