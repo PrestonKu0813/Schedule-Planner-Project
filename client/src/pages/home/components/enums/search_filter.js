@@ -41,6 +41,7 @@ export default {
     ON: "Online",
     SA: "Study Abroad",
     NA: "N/A",
+    ASYNC: -1
   },
   credit: {
     ONE: "1",

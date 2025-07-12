@@ -60,7 +60,7 @@ function CourseList({
   const [showFilters, setShowFilters] = useState(false);
 
   const [specialFilters, setSpecialFilters] = useState({
-    campus: [campus.BU, campus.LI, campus.CA, campus.CD],
+    campus: [campus.BU, campus.LI, campus.CA, campus.CD, campus.ASYNC],
     time: [],
     day: [],
     credits: [],
@@ -241,6 +241,19 @@ function CourseList({
                               removeCampus(campus.CD);
                             } else {
                               addCampus(campus.CD);
+                            }
+                          }}
+                        />
+                        <Checkbox
+                          label="Async"
+                          isChecked={specialFilters.campus.includes(campus.ASYNC) || specialFilters.campus.includes(campus.ON)}
+                          onClick={() => {
+                            if (specialFilters.campus.includes(campus.ASYNC) || specialFilters.campus.includes(campus.ON)) {
+                              removeCampus(campus.ASYNC);
+                              removeCampus(campus.ON);
+                            } else {
+                              addCampus(campus.ASYNC);
+                              addCampus(campus.ON);
                             }
                           }}
                         />
