@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Search.css";
 import { SectionList } from "./SectionList";
-import { sectionsByCourseNumber } from "../api";
 
 /**
  * 
@@ -16,15 +15,14 @@ import { sectionsByCourseNumber } from "../api";
  * @returns 
  */
 
-export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTab, setPreviewSection }) => {
+export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTab, setPreviewSection, specialFilters }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [sections, setSections] = useState([]);
     const [selectedSections, setSelectedSections] = useState(result.selected_sections || []); // Initialize from result
     const isCourseInList = courses.some(course => course.course_number === result.course_number);
     const [isCourseAdded, setIsCourseAdded] = useState(isCourseInList);
-    const [isAllSectionsSelected, setIsAllSectionsSelected] = useState(false); // Track toggle state
+    const [isAllSectionsSelected, setIsAllSectionsSelected] = useState(true); // Track toggle state
     const dropdownRef = useRef(null);
-
     // toggles the dropdown visibility
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -60,26 +58,24 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
     }, [courses, result.course_number]);
 
     useEffect(() => {
-        sectionsByCourseNumber(result.course_number).then((data) => {
-            const sectionList = Object.values(data);
-            setSections(sectionList);
-            if (!isCourseAdded) {
-                setSelectedSections([]); // No sections selected by default when course is not added
-            }
-            else {
-                const matchedCourse = courses.find(course => course.course_number === result.course_number);
-                // Set selected_sections to match, or empty array if not found
-                result.selected_sections = matchedCourse.selected_sections || [];
-                setSelectedSections(result.selected_sections);
-            }
-            // Check if all sections are already selected
-            setIsAllSectionsSelected(
-                sectionList.length > 0 &&
-                sectionList.every(section =>
-                    selectedSections.some(selected => selected.index_number === section.index_number)
-                )
-            );
-        });
+        const sectionList = Object.values(result.sections);
+        setSections(sectionList);
+        if (!isCourseAdded) {
+            setSelectedSections(sectionList); // No sections selected by default when course is not added
+        }
+        else {
+            const matchedCourse = courses.find(course => course.course_number === result.course_number);
+            // Set selected_sections to match, or empty array if not found
+            result.selected_sections = matchedCourse.selected_sections || [];
+            setSelectedSections(result.selected_sections);
+        }
+        // Check if all sections are already selected
+        setIsAllSectionsSelected(
+            sectionList.length > 0 &&
+            sectionList.every(section =>
+                selectedSections.some(selected => selected.index_number === section.index_number)
+            )
+        );
     }, [result.course_number, isCourseAdded]);
 
     useEffect(() => {
@@ -151,6 +147,7 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
                         setSelectedSections={setSelectedSections}
                         setPreviewSection={setPreviewSection}
                         courseInfo={result}
+                        specialFilters={specialFilters}
                     />
                 </div>
             )}

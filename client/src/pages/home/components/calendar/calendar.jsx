@@ -1,33 +1,40 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./calendar.css";
-import "./classes.json";
 
-// Helper: Map day to index (Mon=0, Tue=1, …, Sun=6)
-const dayToIndex = (day) => {
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-  return days.indexOf(day);
+import { 
+  parseTimeString, 
+  timeToMinutes, 
+  calculatePosition, 
+  dayToIndex, 
+  isValidLecture, 
+  isOnlineSection, 
+  getOnlineSections, 
+  createClassDetails,
+  calculateLecturePosition
+} from "./calendarUtils";
+import ClassPopup from "./ClassPopup";
+
+// Constants
+const DAY_ABBREVIATIONS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const HOUR_LABELS = Array.from({ length: 16 }, (_, i) => i + 8);
+
+// Helper: Render online section item
+const renderOnlineSectionItem = ({ course, section }, index, handleClick) => {
+  // Create unified class details for online section
+  const classDetails = createClassDetails(course, section, null, null, null);
+  
+  return (
+    <div 
+      key={index} 
+      className="online-section-item"
+      onClick={(e) => handleClick(classDetails, e)}
+      style={{ cursor: 'pointer' }}
+    >
+      <p><strong>{course.course_name}</strong></p>
+
+    </div>
+  );
 };
-
-// Helper: Calculate vertical position (0% at 8:00 AM, 100% at 11:00 PM)
-const calculatePosition = (time) => {
-  const [hour, minute, period] = time.match(/(\d+):(\d+) (AM|PM)/).slice(1);
-  let hour24 = (parseInt(hour, 10) % 12) + (period === "PM" ? 12 : 0);
-  if (hour24 < 8) hour24 += 12;
-  const totalMinutes = (hour24 - 8) * 60 + parseInt(minute, 10);
-  // 15 hours * 60 = 900 minutes
-  return (totalMinutes / 900) * 100;
-};
-
-// Array of hours from 8 AM (8) to 11 PM (23) -> 16 labels
-const hourLabels = Array.from({ length: 16 }, (_, i) => i + 8);
 
 function Calendar({ courses, previewSection }) {
   // Color mapping for campus locations
@@ -41,12 +48,23 @@ function Calendar({ courses, previewSection }) {
   };
 
   const [selectedClass, setSelectedClass] = useState(null);
+  const [isOnlinePopupVisible, setIsOnlinePopupVisible] = useState(false);
+  const [onlinePopupHeight, setOnlinePopupHeight] = useState(0);
   const calendarRef = useRef(null);
+  const onlinePopupRef = useRef(null);
 
   // Debug: log courses prop whenever it changes
   useEffect(() => {
     console.log("🛠️ [Calendar] courses prop:", courses);
   }, [courses]);
+
+  // Measure online popup height when it becomes visible
+  useEffect(() => {
+    if (isOnlinePopupVisible && onlinePopupRef.current) {
+      const height = onlinePopupRef.current.offsetHeight;
+      setOnlinePopupHeight(height);
+    }
+  }, [isOnlinePopupVisible]);
 
   // Function to check for time conflicts
   const checkTimeConflict = (newLecture, existingLectures) => {
@@ -54,14 +72,22 @@ function Calendar({ courses, previewSection }) {
     const newEnd = newLecture.lectureTime.split(" - ")[1];
     const newDay = newLecture.lectureDay;
 
+    // Convert new lecture times to minutes
+    const newStartMinutes = timeToMinutes(newStart);
+    const newEndMinutes = timeToMinutes(newEnd);
+
     return existingLectures.some(existingLecture => {
       if (existingLecture.lectureDay !== newDay) return false;
       
       const existingStart = existingLecture.lectureTime.split(" - ")[0];
       const existingEnd = existingLecture.lectureTime.split(" - ")[1];
       
-      // Check for overlap
-      return (newStart < existingEnd && newEnd > existingStart);
+      // Convert existing lecture times to minutes
+      const existingStartMinutes = timeToMinutes(existingStart);
+      const existingEndMinutes = timeToMinutes(existingEnd);
+      
+      // Check for overlap using minute values
+      return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
     });
   };
 
@@ -72,9 +98,7 @@ function Calendar({ courses, previewSection }) {
       course.selected_sections.forEach(section => {
         const lectureInfoArray = Object.values(section.lecture_info);
         lectureInfoArray.forEach(lecture => {
-          if (lecture.lectureDay !== "Asynchronous content" && 
-              lecture.lectureDay !== "-1" && 
-              lecture.lectureTime !== "-1") {
+          if (isValidLecture(lecture)) {
             lectures.push(lecture);
           }
         });
@@ -120,12 +144,49 @@ function Calendar({ courses, previewSection }) {
     setSelectedClass(null);
   };
 
+  const toggleOnlinePopup = () => {
+    setIsOnlinePopupVisible(!isOnlinePopupVisible);
+  };
+
+  // Helper: Render a single lecture
+  const renderLecture = (lecture, course, section, index, isPreview = false, hasConflict = false) => {
+    const { topPos, heightPos, dayLeft, start, end } = calculateLecturePosition(lecture);
+    const classDetails = createClassDetails(course, section, lecture, start, end);
+    
+    const className = isPreview 
+      ? `calendar_class preview-class ${hasConflict ? 'conflict' : 'no-conflict'}`
+      : 'calendar_class';
+    
+    const style = {
+      top: `${topPos}%`,
+      left: `${dayLeft}%`,
+      width: `${90 / 7}%`,
+      height: `${heightPos}%`,
+      backgroundColor: campusColors[lecture.campus] || "#ccc",
+      ...(isPreview && {
+        opacity: 0.7,
+        zIndex: 1000,
+      })
+    };
+
+    return (
+      <div
+        key={`${isPreview ? 'preview-' : ''}${course.course_code}-${section.index_number}-${index}`}
+        className={className}
+        style={style}
+        onClick={isPreview ? undefined : (e) => handleClassClick(classDetails, e)}
+      >
+        {(!isPreview || !hasConflict) && course.course_name}
+      </div>
+    );
+  };
+
   return (
     <div ref={calendarRef} className="calendar_container">
       {/* Header row: empty cell for time + day headers */}
       <div className="calendar_header_row">
         <div className="time_header_cell" />
-        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+        {DAY_ABBREVIATIONS.map((day) => (
           <div key={day} className="day_header_cell">
             {day}
           </div>
@@ -134,7 +195,7 @@ function Calendar({ courses, previewSection }) {
 
       {/* Calendar body: hour lines, time labels, and class blocks */}
       <div className="calendar_body">
-        {hourLabels.map((hourValue, i) => {
+        {HOUR_LABELS.map((hourValue, i) => {
           const topPercent = (i / 15) * 100;
           const displayHour = hourValue % 12 || 12;
           const ampm = hourValue >= 12 ? "PM" : "AM";
@@ -155,55 +216,11 @@ function Calendar({ courses, previewSection }) {
         {(courses || []).map((course) =>
           course.selected_sections.map((section) => {
             const lectureInfoArray = Object.values(section.lecture_info);
-
             return lectureInfoArray
-              .filter(
-                (lecture) =>
-                  lecture.lectureDay !== "Asynchronous content" &&
-                  lecture.lectureDay !== "-1" &&
-                  lecture.lectureTime !== "-1"
-              )
-              .map((lecture, index) => {
-                const dayIndex = dayToIndex(lecture.lectureDay);
-                const [start, end] = lecture.lectureTime.split(" - ");
-                const topPos = calculatePosition(start);
-                const bottomPos = calculatePosition(end);
-                const heightPos = bottomPos - topPos;
-                const dayLeft = 10 + dayIndex * (90 / 7);
-
-                const classDetails = {
-                  title: course.course_name,
-                  day: lecture.lectureDay,
-                  start: start,
-                  end: end,
-                  core_code: course.core_code,
-                  course_number: course.course_number,
-                  instructor: section.instructor,
-                  section_number: section.section_number,
-                  campus: lecture.campus,
-                  lectureTime: lecture.lectureTime,
-                  classroom: lecture.classroom,
-                  classroomLink: lecture.classroomLink,
-                  recitation: lecture.recitation,
-                };
-
-                return (
-                  <div
-                    key={`${course.course_code}-${section.index_number}-${index}`}
-                    className="calendar_class"
-                    style={{
-                      top: `${topPos}%`,
-                      left: `${dayLeft}%`,
-                      width: `${90 / 7}%`,
-                      height: `${heightPos}%`,
-                      backgroundColor: campusColors[lecture.campus] || "#ccc",
-                    }}
-                    onClick={(e) => handleClassClick(classDetails, e)}
-                  >
-                    {course.course_name}
-                  </div>
-                );
-              });
+              .filter(isValidLecture)
+              .map((lecture, index) => 
+                renderLecture(lecture, course, section, index)
+              );
           })
         )}
 
@@ -213,89 +230,48 @@ function Calendar({ courses, previewSection }) {
           const lectureInfoArray = Object.values(previewSection.section.lecture_info);
           
           return lectureInfoArray
-            .filter(
-              (lecture) =>
-                lecture.lectureDay !== "Asynchronous content" &&
-                lecture.lectureDay !== "-1" &&
-                lecture.lectureTime !== "-1"
-            )
+            .filter(isValidLecture)
             .map((lecture, index) => {
-              const dayIndex = dayToIndex(lecture.lectureDay);
-              const [start, end] = lecture.lectureTime.split(" - ");
-              const topPos = calculatePosition(start);
-              const bottomPos = calculatePosition(end);
-              const heightPos = bottomPos - topPos;
-              const dayLeft = 10 + dayIndex * (90 / 7);
-              
-              // Check for conflicts
               const hasConflict = checkTimeConflict(lecture, existingLectures);
-              
-              return (
-                <div
-                  key={`preview-${previewSection.section.index_number}-${index}`}
-                  className={`calendar_class preview-class ${hasConflict ? 'conflict' : 'no-conflict'}`}
-                  style={{
-                    top: `${topPos}%`,
-                    left: `${dayLeft}%`,
-                    width: `${90 / 7}%`,
-                    height: `${heightPos}%`,
-                    backgroundColor: campusColors[lecture.campus] || "#ccc",
-                    opacity: 0.7, // Slightly higher opacity for better visibility
-                    zIndex: 1000, // Ensure preview appears on top
-                  }}
-                >
-                  {previewSection.course.course_name}
-                </div>
-              );
+              return renderLecture(lecture, previewSection.course, previewSection.section, index, true, hasConflict);
             });
         })()}
       </div>
 
       {/* Popup positioned relative to the calendar container */}
-      {selectedClass && (
-        <div
-          className="popup"
-          style={{ top: selectedClass.popupY, left: selectedClass.popupX }}
-        >
-          <button className="popup-close" onClick={closePopup}>
-            &times;
-          </button>
-          <h2>{selectedClass.title}</h2>
-          <p>
-            <strong>Day:</strong> {selectedClass.day}
-          </p>
-          <p>
-            <strong>Time:</strong> {selectedClass.start} - {selectedClass.end}
-          </p>
-          <p>
-            <strong>Core Code:</strong> {selectedClass.core_code}
-          </p>
-          <p>
-            <strong>Section:</strong> {selectedClass.section_number}
-          </p>
-          <p>
-            <strong>Instructor:</strong> {selectedClass.instructor}
-          </p>
-          <p>
-            <strong>Campus:</strong> {selectedClass.campus}
-          </p>
-          <p>
-            <strong>Classroom:</strong>{" "}
-            <a
-              href={selectedClass.classroomLink}
-              target="_blank"
-              rel="noreferrer"
+      <ClassPopup selectedClass={selectedClass} onClose={closePopup} />
+
+      {/* Online Sections Popup at bottom */}
+      {(() => {
+        const onlineSections = getOnlineSections(courses);
+        if (onlineSections.length === 0) return null;
+        
+        return (
+          <>
+            {/* Toggle Button */}
+            <button 
+              className={`online-popup-toggle ${isOnlinePopupVisible ? 'expanded' : 'collapsed'}`}
+              onClick={toggleOnlinePopup}
+              style={{
+                bottom: isOnlinePopupVisible ? `${onlinePopupHeight}px` : '0'
+              }}
             >
-              {selectedClass.classroom}
-            </a>
-          </p>
-          {selectedClass.recitation ? (
-            <p>
-              <strong>Recitation:</strong> {selectedClass.recitation}
-            </p>
-          ) : null}
-        </div>
-      )}
+              {isOnlinePopupVisible ? '▼' : '▲'} Online Classes ({onlineSections.length})
+            </button>
+            
+            {/* Collapsible Popup */}
+            {isOnlinePopupVisible && (
+              <div ref={onlinePopupRef} className="online-sections-popup">
+                <div className="online-sections-list">
+                  {onlineSections.map((item, index) => 
+                    renderOnlineSectionItem(item, index, handleClassClick)
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }

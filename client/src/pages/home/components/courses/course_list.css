@@ -55,6 +55,7 @@
     @apply flex flex-row mt-[10px] gap-[5px];
     border: 5px solid blue;
   }
+  
   .course_list_text {
     @apply text-center text-black;
     font-size: clamp(0.5rem, 1vw, 1.5rem);
@@ -132,6 +133,46 @@
 .saved_schedule_container {
   @apply flex-row flex-1 h-full;
   border: 2px solid green;
+}
+
+.filter-checkbox input[type="checkbox"] {
+    margin-right: 0; /* Remove the default margin */
+    margin-left: auto; /* Push the checkbox to the far right */
+}
+
+.filter-button {
+    margin-left: auto; /* Push the button to the far right */
+    width: 20px; /* Set width to resemble a checkbox */
+    height: 20px; /* Set height to resemble a checkbox */
+    background-color: white; /* Default checkbox background */
+    border: 2px solid #007bff; /* Border color to resemble a checkbox */
+    border-radius: 3px; /* Slightly rounded corners like a checkbox */
+    cursor: pointer; /* Pointer cursor to indicate interactivity */
+    display: flex; /* Center the checkmark inside */
+    align-items: center; /* Center the checkmark vertically */
+    justify-content: center; /* Center the checkmark horizontally */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.filter-button:hover {
+    border-color: #0056b3; /* Darker border color on hover */
+}
+
+.filter-button.selected {
+    background-color: #007bff; /* Checkbox "checked" background color */
+    border-color: #0056b3; /* Darker border for the selected state */
+    color: white; /* White color for the checkmark */
+}
+
+.filter-button::after {
+    content: "✔"; /* Checkmark symbol */
+    font-size: 14px; /* Adjust size of the checkmark */
+    display: none; /* Hide by default */
+    color: white; /* Checkmark color */
+}
+
+.filter-button.selected::after {
+    display: block; /* Show checkmark when selected */
 }
 
 

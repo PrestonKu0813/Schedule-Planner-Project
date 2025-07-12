@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+
+  .saved-schedules-container h3 {
+    @apply text-xl font-bold mb-4 text-gray-800;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+
+  .no-schedules {
+    @apply text-center text-gray-500 py-8;
+  }
+
+  .no-schedules p {
+    @apply mb-2;
+  }
+
+  .schedules-list {
+    @apply flex flex-col gap-2 overflow-y-auto;
+    max-height: 77vh;
+    width: auto;
+    background-color: transparent;
+    box-sizing: border-box;
+  }
+
+  .schedule-item {
+    @apply flex flex-col p-2 bg-gray-50 border-2 border-gray-500 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors;
+  }
+
+  .schedule-item:hover {
+    @apply border-blue-300 bg-blue-200;
+  }
+
+  .schedule-item.current-schedule {
+    @apply border-green-500 bg-green-200;
+  }
+
+  .schedule-name {
+    @apply font-semibold text-gray-800 mb-1;
+  }
+
+  .schedule-info {
+    @apply text-sm text-gray-600;
+  }
+
+} 

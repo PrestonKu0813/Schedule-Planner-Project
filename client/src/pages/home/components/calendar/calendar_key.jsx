@@ -7,47 +7,46 @@ function Calendar_Key() {
     // MAIN BODY
     <div className="calendar_key_container">
       {/* FIRST ROW */}
-      <div className="calendar_key_rows">
-        {/* BUSCH INDEX */}
-        <div className="calendar_key_cols">
-          {/* LEFT SIDE COLOR TAG */}
-          <div className="calendar_key" id="busch" />
-          <p id="text">Busch</p>
+      <div className="calendar_key_left">
+        <div className="calendar_key_rows">
+          {/* BUSCH INDEX */}
+          <div className="calendar_key" id="busch">
+            <p id="text">Busch</p>
+          </div>
+          {/* LIVI INDEX */}
+
+          <div className="calendar_key" id="livi">
+            <p id="text">Livingston</p>
+          </div>
+
+          {/* ONLINE INDEX */}
+
+          <div className="calendar_key" id="online">
+            <p id="text">Online</p>
+          </div>
         </div>
-        {/* LIVI INDEX */}
-        <div className="calendar_key_cols">
-          {/* LEFT SIDE COLOR TAG */}
-          <div className="calendar_key" id="livi" />
-          <p id="text">Livingston</p>
-        </div>
-        {/* ONLINE INDEX */}
-        <div className="calendar_key_cols">
-          {/* LEFT SIDE COLOR TAG */}
-          <div className="calendar_key" id="online" />
-          <p id="text">Online</p>
+
+        {/* SECOND ROW */}
+        <div className="calendar_key_rows">
+          {/* COLLEGE AVE INDEX */}
+
+          <div className="calendar_key" id="CA">
+            <p id="text">College Ave</p>
+          </div>
+          {/* COOK DOUG INDEX */}
+
+          <div className="calendar_key" id="CD">
+            <p id="text">Cook/Doug</p>
+          </div>
+          {/* DOWNTOWN INDEX */}
+
+          <div className="calendar_key" id="downtown">
+            <p id="text">Downtown</p>
+          </div>
         </div>
       </div>
-
-      {/* SECOND ROW */}
-      <div className="calendar_key_rows">
-        {/* COLLEGE AVE INDEX */}
-        <div className="calendar_key_cols">
-          {/* LEFT SIDE COLOR TAG */}
-          <div className="calendar_key" id="CA" />
-          <p id="text">College Ave</p>
-        </div>
-        {/* COOK DOUG INDEX */}
-        <div className="calendar_key_cols">
-          {/* LEFT SIDE COLOR TAG */}
-          <div className="calendar_key" id="CD" />
-          <p id="text">Cook/Doug</p>
-        </div>
-        {/* DOWNTOWN INDEX */}
-        <div className="calendar_key_cols">
-          {/* LEFT SIDE COLOR TAG */}
-          <div className="calendar_key" id="downtown" />
-          <p id="text">Downtown</p>
-        </div>
+      <div className="calendar_key_right">
+        <button className="other-popup-button" id="text"> Other </button>
       </div>
     </div>
   );

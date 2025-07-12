@@ -11,6 +11,7 @@ module.exports = {
   message: {
     success: "success",
     failure: "failure",
+    no_schedule: "no such schedule exist",
   },
   subject: {
     CODE: "subject_code",

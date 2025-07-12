@@ -61,7 +61,7 @@ function Selected_Courses({ courses, setCourses, setActiveTab, setInfo }) {
                     onClick={e => {
                       e.stopPropagation();
                       setInfo(course);
-                      setActiveTab("COURSES");
+                      setActiveTab("SECTION");
                     }}
                   >
                     Details
