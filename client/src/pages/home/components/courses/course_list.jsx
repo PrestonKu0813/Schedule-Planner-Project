@@ -2,7 +2,7 @@ import "./course_list.css";
 import { useUser } from "../../../../contexts/UserContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SearchAPI } from "../SearchBar/SearchAPI.js";
 import LogoutButton from "../buttons/logout_button";
 import SaveButton from "../save_button/save_button";
@@ -34,6 +34,7 @@ function CourseList({
 }) {
   const { user } = useUser();
   const { campus } = searchFilter;
+  const savedSchedulesRef = useRef(null);
 
   //setting the results of search bar
   const [results, setResults] = useState([]);
@@ -106,6 +107,13 @@ function CourseList({
     console.log("Special Filters Updated:", specialFilters);
   }, [specialFilters]);
 
+  // Callback function to refresh saved schedules after saving
+  const handleScheduleSaved = () => {
+    if (savedSchedulesRef.current && savedSchedulesRef.current.loadSavedSchedules) {
+      savedSchedulesRef.current.loadSavedSchedules();
+    }
+  };
+
   return (
     <div className="course_list_inner">
       <div className="button_row">
@@ -139,7 +147,11 @@ function CourseList({
         </button>
 
         <LogoutButton />
-        <SaveButton courses={courses} user={user} />
+        <SaveButton 
+          courses={courses} 
+          user={user} 
+          onScheduleSaved={handleScheduleSaved}
+        />
       </div>
       {/* Tab Content */}
       <div
@@ -288,6 +300,7 @@ function CourseList({
             </div>
             <div className="saved_schedule_container">
               <SavedSchedules
+                ref={savedSchedulesRef}
                 user={user}
                 setCourses={setCourses}
                 courses={courses}

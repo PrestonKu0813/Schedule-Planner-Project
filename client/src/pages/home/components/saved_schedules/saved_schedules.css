@@ -47,4 +47,21 @@
     @apply text-sm text-gray-600;
   }
 
+  .delete-schedule-button {
+    @apply mt-1 text-red-600 border-none bg-gray-200 cursor-pointer px-2 py-1 rounded;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .delete-schedule-button:hover {
+    @apply text-red-800 bg-gray-300;
+  }
+
+  .delete-schedule-button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .no-schedules {
+    @apply text-black;
+  }
+
 } 
