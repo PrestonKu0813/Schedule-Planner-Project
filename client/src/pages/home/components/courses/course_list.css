@@ -174,4 +174,7 @@
     display: block; /* Show checkmark when selected */
 }
 
+.filter-section {
+    text-align: left;
+}
 

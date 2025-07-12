@@ -34,6 +34,7 @@ function CourseList({
 }) {
   const { user } = useUser();
   const { campus } = searchFilter;
+  const { credit } = searchFilter;
 
   //setting the results of search bar
   const [results, setResults] = useState([]);
@@ -63,20 +64,22 @@ function CourseList({
     campus: [campus.BU, campus.LI, campus.CA, campus.CD, campus.ASYNC],
     time: [],
     day: [],
-    credits: [],
+    credit: [credit.ONE, credit.TWO, credit.THREE, credit.FOUR, credit.CBA, credit.NA],
   });
 
-  const addCampus = (campus) => {
+  // Generalized add to filter
+  const addToFilter = (filterKey, value) => {
     setSpecialFilters((prev) => ({
       ...prev,
-      campus: [...prev.campus, campus],
+      [filterKey]: [...prev[filterKey], value],
     }));
   };
 
-  const removeCampus = (campus) => {
+  // Generalized remove from filter
+  const removeFromFilter = (filterKey, value) => {
     setSpecialFilters((prev) => ({
       ...prev,
-      campus: prev.campus.filter((c) => c !== campus),
+      [filterKey]: prev[filterKey].filter((item) => item !== value),
     }));
   };
 
@@ -185,10 +188,7 @@ function CourseList({
                 </div>
 
                 {/* Additional Filters Dropdown */}
-                <div
-                  className="additional-filters-dropdown"
-                  style={{ position: "relative", marginLeft: "1rem" }}
-                >
+                <div className="additional-filters-dropdown" style={{ position: "relative", marginLeft: "1rem", display: "inline-block" }}>
                   <button
                     onClick={() => setShowFilters((prev) => !prev)}
                     className="additional-filters-toggle"
@@ -197,7 +197,23 @@ function CourseList({
                     Additional Filters ▼
                   </button>
                   {showFilters && (
-                    <div className="additional-filters-menu">
+                    <div
+                      className="additional-filters-menu"
+                      style={{
+                        position: "absolute",
+                        top: "110%",
+                        left: 0,
+                        width: "100%",           // Make it as wide as the parent
+                        maxHeight: "300px",      // Limit the height
+                        overflowY: "auto",       // Scroll if content is too tall
+                        background: "#fff",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        padding: "1rem",
+                        zIndex: 1000,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+                      }}
+                    >
                       <div className="filter-section">
                         <h4>Campus</h4>
                         <Checkbox
@@ -205,9 +221,9 @@ function CourseList({
                           isChecked={specialFilters.campus.includes(campus.BU)}
                           onClick={() => {
                             if (specialFilters.campus.includes(campus.BU)) {
-                              removeCampus(campus.BU);
+                              removeFromFilter("campus", campus.BU);
                             } else {
-                              addCampus(campus.BU);
+                              addToFilter("campus", campus.BU);
                             }
                           }}
                         />
@@ -216,9 +232,9 @@ function CourseList({
                           isChecked={specialFilters.campus.includes(campus.LI)}
                           onClick={() => {
                             if (specialFilters.campus.includes(campus.LI)) {
-                              removeCampus(campus.LI);
+                              removeFromFilter("campus", campus.LI);
                             } else {
-                              addCampus(campus.LI);
+                              addToFilter("campus", campus.LI);
                             }
                           }}
                         />
@@ -227,9 +243,9 @@ function CourseList({
                           isChecked={specialFilters.campus.includes(campus.CA)}
                           onClick={() => {
                             if (specialFilters.campus.includes(campus.CA)) {
-                              removeCampus(campus.CA);
+                              removeFromFilter("campus", campus.CA);
                             } else {
-                              addCampus(campus.CA);
+                              addToFilter("campus", campus.CA);
                             }
                           }}
                         />
@@ -238,9 +254,9 @@ function CourseList({
                           isChecked={specialFilters.campus.includes(campus.CD)}
                           onClick={() => {
                             if (specialFilters.campus.includes(campus.CD)) {
-                              removeCampus(campus.CD);
+                              removeFromFilter("campus", campus.CD);
                             } else {
-                              addCampus(campus.CD);
+                              addToFilter("campus", campus.CD);
                             }
                           }}
                         />
@@ -249,11 +265,71 @@ function CourseList({
                           isChecked={specialFilters.campus.includes(campus.ASYNC) || specialFilters.campus.includes(campus.ON)}
                           onClick={() => {
                             if (specialFilters.campus.includes(campus.ASYNC) || specialFilters.campus.includes(campus.ON)) {
-                              removeCampus(campus.ASYNC);
-                              removeCampus(campus.ON);
+                              removeFromFilter("campus", campus.ASYNC);
+                              removeFromFilter("campus", campus.ON);
                             } else {
-                              addCampus(campus.ASYNC);
-                              addCampus(campus.ON);
+                              addToFilter("campus", campus.ASYNC);
+                              addToFilter("campus", campus.ON);
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="filter-section">
+                        <h4>Credit</h4>
+                        <Checkbox
+                          label="One"
+                          isChecked={specialFilters.credit.includes(credit.ONE)}
+                          onClick={() => {
+                            if (specialFilters.credit.includes(credit.ONE)) {
+                              removeFromFilter("credit", credit.ONE);
+                            } else {
+                              addToFilter("credit", credit.ONE);
+                            }
+                          }}
+                        />
+                        <Checkbox
+                          label="Two"
+                          isChecked={specialFilters.credit.includes(credit.TWO)}
+                          onClick={() => {
+                            if (specialFilters.credit.includes(credit.TWO)) {
+                              removeFromFilter("credit", credit.TWO);
+                            } else {
+                              addToFilter("credit", credit.TWO);
+                            }
+                          }}
+                        />
+                        <Checkbox
+                          label="Three"
+                          isChecked={specialFilters.credit.includes(credit.THREE)}
+                          onClick={() => {
+                            if (specialFilters.credit.includes(credit.THREE)) {
+                              removeFromFilter("credit", credit.THREE);
+                            } else {
+                              addToFilter("credit", credit.THREE);
+                            }
+                          }}
+                        />
+                        <Checkbox
+                          label="Four"
+                          isChecked={specialFilters.credit.includes(credit.FOUR)}
+                          onClick={() => {
+                            if (specialFilters.credit.includes(credit.FOUR)) {
+                              removeFromFilter("credit", credit.FOUR);
+                            } else {
+                              addToFilter("credit", credit.FOUR);
+                            }
+                          }}
+                        />
+                        <Checkbox
+                          label="CBA/NA"
+                          isChecked={specialFilters.credit.includes(credit.CBA) || specialFilters.credit.includes(credit.NA)}
+                          onClick={() => {
+                            if (specialFilters.credit.includes(credit.CBA) || specialFilters.credit.includes(credit.NA)) {
+                              removeFromFilter("credit", credit.CBA);
+                              removeFromFilter("credit", credit.NA);
+                            } else {
+                              addToFilter("credit", credit.CBA);
+                              addToFilter("credit", credit.NA);
                             }
                           }}
                         />
