@@ -3,14 +3,25 @@ import "./Search.css";
 import { SearchResult } from './SearchResult';
 
 export const SearchResultsList = ({results, courses, setCourses, setInfo, setActiveTab, setPreviewSection, selectedTag, specialFilters}) => {
-    if (results.length === 0) {
+    // Filter results based on credit
+    const filteredResults = results.filter(result => {
+        // Parse credit as float and round down
+        const creditValue = Math.floor(parseFloat(result.credit));
+        // Check if any specialFilters.credit matches the rounded value
+        return specialFilters.credit.some(filterCredit => {
+            // Try to parse filterCredit as float and compare
+            const filterCreditValue = Math.floor(parseFloat(filterCredit));
+            return filterCreditValue === creditValue;
+        });
+    });
+
+    if (filteredResults.length === 0) {
         return <div className="no-results">No results found</div>;
-    }
-    else {  
+    } else {
         return (
             <div className="results-list">
                 {
-                    results.map((result, id) => {
+                    filteredResults.map((result, id) => {
                         // Find a matching course by course_number
                         const matchedCourse = courses.find(course => course.course_number === result.course_number);
                         // Set selected_sections to match, or empty array if not found
