@@ -116,7 +116,7 @@ export const SearchResult = ({ result, courses, setCourses, setInfo, setActiveTa
                     onClick={e => {
                         e.stopPropagation();
                         setInfo(result);
-                        setActiveTab("COURSES");
+                        setActiveTab("SECTION");
                     }}
                 >
                     Details

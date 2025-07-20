@@ -64,7 +64,14 @@ function CourseList({
     campus: [campus.BU, campus.LI, campus.CA, campus.CD, campus.ASYNC],
     time: [],
     day: [],
-    credit: [credit.ONE, credit.TWO, credit.THREE, credit.FOUR, credit.CBA, credit.NA],
+    credit: [
+      credit.ONE,
+      credit.TWO,
+      credit.THREE,
+      credit.FOUR,
+      credit.CBA,
+      credit.NA,
+    ],
   });
 
   // Generalized add to filter
@@ -188,7 +195,14 @@ function CourseList({
                 </div>
 
                 {/* Additional Filters Dropdown */}
-                <div className="additional-filters-dropdown" style={{ position: "relative", marginLeft: "1rem", display: "inline-block" }}>
+                <div
+                  className="additional-filters-dropdown"
+                  style={{
+                    position: "relative",
+                    marginLeft: "1rem",
+                    display: "inline-block",
+                  }}
+                >
                   <button
                     onClick={() => setShowFilters((prev) => !prev)}
                     className="additional-filters-toggle"
@@ -197,23 +211,7 @@ function CourseList({
                     Additional Filters ▼
                   </button>
                   {showFilters && (
-                    <div
-                      className="additional-filters-menu"
-                      style={{
-                        position: "absolute",
-                        top: "110%",
-                        left: 0,
-                        width: "100%",           // Make it as wide as the parent
-                        maxHeight: "300px",      // Limit the height
-                        overflowY: "auto",       // Scroll if content is too tall
-                        background: "#fff",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        padding: "1rem",
-                        zIndex: 1000,
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-                      }}
-                    >
+                    <div className="additional-filters-menu">
                       <div className="filter-section">
                         <h4>Campus</h4>
                         <Checkbox
@@ -262,9 +260,15 @@ function CourseList({
                         />
                         <Checkbox
                           label="Async"
-                          isChecked={specialFilters.campus.includes(campus.ASYNC) || specialFilters.campus.includes(campus.ON)}
+                          isChecked={
+                            specialFilters.campus.includes(campus.ASYNC) ||
+                            specialFilters.campus.includes(campus.ON)
+                          }
                           onClick={() => {
-                            if (specialFilters.campus.includes(campus.ASYNC) || specialFilters.campus.includes(campus.ON)) {
+                            if (
+                              specialFilters.campus.includes(campus.ASYNC) ||
+                              specialFilters.campus.includes(campus.ON)
+                            ) {
                               removeFromFilter("campus", campus.ASYNC);
                               removeFromFilter("campus", campus.ON);
                             } else {
@@ -300,7 +304,9 @@ function CourseList({
                         />
                         <Checkbox
                           label="Three"
-                          isChecked={specialFilters.credit.includes(credit.THREE)}
+                          isChecked={specialFilters.credit.includes(
+                            credit.THREE
+                          )}
                           onClick={() => {
                             if (specialFilters.credit.includes(credit.THREE)) {
                               removeFromFilter("credit", credit.THREE);
@@ -311,7 +317,9 @@ function CourseList({
                         />
                         <Checkbox
                           label="Four"
-                          isChecked={specialFilters.credit.includes(credit.FOUR)}
+                          isChecked={specialFilters.credit.includes(
+                            credit.FOUR
+                          )}
                           onClick={() => {
                             if (specialFilters.credit.includes(credit.FOUR)) {
                               removeFromFilter("credit", credit.FOUR);
@@ -322,9 +330,15 @@ function CourseList({
                         />
                         <Checkbox
                           label="CBA/NA"
-                          isChecked={specialFilters.credit.includes(credit.CBA) || specialFilters.credit.includes(credit.NA)}
+                          isChecked={
+                            specialFilters.credit.includes(credit.CBA) ||
+                            specialFilters.credit.includes(credit.NA)
+                          }
                           onClick={() => {
-                            if (specialFilters.credit.includes(credit.CBA) || specialFilters.credit.includes(credit.NA)) {
+                            if (
+                              specialFilters.credit.includes(credit.CBA) ||
+                              specialFilters.credit.includes(credit.NA)
+                            ) {
                               removeFromFilter("credit", credit.CBA);
                               removeFromFilter("credit", credit.NA);
                             } else {
@@ -352,9 +366,118 @@ function CourseList({
           </div>
         ) : activeTab === "SECTION" ? (
           <div className="course_list_text">
-            <h2>Courses Tab</h2>
-            <p>Welcome to the Courses tab!</p>
-            <p>Selected Info: {info.course_name}</p>
+            {info && info.course_number ? (
+              <div
+                className="section-course-info"
+                style={{ maxWidth: 600, margin: "0 auto", fontSize: "0.97em" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "1.5em 2em",
+                    marginBottom: "0.5em",
+                  }}
+                >
+                  <div>
+                    <strong>{info.course_name}</strong>
+                  </div>
+                  <div>
+                    <strong>Course #:</strong> {info.course_number}
+                  </div>
+                  <div>
+                    <strong>Credits:</strong> {info.credit}
+                  </div>
+                </div>
+                <div className="section-list">
+                  <h4 style={{ margin: "0.5em 0 0.2em 0" }}>Sections</h4>
+                  {info.sections && Object.values(info.sections).length > 0 ? (
+                    Object.values(info.sections).map((section) => (
+                      <div
+                        key={section.index_number}
+                        className="section-detail"
+                        style={{
+                          border: "1px solid #eee",
+                          borderRadius: "4px",
+                          margin: "6px 0",
+                          padding: "6px 10px",
+                          background: "#fafbfc",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "1.5em 1.5em",
+                          }}
+                        >
+                          <div>
+                            <strong>Sec:</strong> {section.section_number}
+                          </div>
+                          <div>
+                            <strong>Index:</strong> {section.index_number}
+                          </div>
+                          <div>
+                            <strong>Instr:</strong>{" "}
+                            {section.instructor !== "-1"
+                              ? section.instructor
+                              : "TBA"}
+                          </div>
+                        </div>
+                        {section.lecture_info &&
+                          Object.values(section.lecture_info).map(
+                            (infoObj, idx) => (
+                              <div
+                                key={idx}
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: "1.5em 1.5em",
+                                  marginLeft: "0.5em",
+                                  fontSize: "0.96em",
+                                }}
+                              >
+                                <div>
+                                  <strong>Day:</strong>{" "}
+                                  {infoObj.lectureDay !== -1
+                                    ? infoObj.lectureDay
+                                    : "TBA"}
+                                </div>
+                                <div>
+                                  <strong>Time:</strong>{" "}
+                                  {infoObj.lectureTime !== -1
+                                    ? infoObj.lectureTime
+                                    : "TBA"}
+                                </div>
+                                <div>
+                                  <strong>Campus:</strong>{" "}
+                                  {infoObj.campus !== -1
+                                    ? infoObj.campus
+                                    : "TBA"}
+                                </div>
+                                <div>
+                                  <strong>Room:</strong>{" "}
+                                  {infoObj.classroom !== -1
+                                    ? infoObj.classroom
+                                    : "TBA"}
+                                </div>
+                              </div>
+                            )
+                          )}
+                      </div>
+                    ))
+                  ) : (
+                    <p style={{ margin: "0.5em 0" }}>No sections available.</p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <h2>Courses Tab</h2>
+                <p>Welcome to the Courses tab!</p>
+                <p>Selected Info: {info && info.course_name}</p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="schedule_container">

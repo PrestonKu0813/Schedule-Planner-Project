@@ -178,4 +178,37 @@
     text-align: left;
 }
 
+/* course_list.css */
+.additional-filters-dropdown {
+  position: relative;
+  margin-left: 1rem;
+  display: inline-block;
+  z-index: 10;
+}
+
+.additional-filters-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1rem;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.section-course-info h2 {
+  margin-bottom: 0.5em;
+}
+.section-detail {
+  background: #f9f9f9;
+}
+.section-list h3 {
+  margin-top: 1em;
+}
+
 
