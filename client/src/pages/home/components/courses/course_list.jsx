@@ -287,10 +287,29 @@ function CourseList({
             </div>
           </div>
         ) : activeTab === "SECTION" ? (
-          <div className="course_list_text">
-            <h2>Courses Tab</h2>
-            <p>Welcome to the Courses tab!</p>
-            <p>Selected Info: {info.course_name}</p>
+          <div className="course_list_text" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+            {info && info.course_number ? (
+              <div>
+                <h2>Section Info</h2>
+                <p>Course: {info.course_name}</p>
+                <p>Course #: {info.course_number}</p>
+                <p>Credits: {info.credit}</p>
+                {/* Add more section info here if needed */}
+              </div>
+            ) : (
+              <>
+                <div style={{ width: '25%', borderRight: '2px solid #ccc', padding: '1em', boxSizing: 'border-box', minHeight: '100%' }}>
+                  {/* Left side (25%) - placeholder for now */}
+                  <div >Left Panel (25%)</div>
+                </div>
+                <div style={{ width: '75%', padding: '1em', boxSizing: 'border-box', minHeight: '100%' }}>
+                  {/* Right side (75%) - existing content */}
+                  <h2>Courses Tab</h2>
+                  <p>Welcome to the Courses tab!</p>
+                  <p>Selected Info: {info && info.course_name}</p>
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <div className="schedule_container">
