@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .save-button {
-    @apply relative top-[10%] h-[57px] border-4 p-[5px] pl-[10px] pr-[10px] border-black rounded-[10px] bg-[#6c89c7];
+    @apply relative top-[10%] h-[57px] border-4 p-[3px] pl-[6px] pr-[6px] border-black rounded-[10px] bg-[#6c89c7];
     transition-duration: 100ms;
     transition-property: all;
 }

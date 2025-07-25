@@ -9,6 +9,7 @@ import SaveButton from "../save_button/save_button";
 import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";
 import searchFilter from "../enums/search_filter.js";
+import RegisterButton from "../save_button/RegisterButton.jsx";
 /**
  *
  * @param {*} props
@@ -152,6 +153,7 @@ function CourseList({
           user={user} 
           onScheduleSaved={handleScheduleSaved}
         />
+        <RegisterButton courses={courses} />
       </div>
       {/* Tab Content */}
       <div
