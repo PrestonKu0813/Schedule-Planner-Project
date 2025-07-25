@@ -288,28 +288,47 @@ function CourseList({
           </div>
         ) : activeTab === "SECTION" ? (
           <div className="course_list_text" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-            {info && info.course_number ? (
-              <div>
-                <h2>Section Info</h2>
-                <p>Course: {info.course_name}</p>
-                <p>Course #: {info.course_number}</p>
-                <p>Credits: {info.credit}</p>
-                {/* Add more section info here if needed */}
-              </div>
-            ) : (
-              <>
-                <div style={{ width: '25%', borderRight: '2px solid #ccc', padding: '1em', boxSizing: 'border-box', minHeight: '100%' }}>
-                  {/* Left side (25%) - placeholder for now */}
-                  <div >Left Panel (25%)</div>
-                </div>
-                <div style={{ width: '75%', padding: '1em', boxSizing: 'border-box', minHeight: '100%' }}>
-                  {/* Right side (75%) - existing content */}
-                  <h2>Courses Tab</h2>
-                  <p>Welcome to the Courses tab!</p>
-                  <p>Selected Info: {info && info.course_name}</p>
-                </div>
-              </>
-            )}
+            {/* Left Panel: Selected Courses List */}
+            <div style={{ width: '25%', padding: '1em', boxSizing: 'border-box', minHeight: '100%', overflowY: 'auto', maxHeight: '100%' }}>
+              <h1 className="selected_courses_text">Selected Courses</h1>
+              {courses.length === 0 ? (
+                <p className="no_courses_selected_text">No courses selected yet!</p>
+              ) : (
+                <ul className="courses_list">
+                  {courses.map((course, index) => (
+                    <li key={index} className="course_card">
+                      <h2>{course.course_name}</h2>
+                      <p>Course Number: {course.course_number}</p>
+                      <p>Credits: {course.credit}</p>
+                      <p>Selected Sections: {course.selected_sections && course.selected_sections.length > 0
+                        ? course.selected_sections.map(section => section.section_number).join(", ")
+                        : "None"}
+                      </p>
+                      <button
+                        className="set-info-button"
+                        onClick={e => {
+                          e.stopPropagation();
+                          setInfo(course);
+                          setActiveTab("SECTION");
+                        }}
+                      >
+                        Details
+                      </button>
+                      <button
+                        className="remove_course_button"
+                        onClick={() => setCourses(courses.filter(c => c.course_number !== course.course_number))}
+                      >Remove Course</button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* Right Panel: Existing Content */}
+            <div style={{ width: '75%', padding: '1em', boxSizing: 'border-box', minHeight: '100%' }}>
+              <h2>Courses Tab</h2>
+              <p>Welcome to the Courses tab!</p>
+              <p>Selected Info: {info && info.course_name}</p>
+            </div>
           </div>
         ) : (
           <div className="schedule_container">
