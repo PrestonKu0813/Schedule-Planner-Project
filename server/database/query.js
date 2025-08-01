@@ -24,12 +24,14 @@ async function sectionsByCourseNumber(courseNumber) {
 
   for (let i = 0; i < sectionsArray.length; i++) {
     const indexNumber = sectionsArray[i][database_names.section.INDEX];
+    const section_open = sectionsArray[i][database_names.section.SECTION_OPEN];
     const lectureInfo = JSON.parse(
       sectionsArray[i][database_names.section.INFO]
     );
     sectionsArray[i][database_names.section.INFO] = lectureInfo;
     delete sectionsArray[i][database_names.course.NUMBER];
     sectionsObject[indexNumber] = sectionsArray[i];
+    sectionsObject[indexNumber].section_open = section_open;
   }
   return sectionsObject;
 }

@@ -28,6 +28,7 @@ module.exports = {
     NUMBER: "section_number",
     INSTRUCTOR: "instructor",
     INFO: "lecture_info",
+    SECTION_OPEN: "section_open",
   },
   user: {
     MAIN: {

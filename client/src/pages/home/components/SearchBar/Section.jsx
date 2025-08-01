@@ -15,10 +15,23 @@ const isOnlineSection = (section) => {
   );
 };
 
+// Helper function to determine if a section is open or closed
+const getSectionStatus = (section) => {
+  // You can modify this logic based on your data structure
+  // For now, I'll use a simple example - you might want to check enrollment capacity
+  if (section.section_open !== undefined && section.section_open !== null) {
+    return section.section_open === 1 ? "open" : "closed";
+  }
+  // Default to open if no enrollment data is available
+  return "open";
+};
+
 export const Section = ({ section, selectedSections, setSelectedSections, setPreviewSection, courseInfo }) => {
     const isSelected = selectedSections.some(
         (selected) => selected.index_number === section.index_number
     );
+
+    const sectionStatus = getSectionStatus(section);
 
     const handleButtonClick = () => {
         if (isSelected) {
@@ -62,11 +75,19 @@ export const Section = ({ section, selectedSections, setSelectedSections, setPre
                     </p>
                 )}
             </div>
-            <button
-                className={`section-button ${isSelected ? "selected" : ""}`}
-                onClick={handleButtonClick}
-            >
-            </button>
+            <div className="section-controls">
+                <div 
+                    className={`status-box ${sectionStatus}`}
+                    title={`Section is ${sectionStatus}`}
+                >
+                    {sectionStatus}
+                </div>
+                <button
+                    className={`section-button ${isSelected ? "selected" : ""}`}
+                    onClick={handleButtonClick}
+                >
+                </button>
+            </div>
         </div>
     );
 };

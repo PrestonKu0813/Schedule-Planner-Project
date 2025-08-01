@@ -160,6 +160,32 @@ input:focus {
     margin-left: auto; /* Push the checkbox to the far right */
 }
 
+.section-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between status box and checkmark button */
+}
+
+.status-box {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    min-width: 50px;
+    text-align: center;
+    cursor: default;
+}
+
+.status-box.open {
+    background-color: #28a745; /* Green background for open */
+}
+
+.status-box.closed {
+    background-color: #dc3545; /* Red background for closed */
+}
+
 .section-button {
     margin-left: auto; /* Push the button to the far right */
     width: 20px; /* Set width to resemble a checkbox */
