@@ -31,11 +31,10 @@ function CourseList({
   activeTab,
   setActiveTab,
   setPreviewSection,
+  specialFilters,
+  setSpecialFilters
 }) {
   const { user } = useUser();
-  const { campus } = searchFilter;
-  const { credit } = searchFilter;
-
   //setting the results of search bar
   const [results, setResults] = useState([]);
   const [searchInput, setSearchInput] = useState("");
@@ -57,64 +56,6 @@ function CourseList({
     const data = await SearchAPI(searchInput, selectedTag);
     setResults(data);
   };
-
-  const [showFilters, setShowFilters] = useState(false);
-
-  const [specialFilters, setSpecialFilters] = useState({
-    campus: [campus.BU, campus.LI, campus.CA, campus.CD, campus.ASYNC],
-    time: [],
-    day: [],
-    credit: [
-      credit.ONE,
-      credit.TWO,
-      credit.THREE,
-      credit.FOUR,
-      credit.CBA,
-      credit.NA,
-    ],
-  });
-
-  // Generalized add to filter
-  const addToFilter = (filterKey, value) => {
-    setSpecialFilters((prev) => ({
-      ...prev,
-      [filterKey]: [...prev[filterKey], value],
-    }));
-  };
-
-  // Generalized remove from filter
-  const removeFromFilter = (filterKey, value) => {
-    setSpecialFilters((prev) => ({
-      ...prev,
-      [filterKey]: prev[filterKey].filter((item) => item !== value),
-    }));
-  };
-
-  //specialFilters = {"campus": [], "time": [], "day": []};
-  // const handleTabChange = (tab) => {
-  //   setActiveTab(tab);
-  // }
-  // useEffect(() => {
-  //   handleTabChange(activeTab);
-  // }, [activeTab]);
-
-  const Checkbox = ({ label, isChecked, onClick }) => {
-    return (
-      <label className="filter-checkbox">
-        {label}
-        <button
-          className={`filter-button ${isChecked ? "selected" : ""}`}
-          onClick={onClick}
-        ></button>
-      </label>
-    );
-  };
-
-  useEffect(() => {
-    // This effect runs whenever specialFilters changes
-    // You can add any logic here that needs to run when filters change
-    console.log("Special Filters Updated:", specialFilters);
-  }, [specialFilters]);
 
   return (
     <div className="course_list_inner">
@@ -192,164 +133,6 @@ function CourseList({
                       indicatorSeparator: () => "rs-separator",
                     }}
                   />
-                </div>
-
-                {/* Additional Filters Dropdown */}
-                <div
-                  className="additional-filters-dropdown"
-                  style={{
-                    position: "relative",
-                    marginLeft: "1rem",
-                    display: "inline-block",
-                  }}
-                >
-                  <button
-                    onClick={() => setShowFilters((prev) => !prev)}
-                    className="additional-filters-toggle"
-                    style={{ padding: "0.5rem 1rem" }}
-                  >
-                    Additional Filters ▼
-                  </button>
-                  {showFilters && (
-                    <div className="additional-filters-menu">
-                      <div className="filter-section">
-                        <h4>Campus</h4>
-                        <Checkbox
-                          label="Busch"
-                          isChecked={specialFilters.campus.includes(campus.BU)}
-                          onClick={() => {
-                            if (specialFilters.campus.includes(campus.BU)) {
-                              removeFromFilter("campus", campus.BU);
-                            } else {
-                              addToFilter("campus", campus.BU);
-                            }
-                          }}
-                        />
-                        <Checkbox
-                          label="Livingston"
-                          isChecked={specialFilters.campus.includes(campus.LI)}
-                          onClick={() => {
-                            if (specialFilters.campus.includes(campus.LI)) {
-                              removeFromFilter("campus", campus.LI);
-                            } else {
-                              addToFilter("campus", campus.LI);
-                            }
-                          }}
-                        />
-                        <Checkbox
-                          label="College Avenue"
-                          isChecked={specialFilters.campus.includes(campus.CA)}
-                          onClick={() => {
-                            if (specialFilters.campus.includes(campus.CA)) {
-                              removeFromFilter("campus", campus.CA);
-                            } else {
-                              addToFilter("campus", campus.CA);
-                            }
-                          }}
-                        />
-                        <Checkbox
-                          label="Cook/Douglass"
-                          isChecked={specialFilters.campus.includes(campus.CD)}
-                          onClick={() => {
-                            if (specialFilters.campus.includes(campus.CD)) {
-                              removeFromFilter("campus", campus.CD);
-                            } else {
-                              addToFilter("campus", campus.CD);
-                            }
-                          }}
-                        />
-                        <Checkbox
-                          label="Async"
-                          isChecked={
-                            specialFilters.campus.includes(campus.ASYNC) ||
-                            specialFilters.campus.includes(campus.ON)
-                          }
-                          onClick={() => {
-                            if (
-                              specialFilters.campus.includes(campus.ASYNC) ||
-                              specialFilters.campus.includes(campus.ON)
-                            ) {
-                              removeFromFilter("campus", campus.ASYNC);
-                              removeFromFilter("campus", campus.ON);
-                            } else {
-                              addToFilter("campus", campus.ASYNC);
-                              addToFilter("campus", campus.ON);
-                            }
-                          }}
-                        />
-                      </div>
-                      <div className="filter-section">
-                        <h4>Credit</h4>
-                        <Checkbox
-                          label="One"
-                          isChecked={specialFilters.credit.includes(credit.ONE)}
-                          onClick={() => {
-                            if (specialFilters.credit.includes(credit.ONE)) {
-                              removeFromFilter("credit", credit.ONE);
-                            } else {
-                              addToFilter("credit", credit.ONE);
-                            }
-                          }}
-                        />
-                        <Checkbox
-                          label="Two"
-                          isChecked={specialFilters.credit.includes(credit.TWO)}
-                          onClick={() => {
-                            if (specialFilters.credit.includes(credit.TWO)) {
-                              removeFromFilter("credit", credit.TWO);
-                            } else {
-                              addToFilter("credit", credit.TWO);
-                            }
-                          }}
-                        />
-                        <Checkbox
-                          label="Three"
-                          isChecked={specialFilters.credit.includes(
-                            credit.THREE
-                          )}
-                          onClick={() => {
-                            if (specialFilters.credit.includes(credit.THREE)) {
-                              removeFromFilter("credit", credit.THREE);
-                            } else {
-                              addToFilter("credit", credit.THREE);
-                            }
-                          }}
-                        />
-                        <Checkbox
-                          label="Four"
-                          isChecked={specialFilters.credit.includes(
-                            credit.FOUR
-                          )}
-                          onClick={() => {
-                            if (specialFilters.credit.includes(credit.FOUR)) {
-                              removeFromFilter("credit", credit.FOUR);
-                            } else {
-                              addToFilter("credit", credit.FOUR);
-                            }
-                          }}
-                        />
-                        <Checkbox
-                          label="CBA/NA"
-                          isChecked={
-                            specialFilters.credit.includes(credit.CBA) ||
-                            specialFilters.credit.includes(credit.NA)
-                          }
-                          onClick={() => {
-                            if (
-                              specialFilters.credit.includes(credit.CBA) ||
-                              specialFilters.credit.includes(credit.NA)
-                            ) {
-                              removeFromFilter("credit", credit.CBA);
-                              removeFromFilter("credit", credit.NA);
-                            } else {
-                              addToFilter("credit", credit.CBA);
-                              addToFilter("credit", credit.NA);
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
               <SearchResultsList

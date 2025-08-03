@@ -16,8 +16,18 @@
 
     /* Custom Padding for Expanded State - still need to push top content down for the button */
     padding: 0 0.5rem 0 0.5rem;
-    overflow-y: hidden;
     pointer-events: none;
+    position: fixed; /* or absolute, depending on your layout */
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 320px; /* or your sidebar width */
+    z-index: 2000; /* higher than your main content */
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden; /* Prevent vertical scrollbar on the sidebar itself */
   }
 
   .selected_courses.minimized {
@@ -33,82 +43,145 @@
     padding-right: 0.25rem; /* Very small side padding for the thin bar */
   }
 
-  /* Minimize Button Styling */
+  /* Minimize Button Styling - full height bar along the sidebar edge */
   .minimize_button {
-    /* Button position relative to the current panel (top-right of the shrinking panel) */
-    @apply absolute top-0 bottom-0 right-0 h-auto text-2xl cursor-pointer text-black p-1 bg-[#6c89c7];
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: 1.8rem; /* Match minimized sidebar width */
+    background: #6c89c7;
+    color: #222;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: background 0.15s;
     pointer-events: auto;
-    transition-duration: 100ms;
-    transition-property: background-color;
+    padding: 0;
+    border-radius: 0 8px 8px 0;
   }
 
   .minimize_button:hover {
-    @apply bg-[#e0e5f0];
+    background: #e0e5f0;
   }
 
-  .content_box{
+  .content_box {
     @apply absolute top-[10px] bottom-[10px];
     width: calc(100% - 2.6rem);
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    position: relative;
+    height: 100vh; /* or flex: 1 1 auto; if using flex layout */
+    direction: rtl; /* Scrollbar on the left */
+    padding-left: 0.2rem; /* Reduce left padding to bring scrollbar closer */
+    width: calc(100% - 2rem); /* Make content box wider if needed */
+    padding-bottom: 2.5rem; /* Add extra space at the bottom for easier scrolling */
+  }
+
+  .content_box > * {
+    direction: ltr; /* Keep child content normal */
+  }
+
+  /* Optional: Style the scrollbar for better appearance */
+  .content_box::-webkit-scrollbar {
+    width: 6px;
+    background: #e0e5f0;
+  }
+
+  .content_box::-webkit-scrollbar-thumb {
+    background: #6c89c7;
+    border-radius: 8px;
   }
 
   /* Original styles for text and cards remain untouched below */
-  .selected_courses_text {
-    @apply text-xl text-center text-[#000000] font-bold mb-4;
-    font-size: clamp(1.3rem, 2vw, 4.5rem);
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 100%;
+
+  /* Filter container styles */
+  .additional-filters-menu {
+    background: #f8fafc;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 1rem 0.75rem;
+    margin: 0.5rem 0;
+    width: 100%;
+    max-width: 18rem;
+    z-index: 10;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  .no_courses_selected_text {
-    @apply text-center mt-5;
-    font-size: clamp(0.6rem, 2vw, 1rem);
+  /* Each filter section (e.g., Campus, Credit) */
+  .filter-section {
+    text-align: left;
+    margin-bottom: 0.5rem;
   }
 
-  .courses_list {
-    @apply list-none p-0;
-    flex: auto;
-    overflow-y: auto;
-    pointer-events: auto;
+  .filter-section h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #334155;
   }
 
-  .course_card {
-    @apply w-full bg-white border border-gray-300 rounded-md p-2 mb-3 shadow-sm;
+  /* Checkbox label and button styling */
+  .filter-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* <-- add this */
+    gap: 0.5em;
+    font-size: 0.97em;
+    margin-bottom: 0.25em;
+    cursor: pointer;
   }
 
-  .course_card h2 {
-    @apply font-bold m-0 mb-2 text-[#2c3e50];
-    font-size: clamp(0.6rem, 1vw, 2rem);
-    overflow-x: hidden; /* Keep this to handle long titles within the card */
-    text-overflow: ellipsis;
+  .filter-button {
+    margin-left: 0.5em;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border: 2px solid #007bff;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      background 0.15s,
+      border-color 0.15s;
+    position: relative;
+    box-sizing: border-box; /* <-- add this */
+    padding: 0; /* <-- ensure no extra padding */
+    min-width: 20px; /* <-- ensure consistent width */
+    min-height: 20px;
   }
 
-  .course_card p {
-    @apply text-gray-600;
-    font-size: clamp(0.6rem, 1vw, 2rem);
+  .filter-button.selected {
+    background-color: #007bff;
+    border-color: #0056b3;
+    color: white;
   }
 
-  .remove_course_button {
-    @apply bg-red-600 text-white border-none rounded px-2 py-1 cursor-pointer mt-2 transition-colors duration-200;
-    font-size: clamp(0.5rem, 1vw, 2rem);
-    margin-left: 10px;
-    pointer-events: auto;
+  .filter-button::after {
+    content: "✔";
+    font-size: 14px;
+    display: none;
+    color: white;
   }
 
-  .set-info-button {
-    @apply order-1 bg-[#ccd0e4] text-[#333] border-none border-black rounded px-2 py-1 cursor-pointer transition-colors duration-200;
-    font-size: clamp(0.5rem, 1vw, 2rem);
-    pointer-events: auto;
+  .filter-button.selected::after {
+    display: block;
   }
 
-  .set-info-button:hover {
-    @apply bg-[#a4c3ee] scale-105;
-    pointer-events: auto;
-  }
-
-  .remove_course_button:hover {
-    @apply bg-[#ca2c49] scale-105;
-    pointer-events: auto;
+  /* Optional: spacing for last filter section */
+  .filter-section:last-child {
+    margin-bottom: 0;
   }
 }

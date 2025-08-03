@@ -1,32 +1,50 @@
 import React, { useState, useEffect } from "react";
 import "./selected_courses.css";
+import searchFilter from "../enums/search_filter.js";
 
-function Selected_Courses({ courses, setCourses, setActiveTab, setInfo }) {
+function Selected_Courses({
+  courses,
+  setCourses,
+  setActiveTab,
+  setInfo,
+  setSpecialFilters,
+  specialFilters,
+}) {
   const [isMinimized, setIsMinimized] = useState(true);
-  // New state to control when the content is actually rendered/visible
-  const [showContent, setShowContent] = useState(true);
+  const [showCampus, setShowCampus] = useState(false);
+  const [showCredit, setShowCredit] = useState(false);
+  const [showCoreCode, setShowCoreCode] = useState(false);
 
-  // Effect to manage content visibility based on minimization state
-  useEffect(() => {
-    if (isMinimized) {
-      // If minimizing, hide content immediately for a cleaner collapse
-      setShowContent(false);
-    } else {
-      // If expanding, wait for the CSS transition to finish (0.3s)
-      // before making the content visible again.
-      const animationDuration = 300; // Matches the '0.3s' transition in your CSS
-      const timer = setTimeout(() => {
-        setShowContent(true);
-      }, animationDuration);
+  const { campus } = searchFilter;
+  const { credit } = searchFilter;
+  const { coreCode } = searchFilter;
 
-      // Cleanup the timer if the component unmounts or isMinimized changes again
-      return () => clearTimeout(timer);
-    }
-  }, [isMinimized]); // This effect runs whenever isMinimized changes
-
-  const handleRemoveCourse = (courseNumber) => {
-    setCourses(courses.filter(course => course.course_number !== courseNumber));
+  // Generalized add to filter
+  const addToFilter = (filterKey, value) => {
+    setSpecialFilters((prev) => ({
+      ...prev,
+      [filterKey]: [...prev[filterKey], value],
+    }));
   };
+
+  // Generalized remove from filter
+  const removeFromFilter = (filterKey, value) => {
+    setSpecialFilters((prev) => ({
+      ...prev,
+      [filterKey]: prev[filterKey].filter((item) => item !== value),
+    }));
+  };
+
+  const Checkbox = ({ label, isChecked, onClick }) => (
+    <label className="filter-checkbox">
+      {label}
+      <button
+        className={`filter-button ${isChecked ? "selected" : ""}`}
+        onClick={onClick}
+        type="button"
+      ></button>
+    </label>
+  );
 
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
@@ -36,44 +54,248 @@ function Selected_Courses({ courses, setCourses, setActiveTab, setInfo }) {
     <div className={`selected_courses ${isMinimized ? "minimized" : ""}`}>
       {/* Minimize Button - positioned at the top right */}
       <button className="minimize_button" onClick={toggleMinimize}>
-        {isMinimized ? ">" : "<"} {/* Right arrow when minimized, left arrow when expanded */}
+        {isMinimized ? ">" : "<"}
       </button>
 
-      {/* Content only renders if not minimized AND showContent is true */}
-      {!isMinimized && showContent && (
+      {/* Content only renders if not minimized */}
+      {!isMinimized && (
         <div className="content_box">
-          <h1 className="selected_courses_text">Selected Courses</h1>
-          {courses.length === 0 ? (
-            <p className="no_courses_selected_text">No courses selected yet!</p>
-          ) : (
-            <ul className="courses_list">
-              {courses.map((course, index) => (
-                <li key={index} className="course_card">
-                  <h2>{course.course_name}</h2>
-                  <p>Course Number: {course.course_number}</p>
-                  <p>Credits: {course.credit}</p>
-                  <p>Selected Sections: {course.selected_sections && course.selected_sections.length > 0
-                    ? course.selected_sections.map(section => section.section_number).join(", ")
-                    : "None"}
-                  </p>
-                  <button
-                    className="set-info-button"
-                    onClick={e => {
-                      e.stopPropagation();
-                      setInfo(course);
-                      setActiveTab("SECTION");
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.08em",
+              marginBottom: "0.6em",
+            }}
+          >
+            Additional Filters
+          </div>
+          {/* Campus Filter Dropdown */}
+          <div className="filter-section">
+            <button
+              type="button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                userSelect: "none",
+                background: "none",
+                border: "none",
+                width: "100%",
+                padding: 0,
+                marginBottom: showCampus ? "0.3em" : 0,
+              }}
+              onClick={() => setShowCampus((prev) => !prev)}
+            >
+              <h4 style={{ margin: 0, flex: 1, pointerEvents: "none" }}>
+                Campus
+              </h4>
+              <span style={{ fontSize: "1.1em" }}>
+                {showCampus ? "▲" : "▼"}
+              </span>
+            </button>
+            {showCampus && (
+              <div>
+                <Checkbox
+                  label="Busch"
+                  isChecked={specialFilters.campus.includes(campus.BU)}
+                  onClick={() => {
+                    if (specialFilters.campus.includes(campus.BU)) {
+                      removeFromFilter("campus", campus.BU);
+                    } else {
+                      addToFilter("campus", campus.BU);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Livingston"
+                  isChecked={specialFilters.campus.includes(campus.LI)}
+                  onClick={() => {
+                    if (specialFilters.campus.includes(campus.LI)) {
+                      removeFromFilter("campus", campus.LI);
+                    } else {
+                      addToFilter("campus", campus.LI);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="College Avenue"
+                  isChecked={specialFilters.campus.includes(campus.CA)}
+                  onClick={() => {
+                    if (specialFilters.campus.includes(campus.CA)) {
+                      removeFromFilter("campus", campus.CA);
+                    } else {
+                      addToFilter("campus", campus.CA);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Cook/Douglass"
+                  isChecked={specialFilters.campus.includes(campus.CD)}
+                  onClick={() => {
+                    if (specialFilters.campus.includes(campus.CD)) {
+                      removeFromFilter("campus", campus.CD);
+                    } else {
+                      addToFilter("campus", campus.CD);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Async"
+                  isChecked={
+                    specialFilters.campus.includes(campus.ASYNC) ||
+                    specialFilters.campus.includes(campus.ON)
+                  }
+                  onClick={() => {
+                    if (
+                      specialFilters.campus.includes(campus.ASYNC) ||
+                      specialFilters.campus.includes(campus.ON)
+                    ) {
+                      removeFromFilter("campus", campus.ASYNC);
+                      removeFromFilter("campus", campus.ON);
+                    } else {
+                      addToFilter("campus", campus.ASYNC);
+                      addToFilter("campus", campus.ON);
+                    }
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          {/* Credit Filter Dropdown */}
+          <div className="filter-section">
+            <button
+              type="button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                userSelect: "none",
+                background: "none",
+                border: "none",
+                width: "100%",
+                padding: 0,
+                marginBottom: showCredit ? "0.3em" : 0,
+              }}
+              onClick={() => setShowCredit((prev) => !prev)}
+            >
+              <h4 style={{ margin: 0, flex: 1, pointerEvents: "none" }}>
+                Credit
+              </h4>
+              <span style={{ fontSize: "1.1em" }}>
+                {showCredit ? "▲" : "▼"}
+              </span>
+            </button>
+            {showCredit && (
+              <div>
+                <Checkbox
+                  label="One"
+                  isChecked={specialFilters.credit.includes(credit.ONE)}
+                  onClick={() => {
+                    if (specialFilters.credit.includes(credit.ONE)) {
+                      removeFromFilter("credit", credit.ONE);
+                    } else {
+                      addToFilter("credit", credit.ONE);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Two"
+                  isChecked={specialFilters.credit.includes(credit.TWO)}
+                  onClick={() => {
+                    if (specialFilters.credit.includes(credit.TWO)) {
+                      removeFromFilter("credit", credit.TWO);
+                    } else {
+                      addToFilter("credit", credit.TWO);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Three"
+                  isChecked={specialFilters.credit.includes(credit.THREE)}
+                  onClick={() => {
+                    if (specialFilters.credit.includes(credit.THREE)) {
+                      removeFromFilter("credit", credit.THREE);
+                    } else {
+                      addToFilter("credit", credit.THREE);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Four"
+                  isChecked={specialFilters.credit.includes(credit.FOUR)}
+                  onClick={() => {
+                    if (specialFilters.credit.includes(credit.FOUR)) {
+                      removeFromFilter("credit", credit.FOUR);
+                    } else {
+                      addToFilter("credit", credit.FOUR);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="CBA/NA"
+                  isChecked={
+                    specialFilters.credit.includes(credit.CBA) ||
+                    specialFilters.credit.includes(credit.NA)
+                  }
+                  onClick={() => {
+                    if (
+                      specialFilters.credit.includes(credit.CBA) ||
+                      specialFilters.credit.includes(credit.NA)
+                    ) {
+                      removeFromFilter("credit", credit.CBA);
+                      removeFromFilter("credit", credit.NA);
+                    } else {
+                      addToFilter("credit", credit.CBA);
+                      addToFilter("credit", credit.NA);
+                    }
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          {/* Core Code Filter Dropdown */}
+          <div className="filter-section">
+            <button
+              type="button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                userSelect: "none",
+                background: "none",
+                border: "none",
+                width: "100%",
+                padding: 0,
+                marginBottom: showCoreCode ? "0.3em" : 0,
+              }}
+              onClick={() => setShowCoreCode((prev) => !prev)}
+            >
+              <h4 style={{ margin: 0, flex: 1, pointerEvents: "none" }}>
+                Core Code
+              </h4>
+              <span style={{ fontSize: "1.1em" }}>
+                {showCoreCode ? "▲" : "▼"}
+              </span>
+            </button>
+            {showCoreCode && (
+              <div>
+                {Object.entries(coreCode).map(([key, label]) => (
+                  <Checkbox
+                    key={key}
+                    label={label}
+                    isChecked={specialFilters.coreCode.includes(key)}
+                    onClick={() => {
+                      if (specialFilters.coreCode.includes(key)) {
+                        removeFromFilter("coreCode", key);
+                      } else {
+                        addToFilter("coreCode", key);
+                      }
                     }}
-                  >
-                    Details
-                  </button>
-                  <button
-                    className="remove_course_button"
-                    onClick={() => handleRemoveCourse(course.course_number)}>Remove Course
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
