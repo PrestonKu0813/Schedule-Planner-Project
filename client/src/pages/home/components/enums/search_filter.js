@@ -71,6 +71,7 @@ export default {
     ECN: "SEBS Only: Economic Analysis (ECN)",
     GVT: "SEBS Only: Government/Regulatory Analysis (GVT)",
     SOEHS: "SOE Only: Approved Humanities/Social Science (SOEHS)",
+    "-1": "N/A",
   },
   courseType: {
     FtF: "Face to Face",
