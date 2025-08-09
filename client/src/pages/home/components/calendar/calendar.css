@@ -70,6 +70,19 @@
     line-height: 1;
   }
 
+  /* Closed section styling */
+  .calendar_class.closed-section {
+    opacity: 0.6;
+    filter: grayscale(100%);
+    background-color: #808080 !important;
+    border-color: #666666 !important;
+  }
+
+  .calendar_class.closed-section:hover {
+    opacity: 0.8;
+    filter: grayscale(80%);
+  }
+
   /* Preview class for hover effects */
   .preview-class {
     @apply absolute text-center;

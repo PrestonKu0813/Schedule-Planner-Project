@@ -19,19 +19,28 @@ const DAY_ABBREVIATIONS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const HOUR_LABELS = Array.from({ length: 16 }, (_, i) => i + 8);
 
 // Helper: Render online section item
-const renderOnlineSectionItem = ({ course, section }, index, handleClick) => {
+const renderOnlineSectionItem = ({ course, section }, index, handleClick, isSectionClosed) => {
   // Create unified class details for online section
   const classDetails = createClassDetails(course, section, null, null, null);
+  const isClosed = isSectionClosed(section);
   
   return (
     <div 
       key={index} 
       className="online-section-item"
       onClick={(e) => handleClick(classDetails, e)}
-      style={{ cursor: 'pointer' }}
+      style={{ 
+        cursor: 'pointer',
+        ...(isClosed && {
+          opacity: 0.6,
+          filter: "grayscale(100%)",
+          backgroundColor: "#f0f0f0"
+        })
+      }}
+      title={isClosed ? `${course.course_name} - Section Closed` : course.course_name}
     >
       <p><strong>{course.course_name}</strong></p>
-
+      {isClosed && <p style={{ color: '#dc3545', fontSize: '12px', margin: '2px 0' }}>CLOSED</p>}
     </div>
   );
 };
@@ -148,21 +157,27 @@ function Calendar({ courses, previewSection }) {
     setIsOnlinePopupVisible(!isOnlinePopupVisible);
   };
 
+  // Helper: Check if a section is closed
+  const isSectionClosed = (section) => {
+    return section.section_open !== undefined && section.section_open !== null && section.section_open === 0;
+  };
+
   // Helper: Render a single lecture
   const renderLecture = (lecture, course, section, index, isPreview = false, hasConflict = false) => {
     const { topPos, heightPos, dayLeft, start, end } = calculateLecturePosition(lecture);
     const classDetails = createClassDetails(course, section, lecture, start, end);
+    const isClosed = isSectionClosed(section);
     
     const className = isPreview 
       ? `calendar_class preview-class ${hasConflict ? 'conflict' : 'no-conflict'}`
-      : 'calendar_class';
+      : `calendar_class ${isClosed ? 'closed-section' : ''}`;
     
     const style = {
       top: `${topPos}%`,
       left: `${dayLeft}%`,
       width: `${90 / 7}%`,
       height: `${heightPos}%`,
-      backgroundColor: campusColors[lecture.campus] || "#ccc",
+      backgroundColor: isClosed ? "#808080" : (campusColors[lecture.campus] || "#ccc"),
       ...(isPreview && {
         opacity: 0.7,
         zIndex: 1000,
@@ -175,6 +190,7 @@ function Calendar({ courses, previewSection }) {
         className={className}
         style={style}
         onClick={isPreview ? undefined : (e) => handleClassClick(classDetails, e)}
+        title={isClosed ? `${course.course_name} - Section Closed` : course.course_name}
       >
         {(!isPreview || !hasConflict) && course.course_name}
       </div>
@@ -264,7 +280,7 @@ function Calendar({ courses, previewSection }) {
               <div ref={onlinePopupRef} className="online-sections-popup">
                 <div className="online-sections-list">
                   {onlineSections.map((item, index) => 
-                    renderOnlineSectionItem(item, index, handleClassClick)
+                    renderOnlineSectionItem(item, index, handleClassClick, isSectionClosed)
                   )}
                 </div>
               </div>

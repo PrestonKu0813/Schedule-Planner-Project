@@ -219,6 +219,8 @@ async function getCoursesBySectionIndices(sectionIndices) {
     return [];
   }
 
+
+
   // Get all sections with their course information
   const sections = await db
     .table(database_names.table.SECTION)
@@ -234,6 +236,7 @@ async function getCoursesBySectionIndices(sectionIndices) {
     .whereIn(database_names.section.INDEX, sectionIndices);
 
   // Group sections by course
+  
   const coursesMap = {};
   sections.forEach((section) => {
     const courseNumber = section[database_names.course.NUMBER];
@@ -253,6 +256,7 @@ async function getCoursesBySectionIndices(sectionIndices) {
       section_number: section[database_names.section.NUMBER],
       instructor: section[database_names.section.INSTRUCTOR],
       lecture_info: JSON.parse(section[database_names.section.INFO] || "{}"),
+      section_open: section[database_names.section.SECTION_OPEN],
     });
   });
 
