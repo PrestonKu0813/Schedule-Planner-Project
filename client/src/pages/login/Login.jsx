@@ -9,11 +9,31 @@ export default function Login() {
         <div className="second_side_binder"></div>
       </div>
       <div className="login_content">
-        <img className="papercorner" src="src\pages\login\components\login_assets\papercorner.png"/>
-        <img className="pencil" src="src\pages\login\components\login_assets\pencil.png"/>
-        <img className="scarletknight" src="src\pages\login\components\login_assets\scarletknight.png"/>
-        <img className="backgrounddetail" src="src\pages\login\components\login_assets\backgrounddetail.png"/>
-        <img className="titlebacksplash" src="src\pages\login\components\login_assets\titlebacksplash.png"/>
+        <img
+          className="papercorner"
+          src="src\pages\login\components\login_assets\papercorner.png"
+        />
+        <img
+          className="pencil"
+          src="src\pages\login\components\login_assets\pencil.png"
+        />
+        <img
+          className="scarletknight"
+          src="src\pages\login\components\login_assets\scarletknight.png"
+        />
+        <img
+          className="backgrounddetail"
+          src="src\pages\login\components\login_assets\backgrounddetail.png"
+        />
+        <div className="titlebacksplash">
+        <img
+          src="src\pages\login\components\login_assets\titlebacksplash.png"
+        />
+          <div className="school-title"></div>
+          <div className="subtext-position">
+            <span id="subtext-highlight">R</span>oadmap to Success
+          </div>
+        </div>
         <div className="title_button_container">
           <div className="title_container">
             <div className="title_rows">

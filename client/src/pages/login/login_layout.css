@@ -29,20 +29,20 @@
     background: #f5da79;
   }
   .login_content {
-    @apply flex w-[var(--content-container-width)] h-full border-4 border-red-600;
+    @apply flex w-[var(--content-container-width)] h-full;
   }
 
   .title_button_container {
-    @apply flex flex-col border-4 border-blue-600 
+    @apply flex flex-col 
     w-[var(--title-button-width)] h-[var(--title-button-height)]
     ml-auto mr-auto mt-40 z-10;
   }
 
   .title_container {
-    @apply flex flex-col border-4 w-full h-[var(--title-container-height)] border-red-400;
+    @apply flex flex-col w-full h-[var(--title-container-height)];
   }
   .title_rows {
-    @apply flex border-4 border-red-600 h-[100%];
+    @apply flex h-[100%];
   }
   .title_rows svg {
     width: 100%;
@@ -50,10 +50,30 @@
     flex-shrink: 0;
   }
   .subtitle {
-    @apply flex border-4 border-red-600 h-[15%];
+    @apply flex h-[15%];
   }
   .login_button_container {
-    @apply relative flex flex-row border-4 border-red-600 h-[var(--button-container-height)] items-center;
+    @apply relative flex flex-row h-[var(--button-container-height)] items-center;
+  }
+
+  .subtext-position {
+    text-align: center;
+    top: clamp(22rem, 50%, 75rem);
+    z-index: 10;
+    font-family: Inter;
+    font-size: clamp(0.5rem, 3vw, 2rem);
+    font-weight: 900;
+    color: #000;
+  }
+
+  #subtext-highlight {
+    position: relative;
+    font-size: clamp(0.8rem, 3.5vw, 2.5rem);
+    color: #ba2d46;
+  }
+
+  .school-title {
+    @apply absolute bg-neutral-500 border-black border-4 rounded-[12px] w-[28%] h-[70%] right-[7%] top-[-55%];
   }
 
   .papercorner {
@@ -73,7 +93,7 @@
 
   .titlebacksplash {
     @apply fixed;
-    margin-top: clamp(18rem, 5vw, 60rem);
+    margin-top: clamp(18rem, 7vw, 60rem);
     width: clamp(310px, 60%, 800px);
     right: 48%;
     left: 52%;
