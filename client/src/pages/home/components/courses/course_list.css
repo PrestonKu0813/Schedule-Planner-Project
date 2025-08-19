@@ -53,6 +53,7 @@
 
   .course_list_header {
     @apply flex flex-row mt-[10px] gap-[5px];
+    border: 5px solid blue;
   }
   
   .course_list_text {
