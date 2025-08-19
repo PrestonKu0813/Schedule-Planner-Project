@@ -25,10 +25,13 @@ export default function Login() {
           className="backgrounddetail"
           src="src\pages\login\components\login_assets\backgrounddetail.png"
         />
+
         <div className="titlebacksplash">
-        <img
-          src="src\pages\login\components\login_assets\titlebacksplash.png"
-        />
+          <img
+            className="planeicon"
+            src="src\pages\login\components\login_assets\planeicon.png"
+          />
+          <img src="src\pages\login\components\login_assets\titlebacksplash.png" />
           <div className="school-title"></div>
           <div className="subtext-position">
             <span id="subtext-highlight">R</span>oadmap to Success
