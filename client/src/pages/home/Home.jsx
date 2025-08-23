@@ -23,7 +23,7 @@ export default function Home() {
 
   const { user } = useUser();
   const { campus } = searchFilter;
-  const { credit, coreCode } = searchFilter;
+  const { credit, coreCode, timeRanges } = searchFilter;
   // const [courses, setCourses] = useState([]);
   // const [info, setInfo] = useState({}); // Initialize info state
   // const [activeTab, setActiveTab] = useState("EXPLORE");
@@ -31,8 +31,15 @@ export default function Home() {
   // const [user, setUser] = useState(null);
 
   const [specialFilters, setSpecialFilters] = useState({
-    campus: [campus.BU, campus.LI, campus.CA, campus.CD, campus.ASYNC],
-    time: [],
+    campus: [
+      campus.BU,
+      campus.LI,
+      campus.CA,
+      campus.CD,
+      campus.ASYNC,
+      campus.ON,
+    ],
+    timeRanges: [timeRanges.MORNING, timeRanges.AFTERNOON, timeRanges.EVENING],
     day: [],
     credit: [
       credit.ONE,
@@ -42,9 +49,13 @@ export default function Home() {
       credit.CBA,
       credit.NA,
     ],
-    coreCode: [],
+    coreCode: Object.keys(coreCode),
   });
 
+  // Print out timeRanges every time they change
+  useEffect(() => {
+    console.log("Current timeRanges:", specialFilters.timeRanges);
+  }, [specialFilters.timeRanges]);
 
   console.log("🛠️ [App] Current courses state:", courses); // Log the courses state in App
 

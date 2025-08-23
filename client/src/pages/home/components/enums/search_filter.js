@@ -78,4 +78,9 @@ export default {
     H: "Hybrid",
     O: "Online",
   },
+  timeRanges: {
+    MORNING: [7, 11],
+    AFTERNOON: [12, 17],
+    EVENING: [18, 22],
+  }
 };

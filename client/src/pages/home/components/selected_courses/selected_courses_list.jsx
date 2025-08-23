@@ -14,10 +14,12 @@ function Selected_Courses({
   const [showCampus, setShowCampus] = useState(false);
   const [showCredit, setShowCredit] = useState(false);
   const [showCoreCode, setShowCoreCode] = useState(false);
+  const [showTimeRange, setShowTimeRange] = useState(false);
 
   const { campus } = searchFilter;
   const { credit } = searchFilter;
   const { coreCode } = searchFilter;
+  const { timeRanges } = searchFilter;
 
   // Generalized add to filter
   const addToFilter = (filterKey, value) => {
@@ -293,6 +295,101 @@ function Selected_Courses({
                     }}
                   />
                 ))}
+              </div>
+            )}
+          </div>
+          {/* Time Range Filter Dropdown */}
+          <div className="filter-section">
+            <button
+              type="button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                userSelect: "none",
+                background: "none",
+                border: "none",
+                width: "100%",
+                padding: 0,
+                marginBottom: showTimeRange ? "0.3em" : 0,
+              }}
+              onClick={() => setShowTimeRange((prev) => !prev)}
+            >
+              <h4 style={{ margin: 0, flex: 1, pointerEvents: "none" }}>
+                Time Range
+              </h4>
+              <span style={{ fontSize: "1.1em" }}>
+                {showTimeRange ? "▲" : "▼"}
+              </span>
+            </button>
+            {showTimeRange && (
+              <div>
+                <Checkbox
+                  label="Morning"
+                  isChecked={specialFilters.timeRanges.some(
+                    (range) =>
+                      Array.isArray(range) &&
+                      range[0] === timeRanges.MORNING[0] &&
+                      range[1] === timeRanges.MORNING[1]
+                  )}
+                  onClick={() => {
+                    const exists = specialFilters.timeRanges.some(
+                      (range) =>
+                        Array.isArray(range) &&
+                        range[0] === timeRanges.MORNING[0] &&
+                        range[1] === timeRanges.MORNING[1]
+                    );
+                    if (exists) {
+                      removeFromFilter("timeRanges", timeRanges.MORNING);
+                    } else {
+                      addToFilter("timeRanges", timeRanges.MORNING);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Afternoon"
+                  isChecked={specialFilters.timeRanges.some(
+                    (range) =>
+                      Array.isArray(range) &&
+                      range[0] === timeRanges.AFTERNOON[0] &&
+                      range[1] === timeRanges.AFTERNOON[1]
+                  )}
+                  onClick={() => {
+                    const exists = specialFilters.timeRanges.some(
+                      (range) =>
+                        Array.isArray(range) &&
+                        range[0] === timeRanges.AFTERNOON[0] &&
+                        range[1] === timeRanges.AFTERNOON[1]
+                    );
+                    if (exists) {
+                      removeFromFilter("timeRanges", timeRanges.AFTERNOON);
+                    } else {
+                      addToFilter("timeRanges", timeRanges.AFTERNOON);
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Evening"
+                  isChecked={specialFilters.timeRanges.some(
+                    (range) =>
+                      Array.isArray(range) &&
+                      range[0] === timeRanges.EVENING[0] &&
+                      range[1] === timeRanges.EVENING[1]
+                  )}
+                  onClick={() => {
+                    const exists = specialFilters.timeRanges.some(
+                      (range) =>
+                        Array.isArray(range) &&
+                        range[0] === timeRanges.EVENING[0] &&
+                        range[1] === timeRanges.EVENING[1]
+                    );
+                    if (exists) {
+                      removeFromFilter("timeRanges", timeRanges.EVENING);
+                    } else {
+                      addToFilter("timeRanges", timeRanges.EVENING);
+                    }
+                  }}
+                />
               </div>
             )}
           </div>
