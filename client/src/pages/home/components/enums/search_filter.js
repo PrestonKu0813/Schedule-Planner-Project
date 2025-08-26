@@ -82,5 +82,14 @@ export default {
     MORNING: [7, 11],
     AFTERNOON: [12, 17],
     EVENING: [18, 22],
+  },
+  weekDays: {
+    Monday: "Monday",
+    Tuesday: "Tuesday",
+    Wednesday: "Wednesday",
+    Thursday: "Thursday",
+    Friday: "Friday",
+    Saturday: "Saturday",
+    Sunday: "Sunday",
   }
 };

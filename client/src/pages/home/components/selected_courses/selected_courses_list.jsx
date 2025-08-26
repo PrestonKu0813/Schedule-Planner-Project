@@ -15,11 +15,45 @@ function Selected_Courses({
   const [showCredit, setShowCredit] = useState(false);
   const [showCoreCode, setShowCoreCode] = useState(false);
   const [showTimeRange, setShowTimeRange] = useState(false);
+  const [showWeekDays, setShowWeekDays] = useState(false);
 
   const { campus } = searchFilter;
   const { credit } = searchFilter;
   const { coreCode } = searchFilter;
   const { timeRanges } = searchFilter;
+  const { weekDays } = searchFilter;
+
+  const [customTimeRangesStr, setCustomTimeRangesStr] = useState("");
+  const [customTimeRanges, setCustomTimeRanges] = useState([]);
+  const parseCustomTimeRanges = (str) => {
+    const ranges = str.split(",").map((range) => range.trim());
+    const parsedRanges = [];
+    ranges.forEach((range) => {
+      const [startStr, endStr] = range.split("-").map((s) => s.trim());
+      const parseHour = (timeStr) => {
+        if (typeof timeStr !== "string") return -1;
+        let [h, m] =
+          timeStr
+            .toLowerCase()
+            .replace(/[^0-9apm]/g, "")
+            .match(/^(\d{1,2})(?::?(\d{2}))?(am|pm)?$/)
+            ?.slice(1) || [];
+        h = parseInt(h, 10);
+        m = m ? parseInt(m, 10) : 0;
+        if (isNaN(h) || h < 1 || h > 12 || isNaN(m) || m < 0 || m >= 60)
+          return -1;
+        if (h === 12) h = 0; // Convert 12 AM to 0
+        if (timeStr.toLowerCase().includes("pm")) h += 12; // Convert PM to 24-hour format
+        return h + m / 60;
+      };
+      const startHour = parseHour(startStr);
+      const endHour = parseHour(endStr);
+      if (startHour !== -1 && endHour !== -1 && startHour < endHour) {
+        parsedRanges.push([startHour, endHour]);
+      }
+    });
+    return parsedRanges;
+  };
 
   // Generalized add to filter
   const addToFilter = (filterKey, value) => {
@@ -50,6 +84,19 @@ function Selected_Courses({
 
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
+  };
+
+  const handleChangeTimeRangesStr = (event) => {
+    customTimeRanges.forEach((customRange) => {
+      removeFromFilter("timeRanges", customRange);
+    });
+    const newValue = event.target.value;
+    setCustomTimeRangesStr(newValue);
+    const parsed = parseCustomTimeRanges(newValue); // <-- use new value
+    setCustomTimeRanges(parsed);
+    parsed.forEach((customRange) => {
+      addToFilter("timeRanges", customRange);
+    });
   };
 
   return (
@@ -325,7 +372,7 @@ function Selected_Courses({
             {showTimeRange && (
               <div>
                 <Checkbox
-                  label="Morning"
+                  label="Morning (7am-12pm)"
                   isChecked={specialFilters.timeRanges.some(
                     (range) =>
                       Array.isArray(range) &&
@@ -347,7 +394,7 @@ function Selected_Courses({
                   }}
                 />
                 <Checkbox
-                  label="Afternoon"
+                  label="Afternoon (12pm-6pm)"
                   isChecked={specialFilters.timeRanges.some(
                     (range) =>
                       Array.isArray(range) &&
@@ -369,7 +416,7 @@ function Selected_Courses({
                   }}
                 />
                 <Checkbox
-                  label="Evening"
+                  label="Evening (6pm-10pm)"
                   isChecked={specialFilters.timeRanges.some(
                     (range) =>
                       Array.isArray(range) &&
@@ -390,6 +437,56 @@ function Selected_Courses({
                     }
                   }}
                 />
+                {"Enter Custom Ranges (Hours Only):"}
+                <input
+                  type="text"
+                  placeholder='Format: "9am-11am,1pm-3pm"'
+                  value={customTimeRangesStr}
+                  onChange={handleChangeTimeRangesStr}
+                />
+              </div>
+            )}
+          </div>
+          {/* Week Days Filter Dropdown */}
+          <div className="filter-section">
+            <button
+              type="button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                userSelect: "none",
+                background: "none",
+                border: "none",
+                width: "100%",
+                padding: 0,
+                marginBottom: showWeekDays ? "0.3em" : 0,
+              }}
+              onClick={() => setShowWeekDays((prev) => !prev)}
+            >
+              <h4 style={{ margin: 0, flex: 1, pointerEvents: "none" }}>
+                Week Days
+              </h4>
+              <span style={{ fontSize: "1.1em" }}>
+                {showWeekDays ? "▲" : "▼"}
+              </span>
+            </button>
+            {showWeekDays && (
+              <div>
+                {Object.entries(weekDays).map(([key, label]) => (
+                  <Checkbox
+                    key={key}
+                    label={label}
+                    isChecked={specialFilters.weekDays.includes(key)}
+                    onClick={() => {
+                      if (specialFilters.weekDays.includes(key)) {
+                        removeFromFilter("weekDays", key);
+                      } else {
+                        addToFilter("weekDays", key);
+                      }
+                    }}
+                  />
+                ))}
               </div>
             )}
           </div>

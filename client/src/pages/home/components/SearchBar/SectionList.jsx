@@ -75,6 +75,14 @@ export const SectionList = ({
         !campusList.some((campus) => specialFilters.campus.includes(campus)))
     );
 
+    // Weekday filter: every weekday in every info must be in specialFilters.weekDays
+    const weekDaysValid = Object.values(section.lecture_info).every(
+      (infoObj) => {
+        if (infoObj.lectureDay === "Asynchronous content") return true; // Ignore invalid days
+        return specialFilters.weekDays.includes(infoObj.lectureDay);
+      }
+    );
+
     // Time filter
     if (mergedTimeRanges.length > 0) {
       const timeValid = Object.values(section.lecture_info).every((infoObj) => {
@@ -86,9 +94,25 @@ export const SectionList = ({
             startHour >= rangeStart && endHour <= rangeEnd
         );
       });
-      console.log("Time valid for section", section.section_number, ":", timeValid);
-      console.log("Campus valid for section", section.section_number, ":", campusValid);
-      return campusValid && timeValid;
+      console.log(
+        "Time valid for section",
+        section.section_number,
+        ":",
+        timeValid
+      );
+      console.log(
+        "Campus valid for section",
+        section.section_number,
+        ":",
+        campusValid
+      );
+      console.log(
+        "WeekDays valid for section",
+        section.section_number,
+        ":",
+        weekDaysValid
+      );
+      return campusValid && timeValid && weekDaysValid;
     } else {
       // Only include sections where ALL lecture_info ranges are [-1, -1]
       const onlyInvalidTime = Object.values(section.lecture_info).every(
@@ -97,7 +121,13 @@ export const SectionList = ({
           return startHour === -1 && endHour === -1;
         }
       );
-      return campusValid && onlyInvalidTime;
+      console.log(
+        "WeekDays valid for section",
+        section.section_number,
+        ":",
+        weekDaysValid
+      );
+      return campusValid && onlyInvalidTime && weekDaysValid;
     }
   });
 
