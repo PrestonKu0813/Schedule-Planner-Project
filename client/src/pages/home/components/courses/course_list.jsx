@@ -2,13 +2,14 @@ import "./course_list.css";
 import { useUser } from "../../../../contexts/UserContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SearchAPI } from "../SearchBar/SearchAPI.js";
 import LogoutButton from "../buttons/logout_button";
 import SaveButton from "../save_button/save_button";
 import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";
 import searchFilter from "../enums/search_filter.js";
+import RegisterButton from "../save_button/RegisterButton.jsx";
 /**
  *
  * @param {*} props
@@ -35,6 +36,10 @@ function CourseList({
   setSpecialFilters
 }) {
   const { user } = useUser();
+
+  const { campus } = searchFilter;
+  const savedSchedulesRef = useRef(null);
+
   //setting the results of search bar
   const [results, setResults] = useState([]);
   const [searchInput, setSearchInput] = useState("");
@@ -90,7 +95,12 @@ function CourseList({
         </button>
 
         <LogoutButton />
-        <SaveButton courses={courses} user={user} />
+        <SaveButton 
+          courses={courses} 
+          user={user} 
+          onScheduleSaved={handleScheduleSaved}
+        />
+        <RegisterButton courses={courses} />
       </div>
       {/* Tab Content */}
       <div
@@ -148,119 +158,48 @@ function CourseList({
             </div>
           </div>
         ) : activeTab === "SECTION" ? (
-          <div className="course_list_text">
-            {info && info.course_number ? (
-              <div
-                className="section-course-info"
-                style={{ maxWidth: 600, margin: "0 auto", fontSize: "0.97em" }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "1.5em 2em",
-                    marginBottom: "0.5em",
-                  }}
-                >
-                  <div>
-                    <strong>{info.course_name}</strong>
-                  </div>
-                  <div>
-                    <strong>Course #:</strong> {info.course_number}
-                  </div>
-                  <div>
-                    <strong>Credits:</strong> {info.credit}
-                  </div>
-                </div>
-                <div className="section-list">
-                  <h4 style={{ margin: "0.5em 0 0.2em 0" }}>Sections</h4>
-                  {info.sections && Object.values(info.sections).length > 0 ? (
-                    Object.values(info.sections).map((section) => (
-                      <div
-                        key={section.index_number}
-                        className="section-detail"
-                        style={{
-                          border: "1px solid #eee",
-                          borderRadius: "4px",
-                          margin: "6px 0",
-                          padding: "6px 10px",
-                          background: "#fafbfc",
+          <div className="course_list_text" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+            {/* Left Panel: Selected Courses List */}
+            <div style={{ width: '25%', padding: '1em', boxSizing: 'border-box', minHeight: '100%', overflowY: 'auto', maxHeight: '100%' }}>
+              <h1 className="selected_courses_text">Selected Courses</h1>
+              {courses.length === 0 ? (
+                <p className="no_courses_selected_text">No courses selected yet!</p>
+              ) : (
+                <ul className="courses_list">
+                  {courses.map((course, index) => (
+                    <li key={index} className="course_card">
+                      <h2>{course.course_name}</h2>
+                      <p>Course Number: {course.course_number}</p>
+                      <p>Credits: {course.credit}</p>
+                      <p>Selected Sections: {course.selected_sections && course.selected_sections.length > 0
+                        ? course.selected_sections.map(section => section.section_number).join(", ")
+                        : "None"}
+                      </p>
+                      <button
+                        className="set-info-button"
+                        onClick={e => {
+                          e.stopPropagation();
+                          setInfo(course);
+                          setActiveTab("SECTION");
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: "1.5em 1.5em",
-                          }}
-                        >
-                          <div>
-                            <strong>Sec:</strong> {section.section_number}
-                          </div>
-                          <div>
-                            <strong>Index:</strong> {section.index_number}
-                          </div>
-                          <div>
-                            <strong>Instr:</strong>{" "}
-                            {section.instructor !== "-1"
-                              ? section.instructor
-                              : "TBA"}
-                          </div>
-                        </div>
-                        {section.lecture_info &&
-                          Object.values(section.lecture_info).map(
-                            (infoObj, idx) => (
-                              <div
-                                key={idx}
-                                style={{
-                                  display: "flex",
-                                  flexWrap: "wrap",
-                                  gap: "1.5em 1.5em",
-                                  marginLeft: "0.5em",
-                                  fontSize: "0.96em",
-                                }}
-                              >
-                                <div>
-                                  <strong>Day:</strong>{" "}
-                                  {infoObj.lectureDay !== -1
-                                    ? infoObj.lectureDay
-                                    : "TBA"}
-                                </div>
-                                <div>
-                                  <strong>Time:</strong>{" "}
-                                  {infoObj.lectureTime !== -1
-                                    ? infoObj.lectureTime
-                                    : "TBA"}
-                                </div>
-                                <div>
-                                  <strong>Campus:</strong>{" "}
-                                  {infoObj.campus !== -1
-                                    ? infoObj.campus
-                                    : "TBA"}
-                                </div>
-                                <div>
-                                  <strong>Room:</strong>{" "}
-                                  {infoObj.classroom !== -1
-                                    ? infoObj.classroom
-                                    : "TBA"}
-                                </div>
-                              </div>
-                            )
-                          )}
-                      </div>
-                    ))
-                  ) : (
-                    <p style={{ margin: "0.5em 0" }}>No sections available.</p>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div>
-                <h2>Courses Tab</h2>
-                <p>Welcome to the Courses tab!</p>
-                <p>Selected Info: {info && info.course_name}</p>
-              </div>
-            )}
+                        Details
+                      </button>
+                      <button
+                        className="remove_course_button"
+                        onClick={() => setCourses(courses.filter(c => c.course_number !== course.course_number))}
+                      >Remove Course</button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* Right Panel: Existing Content */}
+            <div style={{ width: '75%', padding: '1em', boxSizing: 'border-box', minHeight: '100%' }}>
+              <h2>Courses Tab</h2>
+              <p>Welcome to the Courses tab!</p>
+              <p>Selected Info: {info && info.course_name}</p>
+            </div>
           </div>
         ) : (
           <div className="schedule_container">
@@ -270,6 +209,7 @@ function CourseList({
             </div>
             <div className="saved_schedule_container">
               <SavedSchedules
+                ref={savedSchedulesRef}
                 user={user}
                 setCourses={setCourses}
                 courses={courses}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './save_button.css';
 import { savedScheudle, getSavedSchedules } from '../api';
 
-const SaveButton = ({ courses, user }) => {
+const SaveButton = ({ courses, user, onScheduleSaved }) => {
   const [scheduleName, setScheduleName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [showInput, setShowInput] = useState(false);
@@ -87,6 +87,11 @@ const SaveButton = ({ courses, user }) => {
       alert('Schedule saved successfully!');
       setScheduleName('');
       setShowInput(false);
+      
+      // Call the callback function to refresh the saved schedules list
+      if (onScheduleSaved) {
+        onScheduleSaved();
+      }
     } catch (error) {
       console.error('🛠️ [SaveButton] Detailed error:', error);
       console.error('🛠️ [SaveButton] Error response:', error.response);

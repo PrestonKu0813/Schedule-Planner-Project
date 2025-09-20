@@ -1,7 +1,7 @@
 /* Search Bar  */
 
 .input-wrapper {
-    @apply flex items-center relative
+  @apply flex items-center relative
     w-[70%] h-[2.5rem] 
     p-[5px]
     border-l-[8px] border-[3px] rounded-[5px]
@@ -9,194 +9,254 @@
 }
 
 .input-wrapper:hover {
-    @apply top-[-2px];
+  @apply top-[-2px];
 }
 
 input {
-    height: 100%;
-    font-size: 2px;
-    width: 100%;
-    margin-left: 5px;
+  height: 100%;
+  font-size: 2px;
+  width: 100%;
+  margin-left: 5px;
 }
 
 input:focus {
-    outline: none;
+  outline: none;
 }
 
 #search-icon {
-    color: darkred;
-    margin-right: 5px;
+  color: darkred;
+  margin-right: 5px;
 }
 
 /* Search Results */
 
 .search-result {
-    border: 2px solid lightgrey;
-    background-color: white;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
+  border: 2px solid lightgrey;
+  background-color: white;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
 }
 
 .result-header {
-    display: flex;
-    justify-content: space-between; /* Ensure space between elements */
-    align-items: center; /* Center items vertically */
-    cursor: pointer;
+  display: flex;
+  justify-content: space-between; /* Ensure space between elements */
+  align-items: center; /* Center items vertically */
+  cursor: pointer;
 }
 
 .result-title {
-    flex-grow: 1; /* Allow the title to take up available space */
-    margin-right: 10px; /* Add some space between the title and the button */
-    white-space: normal; /* Allow the text to wrap */
-    overflow: visible; /* Show the overflow text */
-    text-align: left; /* Left justify the text */
+  flex-grow: 1; /* Allow the title to take up available space */
+  margin-right: 10px; /* Add some space between the title and the button */
+  white-space: normal; /* Allow the text to wrap */
+  overflow: visible; /* Show the overflow text */
+  text-align: left; /* Left justify the text */
 }
 
 .result-header button {
-    flex-shrink: 0; /* Prevent the button from shrinking */
-    margin-left: 10px; /* Add some space between the buttons */
+  flex-shrink: 0; /* Prevent the button from shrinking */
+  margin-left: 10px; /* Add some space between the buttons */
 }
 
 .add-course-button {
-    background-color: rgb(77, 201, 77);
-    color: white;
-    border-radius: 5px;
-    width: 5%;
+  background-color: rgb(77, 201, 77);
+  color: white;
+  border-radius: 5px;
+  width: 5%;
 }
 
 .add-course-button:hover {
-    background-color: #5cb85c; /* Darker green on hover */
+  background-color: #5cb85c; /* Darker green on hover */
 }
-
 
 .remove-course-button {
-    background-color: #e74c3c;
-    color: white;
-    border-radius: 5px;
-    width: 5%;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 5px;
+  width: 5%;
 }
 .remove-course-button:hover {
-    background-color: #c0392b; /* Darker red on hover */
+  background-color: #c0392b; /* Darker red on hover */
 }
 
-
 .dropdown {
-    margin-top: 10px;
-    padding: 10px;
-    border-top: 1px solid black;
-    text-align: left;
+  margin-top: 10px;
+  padding: 10px;
+  border-top: 1px solid black;
+  text-align: left;
 }
 
 .toggle-all-sections-button {
-    margin: 10px 0;
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  margin: 10px 0;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .toggle-all-sections-button.toggled {
-    background-color: #dc3545; /* Red for deselect state */
+  background-color: #dc3545; /* Red for deselect state */
 }
 
 .toggle-all-sections-button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 .toggle-all-sections-button.toggled:hover {
-    background-color: #c82333; /* Darker red on hover */
+  background-color: #c82333; /* Darker red on hover */
 }
 
 .set-info-button {
-    order: 0;
-    background-color: #f5f5f5;
-    color: #333;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    font-weight: 500;
+  order: 0;
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  font-weight: 500;
 }
 
 .set-info-button:hover {
-    background-color: #e0e0e0;
+  background-color: #e0e0e0;
 }
 
 /* Search Results List */
 
 .results-list {
-    @apply flex-1 overflow-y-scroll;
-    width: auto;
-    max-height: 90vh;
-    background-color: transparent;
-    box-sizing: border-box;
+  @apply flex-1 overflow-y-scroll;
+  width: auto;
+  max-height: 90vh;
+  background-color: transparent;
+  box-sizing: border-box;
 }
 
 /* Section */
 
 .section {
-    display: flex;
-    flex-direction: row; /* Align items horizontally */
-    justify-content: space-between; /* Space out content to push the button to the right */
-    align-items: center; /* Vertically align items in the center */
-    width: 100%;
-    height: auto;
-    background-color: transparent;
-    border-bottom: 1px solid lightgrey; /* Add a small gray borderline between sections */
-    padding: 10px; /* Add padding to ensure content does not touch the border */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  display: flex;
+  flex-direction: row; /* Align items horizontally */
+  justify-content: space-between; /* Space out content to push the button to the right */
+  align-items: center; /* Vertically align items in the center */
+  width: 100%;
+  height: auto;
+  background-color: transparent;
+  border-bottom: 1px solid lightgrey; /* Add a small gray borderline between sections */
+  padding: 15px 10px; /* Add padding to ensure content does not touch the border */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 .section:last-child {
-    border-bottom: none; /* Remove the border from the last section */
+  border-bottom: none; /* Remove the border from the last section */
 }
 
 .section input[type="checkbox"] {
-    margin-right: 0; /* Remove the default margin */
-    margin-left: auto; /* Push the checkbox to the far right */
+  margin-right: 0; /* Remove the default margin */
+  margin-left: auto; /* Push the checkbox to the far right */
+}
+
+.section-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between status box and checkmark button */
+  flex-shrink: 0;
+  width: auto;
+}
+
+.status-box {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  width: 60px;
+  text-align: center;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.status-box.open {
+  background-color: #28a745; /* Green background for open */
+}
+
+.status-box.closed {
+  background-color: #dc3545; /* Red background for closed */
 }
 
 .section-button {
-    margin-left: auto; /* Push the button to the far right */
-    width: 20px; /* Set width to resemble a checkbox */
-    height: 20px; /* Set height to resemble a checkbox */
-    background-color: white; /* Default checkbox background */
-    border: 2px solid #007bff; /* Border color to resemble a checkbox */
-    border-radius: 3px; /* Slightly rounded corners like a checkbox */
-    cursor: pointer; /* Pointer cursor to indicate interactivity */
-    display: flex; /* Center the checkmark inside */
-    align-items: center; /* Center the checkmark vertically */
-    justify-content: center; /* Center the checkmark horizontally */
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-left: auto; /* Push the button to the far right */
+  width: 20px; /* Set width to resemble a checkbox */
+  height: 20px; /* Set height to resemble a checkbox */
+  background-color: white; /* Default checkbox background */
+  border: 2px solid #007bff; /* Border color to resemble a checkbox */
+  border-radius: 3px; /* Slightly rounded corners like a checkbox */
+  cursor: pointer; /* Pointer cursor to indicate interactivity */
+  display: flex; /* Center the checkmark inside */
+  align-items: center; /* Center the checkmark vertically */
+  justify-content: center; /* Center the checkmark horizontally */
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .section-button:hover {
-    border-color: #0056b3; /* Darker border color on hover */
+  border-color: #0056b3; /* Darker border color on hover */
 }
 
 .section-button.selected {
-    background-color: #007bff; /* Checkbox "checked" background color */
-    border-color: #0056b3; /* Darker border for the selected state */
-    color: white; /* White color for the checkmark */
+  background-color: #007bff; /* Checkbox "checked" background color */
+  border-color: #0056b3; /* Darker border for the selected state */
+  color: white; /* White color for the checkmark */
 }
 
 .section-button::after {
-    content: "✔"; /* Checkmark symbol */
-    font-size: 14px; /* Adjust size of the checkmark */
-    display: none; /* Hide by default */
-    color: white; /* Checkmark color */
+  content: "✔"; /* Checkmark symbol */
+  font-size: 14px; /* Adjust size of the checkmark */
+  display: none; /* Hide by default */
+  color: white; /* Checkmark color */
 }
 
 .section-button.selected::after {
-    display: block; /* Show checkmark when selected */
+  display: block; /* Show checkmark when selected */
 }
 
 .section-details {
-    flex: 1; /* Allow the details to take up remaining space */
+  flex: 1; /* Allow the details to take up remaining space */
+  display: flex;
+  align-items: center;
+}
+
+.section-details p {
+  flex: 1;
+  margin: 0;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.section-details p:first-child {
+  text-align: left;
+}
+
+.section-details p:nth-child(2) {
+  text-align: center;
+}
+
+.section-details p:nth-child(3) {
+  text-align: left;
+}
+
+.section-details p:nth-child(4) {
+  flex: 1;
+  text-align: left;
+  color: #e74c3c;
+  font-weight: bold;
 }
 
 /* Section List */
@@ -213,4 +273,34 @@ input:focus {
   border: 2px solid lightgrey; /* Add a border */
   border-radius: 10px; /* Add rounded corners */
   box-sizing: border-box; /* Include border and padding in the element's total width and height */
+}
+
+.section-header {
+  display: flex;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid lightgrey;
+  padding: 15px 10px;
+  font-weight: bold;
+  color: #495057;
+  border-radius: 8px 8px 0 0;
+  font-size: 14px;
+}
+
+.section-header span {
+  flex: 1;
+  text-align: center;
+  padding: 0 -10px 0 -100px;
+}
+
+.section-header span:first-child {
+  text-align: left;
+}
+
+.section-header span:last-child {
+  text-align: left;
+}
+
+.section-header span:nth-child(2) {
+  text-align: center;
+  margin-left: -100px;
 }

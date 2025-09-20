@@ -3,11 +3,18 @@
 @tailwind utilities;
 
 .login_button {
-  @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800;
+  @apply text-black font-bold bg-[#A62044] border-black border-4 rounded-[10px];
+  font-size: clamp(1rem, 2vw, 5rem);
 }
+
+.login_button:hover {
+  @apply bg-[#D93030] translate-y-[-3px];
+}
+
 #login {
-  @apply absolute left-1/4 top-1/2 w-1/5 h-[50%];
+  @apply absolute left-[20%] top-1/2 w-1/4 h-[80%];
 }
+
 #sign_in {
-  @apply absolute right-1/4 top-1/2 w-1/5 h-[50%];
+  @apply absolute right-[20%] top-1/2 w-1/4 h-[80%];
 }
