@@ -80,7 +80,9 @@
   }
 
   .school-title {
-    @apply absolute bg-neutral-500 border-black border-4 rounded-[12px] w-[28%] h-[70%] right-[7%] top-[-55%];
+    @apply absolute bg-[#D93030] flex items-center font-bold border-black border-4 rounded-[12px] w-[28%] h-[70%] right-[7%] top-[-55%] p-1;
+    font-size: clamp(0.5rem, 2vw, 2.5rem);
+    
   }
 
   .papercorner {
