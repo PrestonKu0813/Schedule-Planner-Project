@@ -62,6 +62,13 @@ function CourseList({
     setResults(data);
   };
 
+    // Callback function to refresh saved schedules after saving
+  const handleScheduleSaved = () => {
+    if (savedSchedulesRef.current && savedSchedulesRef.current.loadSavedSchedules) {
+      savedSchedulesRef.current.loadSavedSchedules();
+    }
+  };
+
   return (
     <div className="course_list_inner">
       <div className="button_row">
