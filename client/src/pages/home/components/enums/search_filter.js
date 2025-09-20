@@ -71,10 +71,25 @@ export default {
     ECN: "SEBS Only: Economic Analysis (ECN)",
     GVT: "SEBS Only: Government/Regulatory Analysis (GVT)",
     SOEHS: "SOE Only: Approved Humanities/Social Science (SOEHS)",
+    "-1": "N/A",
   },
   courseType: {
     FtF: "Face to Face",
     H: "Hybrid",
     O: "Online",
   },
+  timeRanges: {
+    MORNING: [7, 11],
+    AFTERNOON: [12, 17],
+    EVENING: [18, 22],
+  },
+  weekDays: {
+    Monday: "Monday",
+    Tuesday: "Tuesday",
+    Wednesday: "Wednesday",
+    Thursday: "Thursday",
+    Friday: "Friday",
+    Saturday: "Saturday",
+    Sunday: "Sunday",
+  }
 };
