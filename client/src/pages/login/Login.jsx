@@ -32,7 +32,7 @@ export default function Login() {
             src="src\pages\login\components\login_assets\planeicon.png"
           />
           <img src="src\pages\login\components\login_assets\titlebacksplash.png" />
-          <div className="school-title"></div>
+          <div className="school-title">Rutgers <br/>New  <br/> Brunswick</div>
           <div className="subtext-position">
             <span id="subtext-highlight">R</span>oadmap to Success
           </div>
