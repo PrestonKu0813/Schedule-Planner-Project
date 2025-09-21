@@ -10,8 +10,8 @@ import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";
 import searchFilter from "../enums/search_filter.js";
 import RegisterButton from "../save_button/RegisterButton.jsx";
+
 /**
- *
  * @param {*} props
  * @param {Array} props.courses - Array of course objects.
  * @param {Function} props.setCourses - Function to update the courses state.
@@ -33,24 +33,23 @@ function CourseList({
   setActiveTab,
   setPreviewSection,
   specialFilters,
-  setSpecialFilters
+  setSpecialFilters,
 }) {
   const { user } = useUser();
-
   const { campus } = searchFilter;
   const savedSchedulesRef = useRef(null);
 
-  //setting the results of search bar
+  // Setting the results of search bar
   const [results, setResults] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
-  //setting the selected tag for filtering
+  // Setting the selected tag for filtering
   const [selectedTag, setSelectedTag] = useState({
     value: "all",
     label: "All",
   });
 
-  //filter options
+  // Filter options
   const tagOptions = [
     { value: "all", label: "All" },
     { value: "010", label: "Accounting (010)" },
@@ -62,9 +61,12 @@ function CourseList({
     setResults(data);
   };
 
-    // Callback function to refresh saved schedules after saving
+  // Callback function to refresh saved schedules after saving
   const handleScheduleSaved = () => {
-    if (savedSchedulesRef.current && savedSchedulesRef.current.loadSavedSchedules) {
+    if (
+      savedSchedulesRef.current &&
+      savedSchedulesRef.current.loadSavedSchedules
+    ) {
       savedSchedulesRef.current.loadSavedSchedules();
     }
   };
@@ -73,45 +75,43 @@ function CourseList({
     <div className="course_list_inner">
       <div className="button_row">
         <button
-          className={`course_list_search_button ${
-            activeTab === "SEARCH" ? "active" : ""
-          }`}
+          className={`course_list_search_button ${activeTab === "SEARCH" ? "active" : ""}`}
           onClick={() => setActiveTab("SEARCH")}
           id="headerText"
         >
           SEARCH
         </button>
-
         <button
-          className={`course_list_section_button ${
-            activeTab === "SECTION" ? "active" : ""
-          }`}
+          className={`course_list_section_button ${activeTab === "SECTION" ? "active" : ""}`}
           onClick={() => setActiveTab("SECTION")}
           id="headerText"
         >
-          SECTION
+          SELECTED
         </button>
         <button
-          className={`course_list_schedule_button ${
-            activeTab === "SCHEDULE" ? "active" : ""
-          }`}
+          className={`course_list_schedule_button ${activeTab === "SCHEDULE" ? "active" : ""}`}
           onClick={() => setActiveTab("SCHEDULE")}
           id="headerText"
         >
           SCHEDULE
         </button>
-
         <LogoutButton />
-        <SaveButton 
-          courses={courses} 
-          user={user} 
+        <SaveButton
+          courses={courses}
+          user={user}
           onScheduleSaved={handleScheduleSaved}
         />
         <RegisterButton courses={courses} />
       </div>
       {/* Tab Content */}
       <div
-        className={`course_list ${activeTab === "SEARCH" ? "search-bg" : activeTab === "SECTION" ? "section-bg" : "schedule-bg"}`}
+        className={`course_list ${
+          activeTab === "SEARCH"
+            ? "search-bg"
+            : activeTab === "SECTION"
+              ? "section-bg"
+              : "schedule-bg"
+        }`}
       >
         {activeTab === "SEARCH" ? (
           <div className="course_list_text">
@@ -165,53 +165,118 @@ function CourseList({
             </div>
           </div>
         ) : activeTab === "SECTION" ? (
-          <div className="course_list_text" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+          <div
+            className="course_list_text"
+            style={{ display: "flex", flexDirection: "row", height: "100%" }}
+          >
             {/* Left Panel: Selected Courses List */}
-            <div style={{ width: '25%', padding: '1em', boxSizing: 'border-box', minHeight: '100%', overflowY: 'auto', maxHeight: '100%' }}>
+            <div
+              style={{
+                width: "25%",
+                padding: "1em",
+                boxSizing: "border-box",
+                minHeight: "100%",
+                overflowY: "auto",
+                maxHeight: "100%",
+              }}
+            >
               <h1 className="selected_courses_text">Selected Courses</h1>
               {courses.length === 0 ? (
-                <p className="no_courses_selected_text">No courses selected yet!</p>
+                <p className="no_courses_selected_text">
+                  No courses selected yet!
+                </p>
               ) : (
                 <ul className="courses_list">
-                  {courses.map((course, index) => (
-                    <li key={index} className="course_card">
-                      <h2>{course.course_name}</h2>
-                      <p>Course Number: {course.course_number}</p>
-                      <p>Credits: {course.credit}</p>
-                      <p>Selected Sections: {course.selected_sections && course.selected_sections.length > 0
-                        ? course.selected_sections.map(section => section.section_number).join(", ")
-                        : "None"}
-                      </p>
-                      <button
-                        className="set-info-button"
-                        onClick={e => {
-                          e.stopPropagation();
-                          setInfo(course);
-                          setActiveTab("SECTION");
-                        }}
-                      >
-                        Details
-                      </button>
-                      <button
-                        className="remove_course_button"
-                        onClick={() => setCourses(courses.filter(c => c.course_number !== course.course_number))}
-                      >Remove Course</button>
-                    </li>
-                  ))}
+                  {courses.map((course, index) => {
+                    const courseNameEncoded = encodeURIComponent(
+                      course.course_name
+                    );
+                    const courseLink = `https://classes.rutgers.edu/soc/#keyword?keyword=${courseNameEncoded}&semester=92025&campus=NB&level=U`;
+                    return (
+                      <li key={index} className="course_card">
+                        <h2>{course.course_name}</h2>
+                        <p>Course Number: {course.course_number}</p>
+                        <p>Credits: {course.credit}</p>
+                        <p>
+                          Selected Sections:{" "}
+                          {course.selected_sections &&
+                          course.selected_sections.length > 0
+                            ? course.selected_sections
+                                .map((section) => section.section_number)
+                                .join(", ")
+                            : "None"}
+                        </p>
+                        <button
+                          className="set-info-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setInfo({ ...course, course_link: courseLink });
+                            setActiveTab("SECTION");
+                          }}
+                        >
+                          Details
+                        </button>
+                        <button
+                          className="remove_course_button"
+                          onClick={() =>
+                            setCourses(
+                              courses.filter(
+                                (c) => c.course_number !== course.course_number
+                              )
+                            )
+                          }
+                        >
+                          Remove Course
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>
             {/* Right Panel: Existing Content */}
-            <div style={{ width: '75%', padding: '1em', boxSizing: 'border-box', minHeight: '100%' }}>
-              <h2>Courses Tab</h2>
-              <p>Welcome to the Courses tab!</p>
-              <p>Selected Info: {info && info.course_name}</p>
+            <div
+              style={{
+                width: "75%",
+                padding: "1em",
+                boxSizing: "border-box",
+                minHeight: "100%",
+              }}
+            >
+              <h1 className="course_details_text">Course Details</h1>
+              {info ? (
+                <div className="course_details">
+                  <h2>{info.course_name}</h2>
+                  <p>Course Number: {info.course_number}</p>
+                  <p>Credits: {info.credit}</p>
+                  <p>Core Codes: {info.core_code}</p>
+                  <a
+                    href={info.course_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="soc-link"
+                  >
+                      View on Rutgers SOC
+                  </a>
+                  <p>
+                    Selected Sections:{" "}
+                    {info.selected_sections && info.selected_sections.length > 0
+                      ? info.selected_sections
+                          .map((section) => section.section_number)
+                          .join(", ")
+                      : "None"}
+                  </p>
+                </div>
+              ) : (
+                <p className="no_courses_selected_text">
+                  Select a course to view details.
+                </p>
+              )}
             </div>
           </div>
         ) : (
           <div className="schedule_container">
             <div className="randomizer_container">
-              {" "}
               randomizer + schedule next and behind generator put here
             </div>
             <div className="saved_schedule_container">
