@@ -10,9 +10,6 @@ function LoginButtons() {
       <button onClick={handleLogin} className="login_button" id="login">
         Login
       </button>
-      <button className="login_button" id="sign_in">
-        Sign in
-      </button>
     </div>
   );
 }

@@ -19,6 +19,8 @@
 @layer components {
   .login_layout_container {
     @apply flex flex-row w-screen h-screen bg-[#E8BE8C];
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
 
   .side_binder {
@@ -61,6 +63,7 @@
 
   .login_button_container {
     @apply relative flex flex-row h-[var(--button-container-height)] items-center;
+    justify-content: center;
   }
 
   .subtext-position {
@@ -80,8 +83,10 @@
   }
 
   .school-title {
-    @apply absolute bg-[#D93030] flex items-center font-bold border-black border-4 rounded-[12px] w-[28%] h-[70%] right-[7%] top-[-55%] p-1;
-    font-size: clamp(0.5rem, 2vw, 2.5rem);
+    @apply absolute bg-[#D93030] flex items-center font-extrabold border-black border-4 rounded-[12px] w-[28%] h-[70%] right-[7%] top-[-55%] p-1;
+    font-size: clamp(0.5rem, 2.6vw, 2.5rem);
+    line-height: 1;
+    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   }
 
   .papercorner {
@@ -102,7 +107,7 @@
   .planeicon {
     @apply absolute left-[3%] z-10;
     top: clamp(-60%, -8vw, -58%);
-    left: clamp(2%, 2.5vw , 6%);
+    left: clamp(2%, 2.5vw, 6%);
     width: clamp(1rem, 6%, 10rem);
   }
 

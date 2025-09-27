@@ -4,7 +4,7 @@
 
 .login_button {
   @apply text-black font-bold bg-[#A62044] border-black border-4 rounded-[10px];
-  font-size: clamp(1rem, 2vw, 5rem);
+  font-size: clamp(1rem, 3vw, 2rem);
 }
 
 .login_button:hover {
@@ -12,9 +12,7 @@
 }
 
 #login {
-  @apply absolute left-[20%] top-1/2 w-1/4 h-[80%];
-}
-
-#sign_in {
-  @apply absolute right-[20%] top-1/2 w-1/4 h-[80%];
+  @apply relative w-[25vw];
+  height: clamp( 3rem,6vw,4rem);
+  
 }
