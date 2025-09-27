@@ -54,12 +54,202 @@
   .course_list_header {
     @apply flex flex-row mt-[10px] gap-[5px];
   }
-  
+
   .course_list_text {
     @apply text-center text-black;
     font-size: clamp(0.5rem, 1vw, 1.5rem);
     overflow-x: hidden;
     text-overflow: ellipsis;
+  }
+
+  /* Selected course card header layout: title left, buttons right (like search results) */
+  .course_card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    gap: 8px;
+  }
+
+  /* Alias SearchResult header to use same styles as course card header */
+  .result-header,
+  .course_card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    gap: 8px;
+  }
+
+  .course_card_title {
+    flex-grow: 1; /* allow title to take available space */
+    margin-right: 10px;
+    white-space: normal;
+    overflow: visible;
+    text-align: left;
+    font-size: 1rem;
+  }
+
+  /* Alias SearchResult title to use same styles as course card title */
+  .result-title,
+  .course_card_title {
+    flex-grow: 1; /* allow title to take available space */
+    margin-right: 10px;
+    white-space: normal;
+    overflow: visible;
+    text-align: left;
+    font-size: 1rem;
+  }
+
+  .course_card_buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0; /* prevent buttons from shrinking */
+  }
+
+  /* Alias SearchResult buttons container to the same style so Visit/Add/Remove align */
+  .result-header .result-title + .visit-course-button,
+  .result-header .visit-course-button,
+  .result-header .add-course-button,
+  .result-header .remove-course-button,
+  .course_card_buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .course_card_buttons button {
+    flex-shrink: 0;
+    margin-left: 6px;
+  }
+
+  /* Ensure SearchResult header buttons receive same sizing/centering as course card buttons */
+  .result-header button,
+  .course_card_buttons button {
+    flex-shrink: 0;
+    margin-left: 6px;
+  }
+
+  /* Make sure each course card is a column so dropdown expands below header
+     and does not overlap neighboring card headers */
+  .course_card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Space the dropdown so it doesn't sit directly on top of the next card */
+  .selected-course-dropdown {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  /* Give the toggle arrow a fixed, non-shrinking size so it can't overlap
+     with other buttons when fonts or content change */
+  .toggle-open-button {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 1rem;
+  }
+
+  /* Arrow color: black when closed, blue when open (aria-expanded="true") */
+  .toggle-open-button {
+    color: #000; /* default black */
+  }
+
+  .toggle-open-button[aria-expanded="true"] {
+    color: #3498db; /* blue when open */
+  }
+
+  /* Apply same toggle sizing for SearchResult's unlabeled toggle button (last child) */
+  .result-header > button:last-child {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 1rem;
+  }
+
+  /* Also color the SearchResult's last-child toggle based on aria-expanded */
+  .result-header > button:last-child {
+    color: #000;
+  }
+
+  .result-header > button:last-child[aria-expanded="true"] {
+    color: #3498db;
+  }
+
+  /* Ensure buttons in the header vertically align and don't change layout on hover/active */
+  .course_card_buttons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px; /* slightly smaller */
+    min-width: 34px;
+    height: 30px;
+    box-sizing: border-box;
+  }
+
+  /* Ensure the Remove button matches header button sizing and is vertically centered */
+  .remove_course_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    height: 30px;
+    min-width: 44px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 2px solid #000;
+    cursor: pointer;
+  }
+
+  /* Also style the hyphen-style remove and add buttons used in SearchResult */
+  .remove-course-button,
+  .add-course-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    height: 30px;
+    min-width: 44px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 2px solid #000;
+    cursor: pointer;
+  }
+
+  /* Visit button for search/selected course items */
+  .visit-course-button {
+    @apply bg-[#3498db] text-white px-[8px] py-[4px] rounded-md border-2 border-black font-semibold;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .visit-course-button:hover {
+    @apply opacity-90;
+  }
+
+  .visit-course-button:active {
+    transform: scale(0.98);
   }
 
   .search-bar-container {
@@ -148,6 +338,3 @@
 .section-list h3 {
   margin-top: 1em;
 }
-
-
-

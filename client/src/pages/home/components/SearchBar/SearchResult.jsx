@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import "./Search.css";
 import { SectionList } from "./SectionList";
 
@@ -19,8 +20,6 @@ export const SearchResult = ({
   result,
   courses,
   setCourses,
-  setInfo,
-  setActiveTab,
   setPreviewSection,
   specialFilters,
 }) => {
@@ -52,9 +51,15 @@ export const SearchResult = ({
       );
     } else {
       // Add course to selected courses with selected_sections initialized
+      const courseNameEncoded = encodeURIComponent(result.course_name);
+      const courseLink = `https://classes.rutgers.edu/soc/#keyword?keyword=${courseNameEncoded}&semester=92025&campus=NB&level=U`;
       setCourses([
         ...courses,
-        { ...result, selected_sections: selectedSections },
+        {
+          ...result,
+          selected_sections: selectedSections,
+          course_link: courseLink,
+        },
       ]);
     }
     setIsCourseAdded(!isCourseAdded);
@@ -136,16 +141,16 @@ export const SearchResult = ({
       <div className="result-header" onClick={toggleDropdown}>
         <div className="result-title">{result.course_name}</div>
         <button
-          className="set-info-button"
+          className="visit-course-button"
           onClick={(e) => {
             e.stopPropagation();
             const courseNameEncoded = encodeURIComponent(result.course_name);
             const courseLink = `https://classes.rutgers.edu/soc/#keyword?keyword=${courseNameEncoded}&semester=92025&campus=NB&level=U`;
-            setInfo({ ...result, course_link: courseLink });
-            setActiveTab("SECTION");
+            // Open the course link in a new tab
+            window.open(courseLink, "_blank", "noopener,noreferrer");
           }}
         >
-          Details
+          Visit
         </button>
         <button
           onClick={handleAddRemoveCourse}
@@ -155,7 +160,18 @@ export const SearchResult = ({
         >
           {isCourseAdded ? "-" : "+"}
         </button>
-        <button>{isOpen ? "▲" : "▼"}</button>
+        <button
+          type="button"
+          className="toggle-open-button"
+          aria-expanded={isOpen}
+          aria-label={isOpen ? "Collapse sections" : "Expand sections"}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleDropdown();
+          }}
+        >
+          {isOpen ? "▲" : "▼"}
+        </button>
       </div>
       {isOpen && (
         <div className="dropdown">
@@ -192,4 +208,12 @@ export const SearchResult = ({
       )}
     </div>
   );
+};
+
+SearchResult.propTypes = {
+  result: PropTypes.object.isRequired,
+  courses: PropTypes.array.isRequired,
+  setCourses: PropTypes.func.isRequired,
+  setPreviewSection: PropTypes.func,
+  specialFilters: PropTypes.object,
 };

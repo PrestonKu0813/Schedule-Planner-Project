@@ -2,7 +2,8 @@ import "./course_list.css";
 import { useUser } from "../../../../contexts/UserContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
-import { useState, useEffect, useRef } from "react";
+import { SearchResult } from "../SearchBar/SearchResult";
+import { useState, useRef } from "react";
 import { SearchAPI } from "../SearchBar/SearchAPI.js";
 import LogoutButton from "../buttons/logout_button";
 import SaveButton from "../save_button/save_button";
@@ -10,6 +11,7 @@ import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";
 import searchFilter from "../enums/search_filter.js";
 import RegisterButton from "../save_button/RegisterButton.jsx";
+// Selected courses are rendered with SearchResult
 
 /**
  * @param {*} props
@@ -156,8 +158,6 @@ function CourseList({
                 results={results}
                 courses={courses}
                 setCourses={setCourses}
-                setInfo={setInfo}
-                setActiveTab={setActiveTab}
                 setPreviewSection={setPreviewSection}
                 selectedTag={selectedTag.value}
                 specialFilters={specialFilters}
@@ -167,12 +167,12 @@ function CourseList({
         ) : activeTab === "SECTION" ? (
           <div
             className="course_list_text"
-            style={{ display: "flex", flexDirection: "row", height: "100%" }}
+            style={{ display: "flex", flexDirection: "column", height: "100%" }}
           >
-            {/* Left Panel: Selected Courses List */}
+            <h1 className="selected_courses_text">Selected Courses</h1>
             <div
               style={{
-                width: "25%",
+                width: "100%",
                 padding: "1em",
                 boxSizing: "border-box",
                 minHeight: "100%",
@@ -180,97 +180,23 @@ function CourseList({
                 maxHeight: "100%",
               }}
             >
-              <h1 className="selected_courses_text">Selected Courses</h1>
               {courses.length === 0 ? (
                 <p className="no_courses_selected_text">
                   No courses selected yet!
                 </p>
               ) : (
-                <ul className="courses_list">
-                  {courses.map((course, index) => {
-                    const courseNameEncoded = encodeURIComponent(
-                      course.course_name
-                    );
-                    const courseLink = `https://classes.rutgers.edu/soc/#keyword?keyword=${courseNameEncoded}&semester=92025&campus=NB&level=U`;
-                    return (
-                      <li key={index} className="course_card">
-                        <h2>{course.course_name}</h2>
-                        <p>Course Number: {course.course_number}</p>
-                        <p>Credits: {course.credit}</p>
-                        <p>
-                          Selected Sections:{" "}
-                          {course.selected_sections &&
-                          course.selected_sections.length > 0
-                            ? course.selected_sections
-                                .map((section) => section.section_number)
-                                .join(", ")
-                            : "None"}
-                        </p>
-                        <button
-                          className="set-info-button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setInfo({ ...course, course_link: courseLink });
-                            setActiveTab("SECTION");
-                          }}
-                        >
-                          Details
-                        </button>
-                        <button
-                          className="remove_course_button"
-                          onClick={() =>
-                            setCourses(
-                              courses.filter(
-                                (c) => c.course_number !== course.course_number
-                              )
-                            )
-                          }
-                        >
-                          Remove Course
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
-            {/* Right Panel: Existing Content */}
-            <div
-              style={{
-                width: "75%",
-                padding: "1em",
-                boxSizing: "border-box",
-                minHeight: "100%",
-              }}
-            >
-              <h1 className="course_details_text">Course Details</h1>
-              {info ? (
-                <div className="course_details">
-                  <h2>{info.course_name}</h2>
-                  <p>Course Number: {info.course_number}</p>
-                  <p>Credits: {info.credit}</p>
-                  <p>Core Codes: {info.core_code}</p>
-                  <a
-                    href={info.course_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="soc-link"
-                  >
-                      View on Rutgers SOC
-                  </a>
-                  <p>
-                    Selected Sections:{" "}
-                    {info.selected_sections && info.selected_sections.length > 0
-                      ? info.selected_sections
-                          .map((section) => section.section_number)
-                          .join(", ")
-                      : "None"}
-                  </p>
+                <div className="courses_list">
+                  {courses.map((course, index) => (
+                    <SearchResult
+                      key={course.course_number || index}
+                      result={course}
+                      courses={courses}
+                      setCourses={setCourses}
+                      setPreviewSection={setPreviewSection}
+                      specialFilters={specialFilters}
+                    />
+                  ))}
                 </div>
-              ) : (
-                <p className="no_courses_selected_text">
-                  Select a course to view details.
-                </p>
               )}
             </div>
           </div>
