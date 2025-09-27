@@ -1,5 +1,6 @@
 import "./course_list.css";
 import { useUser } from "../../../../contexts/UserContext";
+import { useSchedule } from "../../../../contexts/ScheduleContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState, useEffect, useRef } from "react";
@@ -33,9 +34,10 @@ function CourseList({
   setActiveTab,
   setPreviewSection,
   specialFilters,
-  setSpecialFilters
+  setSpecialFilters,
 }) {
   const { user } = useUser();
+  const { isViewingSavedSchedule, restoreUserSchedule } = useSchedule();
 
   const { campus } = searchFilter;
   const savedSchedulesRef = useRef(null);
@@ -62,11 +64,27 @@ function CourseList({
     setResults(data);
   };
 
-    // Callback function to refresh saved schedules after saving
+  // Callback function to refresh saved schedules after saving
   const handleScheduleSaved = () => {
-    if (savedSchedulesRef.current && savedSchedulesRef.current.loadSavedSchedules) {
+    if (
+      savedSchedulesRef.current &&
+      savedSchedulesRef.current.loadSavedSchedules
+    ) {
       savedSchedulesRef.current.loadSavedSchedules();
     }
+  };
+
+  // Handle tab switching - restore user schedule when leaving saved schedule view
+  const handleTabSwitch = (newTab) => {
+    // If currently viewing a saved schedule and switching to SEARCH or SECTION tab,
+    // restore the user's work-in-progress schedule
+    if (
+      isViewingSavedSchedule &&
+      (newTab === "SEARCH" || newTab === "SECTION")
+    ) {
+      restoreUserSchedule();
+    }
+    setActiveTab(newTab);
   };
 
   return (
@@ -76,7 +94,7 @@ function CourseList({
           className={`course_list_search_button ${
             activeTab === "SEARCH" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("SEARCH")}
+          onClick={() => handleTabSwitch("SEARCH")}
           id="headerText"
         >
           SEARCH
@@ -86,7 +104,7 @@ function CourseList({
           className={`course_list_section_button ${
             activeTab === "SECTION" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("SECTION")}
+          onClick={() => handleTabSwitch("SECTION")}
           id="headerText"
         >
           SECTION
@@ -95,16 +113,16 @@ function CourseList({
           className={`course_list_schedule_button ${
             activeTab === "SCHEDULE" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("SCHEDULE")}
+          onClick={() => handleTabSwitch("SCHEDULE")}
           id="headerText"
         >
           SCHEDULE
         </button>
 
         <LogoutButton />
-        <SaveButton 
-          courses={courses} 
-          user={user} 
+        <SaveButton
+          courses={courses}
+          user={user}
           onScheduleSaved={handleScheduleSaved}
         />
         <RegisterButton courses={courses} />
@@ -157,7 +175,7 @@ function CourseList({
                 courses={courses}
                 setCourses={setCourses}
                 setInfo={setInfo}
-                setActiveTab={setActiveTab}
+                setActiveTab={handleTabSwitch}
                 setPreviewSection={setPreviewSection}
                 selectedTag={selectedTag.value}
                 specialFilters={specialFilters}
@@ -165,12 +183,26 @@ function CourseList({
             </div>
           </div>
         ) : activeTab === "SECTION" ? (
-          <div className="course_list_text" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+          <div
+            className="course_list_text"
+            style={{ display: "flex", flexDirection: "row", height: "100%" }}
+          >
             {/* Left Panel: Selected Courses List */}
-            <div style={{ width: '25%', padding: '1em', boxSizing: 'border-box', minHeight: '100%', overflowY: 'auto', maxHeight: '100%' }}>
+            <div
+              style={{
+                width: "25%",
+                padding: "1em",
+                boxSizing: "border-box",
+                minHeight: "100%",
+                overflowY: "auto",
+                maxHeight: "100%",
+              }}
+            >
               <h1 className="selected_courses_text">Selected Courses</h1>
               {courses.length === 0 ? (
-                <p className="no_courses_selected_text">No courses selected yet!</p>
+                <p className="no_courses_selected_text">
+                  No courses selected yet!
+                </p>
               ) : (
                 <ul className="courses_list">
                   {courses.map((course, index) => (
@@ -178,31 +210,51 @@ function CourseList({
                       <h2>{course.course_name}</h2>
                       <p>Course Number: {course.course_number}</p>
                       <p>Credits: {course.credit}</p>
-                      <p>Selected Sections: {course.selected_sections && course.selected_sections.length > 0
-                        ? course.selected_sections.map(section => section.section_number).join(", ")
-                        : "None"}
+                      <p>
+                        Selected Sections:{" "}
+                        {course.selected_sections &&
+                        course.selected_sections.length > 0
+                          ? course.selected_sections
+                              .map((section) => section.section_number)
+                              .join(", ")
+                          : "None"}
                       </p>
                       <button
                         className="set-info-button"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.stopPropagation();
                           setInfo(course);
-                          setActiveTab("SECTION");
+                          handleTabSwitch("SECTION");
                         }}
                       >
                         Details
                       </button>
                       <button
                         className="remove_course_button"
-                        onClick={() => setCourses(courses.filter(c => c.course_number !== course.course_number))}
-                      >Remove Course</button>
+                        onClick={() =>
+                          setCourses(
+                            courses.filter(
+                              (c) => c.course_number !== course.course_number
+                            )
+                          )
+                        }
+                      >
+                        Remove Course
+                      </button>
                     </li>
                   ))}
                 </ul>
               )}
             </div>
             {/* Right Panel: Existing Content */}
-            <div style={{ width: '75%', padding: '1em', boxSizing: 'border-box', minHeight: '100%' }}>
+            <div
+              style={{
+                width: "75%",
+                padding: "1em",
+                boxSizing: "border-box",
+                minHeight: "100%",
+              }}
+            >
               <h2>Courses Tab</h2>
               <p>Welcome to the Courses tab!</p>
               <p>Selected Info: {info && info.course_name}</p>
@@ -215,12 +267,7 @@ function CourseList({
               randomizer + schedule next and behind generator put here
             </div>
             <div className="saved_schedule_container">
-              <SavedSchedules
-                ref={savedSchedulesRef}
-                user={user}
-                setCourses={setCourses}
-                courses={courses}
-              />
+              <SavedSchedules ref={savedSchedulesRef} user={user} />
             </div>
           </div>
         )}

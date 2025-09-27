@@ -230,7 +230,10 @@
 
   .popup {
     @apply absolute bg-white border border-black p-2 z-10 shadow-md max-w-[200px];
-    /* not sure if you should use px for max width */
+    min-width: 180px;
+    max-width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .popup-close {
@@ -259,14 +262,14 @@
   }
 
   .other-popup-button {
-    @apply bg-gray-400 h-[90%] w-full border-4 border-black ;
+    @apply bg-gray-400 h-[90%] w-full border-4 border-black;
     transition: background-color 0.3s ease;
-    transition:ease-in;
+    transition: ease-in;
   }
 
   .other-popup-button:hover {
     @apply bg-gray-300 h-[90%] w-full border-4 border-black;
-    transform: translateY(-3px)
+    transform: translateY(-3px);
   }
   #text {
     @apply font-semibold;
@@ -337,7 +340,7 @@
 
   /* Toggle Button */
   .online-popup-toggle {
-    @apply font-bold text-sm ;
+    @apply font-bold text-sm;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -349,7 +352,10 @@
     border-radius: 20px 20px 0 0;
     cursor: pointer;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-    transition: bottom 0.3s ease-out, background-color 0.2s ease, transform 0.2s ease;
+    transition:
+      bottom 0.3s ease-out,
+      background-color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .online-popup-toggle.expanded {
