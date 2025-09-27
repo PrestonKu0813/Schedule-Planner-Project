@@ -6,22 +6,23 @@ function Calendar_Key() {
   return (
     // MAIN BODY
     <div className="calendar_key_container">
-      {/* FIRST ROW */}
-      <div className="calendar_key_left">
         <div className="calendar_key_rows">
           {/* BUSCH INDEX */}
-          <div className="calendar_key" id="busch">
+          <div className="calendar_key">
+            <div className="calendar_key_color" id="busch"/>
             <p id="text">Busch</p>
           </div>
           {/* LIVI INDEX */}
 
-          <div className="calendar_key" id="livi">
+          <div className="calendar_key">
+            <div className="calendar_key_color" id="livi"/>
             <p id="text">Livingston</p>
           </div>
 
           {/* ONLINE INDEX */}
 
-          <div className="calendar_key" id="online">
+          <div className="calendar_key">
+            <div className="calendar_key_color" id="online"/>
             <p id="text">Online</p>
           </div>
         </div>
@@ -30,25 +31,24 @@ function Calendar_Key() {
         <div className="calendar_key_rows">
           {/* COLLEGE AVE INDEX */}
 
-          <div className="calendar_key" id="CA">
+          <div className="calendar_key">
+            <div className="calendar_key_color" id="CA"/>
             <p id="text">College Ave</p>
           </div>
           {/* COOK DOUG INDEX */}
 
-          <div className="calendar_key" id="CD">
-            <p id="text">Cook/Doug</p>
+          <div className="calendar_key">
+            <div className="calendar_key_color" id="CD"/>
+            <p id="text">Cook/Douglass</p>
           </div>
           {/* DOWNTOWN INDEX */}
 
-          <div className="calendar_key" id="downtown">
+          <div className="calendar_key">
+            <div className="calendar_key_color" id="downtown"/>
             <p id="text">Downtown</p>
           </div>
         </div>
       </div>
-      <div className="calendar_key_right">
-        <button className="other-popup-button" id="text"> Other </button>
-      </div>
-    </div>
   );
 }
 

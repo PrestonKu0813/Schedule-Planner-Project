@@ -12,7 +12,9 @@
            h-screen
            p-[10px]
            gap-[10px]
-           box-border;
+           box-border
+           overflow-x-hidden
+           overflow-y-hidden;
   }
 
   /* 2. Left panel: “Selected Courses” */

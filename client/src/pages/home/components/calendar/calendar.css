@@ -239,23 +239,19 @@
 
   /* CALENDAR KEY CSS SECTION */
   .calendar_key_container {
-    @apply w-full h-full flex flex-row gap-[5px];
+    @apply w-full h-full flex flex-col gap-[5px];
   }
-
-  .calendar_key_left {
-    @apply flex flex-col gap-[5px] flex-[4];
-  }
-
-  .calendar_key_right {
-    @apply flex flex-[1];
-  }
-
+ 
   .calendar_key_rows {
     @apply flex flex-row h-full gap-[5px] w-full;
   }
 
   .calendar_key {
-    @apply flex flex-1;
+    @apply flex flex-1 border-4 border-black;
+  }
+
+  .calendar_key_color{
+    @apply w-[20%] h-full ;
   }
 
   .other-popup-button {
@@ -268,6 +264,7 @@
     @apply bg-gray-300 h-[90%] w-full border-4 border-black;
     transform: translateY(-3px)
   }
+
   #text {
     @apply font-semibold;
     font-size: clamp(0.5rem, 1.5vw, 1rem);
