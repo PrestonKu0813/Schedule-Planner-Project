@@ -4,7 +4,7 @@ import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { useState, useEffect, useRef } from "react";
 import { SearchAPI } from "../SearchBar/SearchAPI.js";
-import LogoutButton from "../buttons/logout_button";
+import LogoutButton from "../save_button/logout_button.jsx";
 import SaveButton from "../save_button/save_button";
 import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";

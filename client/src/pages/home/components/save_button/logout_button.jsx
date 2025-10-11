@@ -1,5 +1,5 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL;
-import "./buttons.css";
+import "./save_button.css";
 
 function LogoutButton() {
   return (
