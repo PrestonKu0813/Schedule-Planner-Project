@@ -127,10 +127,11 @@ const SaveButton = ({ courses, user, onScheduleSaved }) => {
   };
 
   return (
-    <div className="save-button-container">
+    <div className="save_full_container">
       {!showInput ? (
         <button 
-          className="save-button"
+          className="button_container"
+          id="save"
           onClick={handleSaveClick}
         >
           Save Schedule

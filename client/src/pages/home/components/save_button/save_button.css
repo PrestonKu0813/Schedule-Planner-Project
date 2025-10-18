@@ -2,68 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-.logout_button {
-    @apply relative top-[10%] h-[80%] border-4 p-[5px] pl-[10px] pr-[10px] border-black rounded-[10px] bg-[#6c89c7];
-    transition-duration: 100ms;
-    transition-property: background-color;
+.save_full_container{
+    @apply flex-[2];
+}
+.button_container {
+  @apply relative flex-1 h-[80%] border-4 rounded-[5px] border-black bg-[#6c89c7] overflow-hidden;
+  transition-duration: 100ms;
+  transition-property: background-color;
+  font-size: clamp(0.5rem, 1vw, 4rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.logout_button:hover {
-    @apply bg-[#e0e5f0] top-[7%];
+#save {
+@apply px-[5%] w-full;
 }
 
-.save-button {
-    @apply relative top-[10%] h-[57px] border-4 p-[3px] pl-[6px] pr-[6px] border-black rounded-[10px] bg-[#6c89c7];
-    transition-duration: 100ms;
-    transition-property: all;
-}
-
-.save-button:hover {
-    @apply bg-[#e0e5f0] top-[7%];
-    transform: translateY(-3px);
+.button_container:hover {
+  @apply bg-[#e0e5f0] top-[5%];
 }
 
 .save-input-container {
-    @apply flex flex-col gap-[5px] w-full;
+  @apply flex flex-col gap-[5px] w-full h-[80%];
 }
 
 .schedule-name-input {
-    @apply border-2 border-black rounded-[5px] p-[5px] text-sm;
-    background-color: white;
+  @apply flex-1 border-2 border-black rounded-[5px] p-[5px] text-sm;
+  background-color: white;
 }
 
 .schedule-name-input:focus {
-    @apply outline-none border-[#6c89c7];
+  @apply outline-none border-[#6c89c7];
 }
 
 .save-actions {
-    @apply flex gap-[5px];
+  @apply flex gap-[5px] ;
+  border:2px soild red;
 }
 
 .save-confirm-button {
-    @apply flex-1 border-2 border-black rounded-[5px] p-[3px] text-sm bg-[#6c89c7] text-white;
-    transition-duration: 100ms;
+  @apply flex-1 border-2 border-black rounded-[5px] p-[3px] bg-[#6c89c7] text-white;
+  line-height:90%;
+  font-size:small;
+  font-weight:bold;
+  transition-duration: 100ms;
 }
 
 .save-confirm-button:hover:not(:disabled) {
-    @apply bg-[#e0e5f0] text-black;
+  @apply bg-[#e0e5f0] text-black;
 }
 
 .save-confirm-button:disabled {
-    @apply opacity-50 cursor-not-allowed;
+  @apply opacity-50 cursor-not-allowed;
 }
 
 .save-cancel-button {
-    @apply flex-1 border-2 border-black rounded-[5px] p-[3px] text-sm bg-gray-300;
-    transition-duration: 100ms;
+  @apply flex-1 border-2 border-black rounded-[5px] p-[3px] bg-gray-300;
+  line-height:50%;
+  font-size:small;
+  font-weight:bold;
+  transition-duration: 100ms;
 }
 
 .save-cancel-button:hover:not(:disabled) {
-    @apply bg-gray-400;
+  @apply bg-gray-400;
 }
 
 .save-cancel-button:disabled {
-    @apply opacity-50 cursor-not-allowed;
+  @apply opacity-50 cursor-not-allowed;
 }
-
- 

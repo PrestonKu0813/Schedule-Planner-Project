@@ -25,8 +25,7 @@ const RegisterButton = ({ courses }) => {
 
   return (
     <button 
-      className="save-button"
-      style={{ marginLeft: '8px' }}
+      className="button_container"
       onClick={handleRegister}
     >
       Register

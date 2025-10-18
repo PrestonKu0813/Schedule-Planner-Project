@@ -24,7 +24,11 @@
   }
 
   .button_row {
-    @apply flex flex-row w-full h-[10%] gap-[5px];
+    @apply flex flex-row w-[full] h-[10%] gap-[5px];
+  }
+
+  .button_row_left {
+    @apply flex flex-row w-[40%] h-full gap-[5px] pt-[5px];
   }
 
   .course_list_search_button {
@@ -54,7 +58,7 @@
   .course_list_header {
     @apply flex flex-row mt-[10px] gap-[5px];
   }
-  
+
   .course_list_text {
     @apply text-center text-black;
     font-size: clamp(0.5rem, 1vw, 1.5rem);
@@ -143,5 +147,3 @@
 .section-list h3 {
   margin-top: 1em;
 }
-
-
