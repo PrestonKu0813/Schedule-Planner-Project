@@ -1,8 +1,19 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { getSavedSchedules, loadScheduleByIndices, deleteScheudle } from '../api';
-import './saved_schedules.css';
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import {
+  getSavedSchedules,
+  loadScheduleByIndices,
+  deleteScheudle,
+} from "../api";
+import { useSchedule } from "../../../../contexts/ScheduleContext";
+import "./saved_schedules.css";
 
-const SavedSchedules = forwardRef(({ user, setCourses, courses }, ref) => {
+const SavedSchedules = forwardRef(({ user }, ref) => {
+  const { setCourses, isViewingSavedSchedule } = useSchedule();
   const [savedSchedules, setSavedSchedules] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -22,15 +33,15 @@ const SavedSchedules = forwardRef(({ user, setCourses, courses }, ref) => {
     if (!user || !userId) {
       return;
     }
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const schedules = await getSavedSchedules(userId);
       setSavedSchedules(schedules);
     } catch (err) {
-      setError('Failed to load saved schedules');
+      setError("Failed to load saved schedules");
     } finally {
       setLoading(false);
     }
@@ -38,21 +49,22 @@ const SavedSchedules = forwardRef(({ user, setCourses, courses }, ref) => {
 
   // Expose loadSavedSchedules function to parent component via ref
   useImperativeHandle(ref, () => ({
-    loadSavedSchedules
+    loadSavedSchedules,
   }));
 
   const handleScheduleClick = async (scheduleName, scheduleIndices) => {
     try {
       // Load the schedule from the server
       const courses = await loadScheduleByIndices(scheduleIndices);
-      
+
       // Set the courses in the main state to display on calendar
-      setCourses(courses);
-      
+      // Pass true to indicate this is from a saved schedule
+      setCourses(courses, true);
+
       // Set current schedule
       setCurrentSchedule(scheduleName);
     } catch (err) {
-      alert('Failed to load schedule. Please try again.');
+      alert("Failed to load schedule. Please try again.");
     }
   };
 
@@ -65,14 +77,16 @@ const SavedSchedules = forwardRef(({ user, setCourses, courses }, ref) => {
       await deleteScheudle(userId, scheduleName);
       await loadSavedSchedules();
     } catch (err) {
-      setError('Failed to delete schedule: ' + (err?.message || 'Unknown error'));
+      setError(
+        "Failed to delete schedule: " + (err?.message || "Unknown error")
+      );
     } finally {
       setDeletingSchedule(null);
     }
   };
 
   const formatScheduleName = (name) => {
-    return name.replace(/_/g, ' ');
+    return name.replace(/_/g, " ");
   };
 
   // Helper to get the actual key for a schedule (in case display formatting changes)
@@ -91,7 +105,9 @@ const SavedSchedules = forwardRef(({ user, setCourses, courses }, ref) => {
     return (
       <div className="saved-schedules-container">
         <h3>Saved Schedules</h3>
-        <div className="error" style={{ color: 'red', marginBottom: '8px' }}>{error}</div>
+        <div className="error" style={{ color: "red", marginBottom: "8px" }}>
+          {error}
+        </div>
         <button onClick={loadSavedSchedules} className="retry-button">
           Retry
         </button>
@@ -113,8 +129,10 @@ const SavedSchedules = forwardRef(({ user, setCourses, courses }, ref) => {
           {scheduleNames.map((scheduleName) => (
             <div
               key={scheduleName}
-              className={`schedule-item ${currentSchedule === scheduleName ? 'current-schedule' : ''}`}
-              onClick={() => handleScheduleClick(scheduleName, savedSchedules[scheduleName])}
+              className={`schedule-item ${currentSchedule === scheduleName ? "current-schedule" : ""}`}
+              onClick={() =>
+                handleScheduleClick(scheduleName, savedSchedules[scheduleName])
+              }
             >
               <div className="schedule-name">
                 {formatScheduleName(scheduleName)}
@@ -124,15 +142,15 @@ const SavedSchedules = forwardRef(({ user, setCourses, courses }, ref) => {
               </div>
               <button
                 className="delete-schedule-button"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   handleDeleteSchedule(getScheduleKey(scheduleName));
                 }}
                 disabled={deletingSchedule === scheduleName}
               >
-                {deletingSchedule === scheduleName ? 'Deleting...' : 'Delete'}
+                {deletingSchedule === scheduleName ? "Deleting..." : "Delete"}
               </button>
-              {currentSchedule === scheduleName }
+              {currentSchedule === scheduleName}
             </div>
           ))}
         </div>
@@ -141,4 +159,4 @@ const SavedSchedules = forwardRef(({ user, setCourses, courses }, ref) => {
   );
 });
 
-export default SavedSchedules; 
+export default SavedSchedules;

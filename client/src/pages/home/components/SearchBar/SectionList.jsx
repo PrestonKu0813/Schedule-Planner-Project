@@ -10,7 +10,6 @@ export const SectionList = ({
   courseInfo,
   specialFilters,
 }) => {
-
   function mergeAdjacentRanges(ranges) {
     if (!Array.isArray(ranges) || ranges.length === 0) return [];
 
@@ -64,15 +63,14 @@ export const SectionList = ({
   const mergedTimeRanges = mergeAdjacentRanges(specialFilters.timeRanges);
 
   // Filter sections based on campus and time after helper functions
-  
+
   const filteredSections = sections.filter((section) => {
     const campusList = Object.values(section.lecture_info)
       .map((infoObj) => infoObj.campus)
       .filter(Boolean);
-    
+
     // Campus filter
     const campusValid = !(
-
       campusList.some((campus) => !specialFilters.campus.includes(campus)) ||
       (specialFilters.campus.length > 0 &&
         !campusList.some((campus) => specialFilters.campus.includes(campus)))
@@ -141,17 +139,27 @@ export const SectionList = ({
           No sections available for this course with current filter options.
         </div>
       ) : (
-
-        filteredSections.map((section, id) => (
-          <Section
-            section={section}
-            key={id}
-            selectedSections={selectedSections}
-            setSelectedSections={setSelectedSections}
-            setPreviewSection={setPreviewSection}
-            courseInfo={courseInfo}
-          />
-        ))
+        <>
+          <div className="section-table-header">
+            <div className="table-cell checkbox-cell"></div>
+            <div className="table-cell sec-cell">SEC</div>
+            <div className="table-cell status-cell">STATUS</div>
+            <div className="table-cell index-cell">INDEX</div>
+            <div className="table-cell meeting-times-cell">MEETING TIMES</div>
+            <div className="table-cell meeting-locations-cell">LOCATIONS</div>
+            <div className="table-cell instructor-cell">INSTRUCTOR</div>
+          </div>
+          {filteredSections.map((section, id) => (
+            <Section
+              section={section}
+              key={id}
+              selectedSections={selectedSections}
+              setSelectedSections={setSelectedSections}
+              setPreviewSection={setPreviewSection}
+              courseInfo={courseInfo}
+            />
+          ))}
+        </>
       )}
     </div>
   );

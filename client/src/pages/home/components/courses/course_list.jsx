@@ -1,5 +1,6 @@
 import "./course_list.css";
 import { useUser } from "../../../../contexts/UserContext";
+import { useSchedule } from "../../../../contexts/ScheduleContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { SearchResult } from "../SearchBar/SearchResult";
@@ -38,6 +39,10 @@ function CourseList({
   setSpecialFilters,
 }) {
   const { user } = useUser();
+
+  const { isViewingSavedSchedule, restoreUserSchedule } = useSchedule();
+
+
   const { campus } = searchFilter;
   const savedSchedulesRef = useRef(null);
 
@@ -73,26 +78,51 @@ function CourseList({
     }
   };
 
+  // Handle tab switching - restore user schedule when leaving saved schedule view
+  const handleTabSwitch = (newTab) => {
+    // If currently viewing a saved schedule and switching to SEARCH or SECTION tab,
+    // restore the user's work-in-progress schedule
+    if (
+      isViewingSavedSchedule &&
+      (newTab === "SEARCH" || newTab === "SECTION")
+    ) {
+      restoreUserSchedule();
+    }
+    setActiveTab(newTab);
+  };
+
   return (
     <div className="course_list_inner">
       <div className="button_row">
         <button
-          className={`course_list_search_button ${activeTab === "SEARCH" ? "active" : ""}`}
-          onClick={() => setActiveTab("SEARCH")}
+
+          className={`course_list_search_button ${
+            activeTab === "SEARCH" ? "active" : ""
+          }`}
+          onClick={() => handleTabSwitch("SEARCH")}
+
           id="headerText"
         >
           SEARCH
         </button>
         <button
-          className={`course_list_section_button ${activeTab === "SECTION" ? "active" : ""}`}
-          onClick={() => setActiveTab("SECTION")}
+
+          className={`course_list_section_button ${
+            activeTab === "SECTION" ? "active" : ""
+          }`}
+          onClick={() => handleTabSwitch("SECTION")}
+
           id="headerText"
         >
           SELECTED
         </button>
         <button
-          className={`course_list_schedule_button ${activeTab === "SCHEDULE" ? "active" : ""}`}
-          onClick={() => setActiveTab("SCHEDULE")}
+
+          className={`course_list_schedule_button ${
+            activeTab === "SCHEDULE" ? "active" : ""
+          }`}
+          onClick={() => handleTabSwitch("SCHEDULE")}
+
           id="headerText"
         >
           SCHEDULE
@@ -158,6 +188,10 @@ function CourseList({
                 results={results}
                 courses={courses}
                 setCourses={setCourses}
+
+                setInfo={setInfo}
+                setActiveTab={handleTabSwitch}
+
                 setPreviewSection={setPreviewSection}
                 selectedTag={selectedTag.value}
                 specialFilters={specialFilters}
@@ -167,12 +201,12 @@ function CourseList({
         ) : activeTab === "SECTION" ? (
           <div
             className="course_list_text"
-            style={{ display: "flex", flexDirection: "column", height: "100%" }}
+            style={{ display: "flex", flexDirection: "row", height: "100%" }}
           >
-            <h1 className="selected_courses_text">Selected Courses</h1>
+            {/* Left Panel: Selected Courses List */}
             <div
               style={{
-                width: "100%",
+                width: "25%",
                 padding: "1em",
                 boxSizing: "border-box",
                 minHeight: "100%",
@@ -180,6 +214,7 @@ function CourseList({
                 maxHeight: "100%",
               }}
             >
+              <h1 className="selected_courses_text">Selected Courses</h1>
               {courses.length === 0 ? (
                 <p className="no_courses_selected_text">
                   No courses selected yet!
@@ -206,12 +241,7 @@ function CourseList({
               randomizer + schedule next and behind generator put here
             </div>
             <div className="saved_schedule_container">
-              <SavedSchedules
-                ref={savedSchedulesRef}
-                user={user}
-                setCourses={setCourses}
-                courses={courses}
-              />
+              <SavedSchedules ref={savedSchedulesRef} user={user} />
             </div>
           </div>
         )}
