@@ -201,12 +201,12 @@ function CourseList({
         ) : activeTab === "SECTION" ? (
           <div
             className="course_list_text"
-            style={{ display: "flex", flexDirection: "row", height: "100%" }}
+            style={{ display: "flex", flexDirection: "column", height: "100%" }}
           >
-            {/* Left Panel: Selected Courses List */}
+            <h1 className="selected_courses_text">Selected Courses</h1>
             <div
               style={{
-                width: "25%",
+                width: "100%",
                 padding: "1em",
                 boxSizing: "border-box",
                 minHeight: "100%",
@@ -214,7 +214,6 @@ function CourseList({
                 maxHeight: "100%",
               }}
             >
-              <h1 className="selected_courses_text">Selected Courses</h1>
               {courses.length === 0 ? (
                 <p className="no_courses_selected_text">
                   No courses selected yet!

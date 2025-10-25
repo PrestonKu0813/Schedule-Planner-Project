@@ -92,6 +92,7 @@ export const SearchResult = ({
       const matchedCourse = courses.find(
         (course) => course.course_number === result.course_number
       );
+      if (!matchedCourse) return;
       // Set selected_sections to match, or empty array if not found
       result.selected_sections = matchedCourse.selected_sections || [];
       setSelectedSections(result.selected_sections);
