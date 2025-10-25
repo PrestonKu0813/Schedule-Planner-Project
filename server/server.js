@@ -66,6 +66,10 @@ app.use("/explore", exploreRouter);
 const courseRouter = require("./routes/course");
 app.use("/course", courseRouter);
 
+// open section API
+const openSectionsRouter = require("./routes/open_section_API")
+app.use("/openSections", openSectionsRouter);
+
 // run server
 app.listen(port, () => {
   console.log(`server listening at http://localhost:${port}`);
