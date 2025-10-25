@@ -228,7 +228,7 @@ function Selected_Courses({
               onClick={() => setShowCredit((prev) => !prev)}
             >
               <h4 style={{ margin: 0, flex: 1, pointerEvents: "none" }}>
-                Credit
+                Credits
               </h4>
               <span style={{ fontSize: "1.1em" }}>
                 {showCredit ? "▲" : "▼"}

@@ -3,7 +3,8 @@ import { useUser } from "../../../../contexts/UserContext";
 import { useSchedule } from "../../../../contexts/ScheduleContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
-import { useState, useEffect, useRef } from "react";
+import { SearchResult } from "../SearchBar/SearchResult";
+import { useState, useRef } from "react";
 import { SearchAPI } from "../SearchBar/SearchAPI.js";
 import LogoutButton from "../buttons/logout_button";
 import SaveButton from "../save_button/save_button";
@@ -11,8 +12,9 @@ import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";
 import searchFilter from "../enums/search_filter.js";
 import RegisterButton from "../save_button/RegisterButton.jsx";
+// Selected courses are rendered with SearchResult
+
 /**
- *
  * @param {*} props
  * @param {Array} props.courses - Array of course objects.
  * @param {Function} props.setCourses - Function to update the courses state.
@@ -37,22 +39,24 @@ function CourseList({
   setSpecialFilters,
 }) {
   const { user } = useUser();
+
   const { isViewingSavedSchedule, restoreUserSchedule } = useSchedule();
+
 
   const { campus } = searchFilter;
   const savedSchedulesRef = useRef(null);
 
-  //setting the results of search bar
+  // Setting the results of search bar
   const [results, setResults] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
-  //setting the selected tag for filtering
+  // Setting the selected tag for filtering
   const [selectedTag, setSelectedTag] = useState({
     value: "all",
     label: "All",
   });
 
-  //filter options
+  // Filter options
   const tagOptions = [
     { value: "all", label: "All" },
     { value: "010", label: "Accounting (010)" },
@@ -91,34 +95,38 @@ function CourseList({
     <div className="course_list_inner">
       <div className="button_row">
         <button
+
           className={`course_list_search_button ${
             activeTab === "SEARCH" ? "active" : ""
           }`}
           onClick={() => handleTabSwitch("SEARCH")}
+
           id="headerText"
         >
           SEARCH
         </button>
-
         <button
+
           className={`course_list_section_button ${
             activeTab === "SECTION" ? "active" : ""
           }`}
           onClick={() => handleTabSwitch("SECTION")}
+
           id="headerText"
         >
-          SECTION
+          SELECTED
         </button>
         <button
+
           className={`course_list_schedule_button ${
             activeTab === "SCHEDULE" ? "active" : ""
           }`}
           onClick={() => handleTabSwitch("SCHEDULE")}
+
           id="headerText"
         >
           SCHEDULE
         </button>
-
         <LogoutButton />
         <SaveButton
           courses={courses}
@@ -129,7 +137,13 @@ function CourseList({
       </div>
       {/* Tab Content */}
       <div
-        className={`course_list ${activeTab === "SEARCH" ? "search-bg" : activeTab === "SECTION" ? "section-bg" : "schedule-bg"}`}
+        className={`course_list ${
+          activeTab === "SEARCH"
+            ? "search-bg"
+            : activeTab === "SECTION"
+              ? "section-bg"
+              : "schedule-bg"
+        }`}
       >
         {activeTab === "SEARCH" ? (
           <div className="course_list_text">
@@ -174,8 +188,10 @@ function CourseList({
                 results={results}
                 courses={courses}
                 setCourses={setCourses}
+
                 setInfo={setInfo}
                 setActiveTab={handleTabSwitch}
+
                 setPreviewSection={setPreviewSection}
                 selectedTag={selectedTag.value}
                 specialFilters={specialFilters}
@@ -204,66 +220,24 @@ function CourseList({
                   No courses selected yet!
                 </p>
               ) : (
-                <ul className="courses_list">
+                <div className="courses_list">
                   {courses.map((course, index) => (
-                    <li key={index} className="course_card">
-                      <h2>{course.course_name}</h2>
-                      <p>Course Number: {course.course_number}</p>
-                      <p>Credits: {course.credit}</p>
-                      <p>
-                        Selected Sections:{" "}
-                        {course.selected_sections &&
-                        course.selected_sections.length > 0
-                          ? course.selected_sections
-                              .map((section) => section.section_number)
-                              .join(", ")
-                          : "None"}
-                      </p>
-                      <button
-                        className="set-info-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setInfo(course);
-                          handleTabSwitch("SECTION");
-                        }}
-                      >
-                        Details
-                      </button>
-                      <button
-                        className="remove_course_button"
-                        onClick={() =>
-                          setCourses(
-                            courses.filter(
-                              (c) => c.course_number !== course.course_number
-                            )
-                          )
-                        }
-                      >
-                        Remove Course
-                      </button>
-                    </li>
+                    <SearchResult
+                      key={course.course_number || index}
+                      result={course}
+                      courses={courses}
+                      setCourses={setCourses}
+                      setPreviewSection={setPreviewSection}
+                      specialFilters={specialFilters}
+                    />
                   ))}
-                </ul>
+                </div>
               )}
-            </div>
-            {/* Right Panel: Existing Content */}
-            <div
-              style={{
-                width: "75%",
-                padding: "1em",
-                boxSizing: "border-box",
-                minHeight: "100%",
-              }}
-            >
-              <h2>Courses Tab</h2>
-              <p>Welcome to the Courses tab!</p>
-              <p>Selected Info: {info && info.course_name}</p>
             </div>
           </div>
         ) : (
           <div className="schedule_container">
             <div className="randomizer_container">
-              {" "}
               randomizer + schedule next and behind generator put here
             </div>
             <div className="saved_schedule_container">

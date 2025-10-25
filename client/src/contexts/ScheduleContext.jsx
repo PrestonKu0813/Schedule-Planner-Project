@@ -4,7 +4,7 @@ export const ScheduleContext = createContext();
 
 export function ScheduleProvider({ children }) {
   const [courses, setCourses] = useState([]);
-  const [info, setInfo] = useState({});
+  const [info, setInfo] = useState(null);
   const [activeTab, setActiveTab] = useState("SEARCH");
   const [previewSection, setPreviewSection] = useState(null);
 

@@ -6,8 +6,6 @@ export const SearchResultsList = ({
   results,
   courses,
   setCourses,
-  setInfo,
-  setActiveTab,
   setPreviewSection,
   selectedTag,
   specialFilters,
@@ -31,7 +29,9 @@ export const SearchResultsList = ({
           typeof result.core_code === "number"
         ? [String(result.core_code)]
         : [];
-    const coreCodeMatch = coreCodes.some((code) => specialFilters.coreCode.includes(code));
+    const coreCodeMatch = coreCodes.some((code) =>
+      specialFilters.coreCode.includes(code)
+    );
 
     // Both filters must match
     console.log("coreCodes:", coreCodes);
@@ -61,8 +61,6 @@ export const SearchResultsList = ({
               key={id}
               courses={courses}
               setCourses={setCourses}
-              setInfo={setInfo}
-              setActiveTab={setActiveTab}
               setPreviewSection={setPreviewSection}
               specialFilters={specialFilters}
             />
