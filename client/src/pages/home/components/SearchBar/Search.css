@@ -211,6 +211,7 @@ input:focus {
   font-size: 12px;
   color: #666;
   justify-content: center;
+  padding-left: 8px;
 }
 
 .section-table-header .index-cell {

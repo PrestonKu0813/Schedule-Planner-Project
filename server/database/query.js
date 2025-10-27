@@ -174,6 +174,11 @@ async function getSavedSchedules(id) {
     return {};
   }
 
+  // Handle both string and object types
+  if (typeof user[database_names.user.GOOGLE.SAVED_SCHEDULE] === "string") {
+    return JSON.parse(user[database_names.user.GOOGLE.SAVED_SCHEDULE]);
+  }
+
   return user[database_names.user.GOOGLE.SAVED_SCHEDULE];
 }
 
@@ -189,9 +194,15 @@ async function deleteSavedSchedules(id, scheduleName) {
   }
   // Properly parse the saved_schedule JSON string
   let obj;
-  if (data && typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "string") {
+  if (
+    data &&
+    typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "string"
+  ) {
     obj = JSON.parse(data[database_names.user.GOOGLE.SAVED_SCHEDULE]);
-  } else if (data && typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "object") {
+  } else if (
+    data &&
+    typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "object"
+  ) {
     obj = data[database_names.user.GOOGLE.SAVED_SCHEDULE];
   } else {
     obj = {};
@@ -219,8 +230,6 @@ async function getCoursesBySectionIndices(sectionIndices) {
     return [];
   }
 
-
-
   // Get all sections with their course information
   const sections = await db
     .table(database_names.table.SECTION)
@@ -236,7 +245,7 @@ async function getCoursesBySectionIndices(sectionIndices) {
     .whereIn(database_names.section.INDEX, sectionIndices);
 
   // Group sections by course
-  
+
   const coursesMap = {};
   sections.forEach((section) => {
     const courseNumber = section[database_names.course.NUMBER];
