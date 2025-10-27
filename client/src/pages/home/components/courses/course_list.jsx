@@ -12,6 +12,7 @@ import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";
 import searchFilter from "../enums/search_filter.js";
 import RegisterButton from "../save_button/RegisterButton.jsx";
+import ScheduleGenerator from "../schedule_generator/schedule_generator.jsx";
 // Selected courses are rendered with SearchResult
 
 /**
@@ -41,7 +42,7 @@ function CourseList({
   const { user } = useUser();
 
   const { isViewingSavedSchedule, restoreUserSchedule } = useSchedule();
-
+  const [generatedSchedules, setGeneratedSchedules] = useState([]);
 
   const { campus } = searchFilter;
   const savedSchedulesRef = useRef(null);
@@ -95,34 +96,28 @@ function CourseList({
     <div className="course_list_inner">
       <div className="button_row">
         <button
-
           className={`course_list_search_button ${
             activeTab === "SEARCH" ? "active" : ""
           }`}
           onClick={() => handleTabSwitch("SEARCH")}
-
           id="headerText"
         >
           SEARCH
         </button>
         <button
-
           className={`course_list_section_button ${
             activeTab === "SECTION" ? "active" : ""
           }`}
           onClick={() => handleTabSwitch("SECTION")}
-
           id="headerText"
         >
           SELECTED
         </button>
         <button
-
           className={`course_list_schedule_button ${
             activeTab === "SCHEDULE" ? "active" : ""
           }`}
           onClick={() => handleTabSwitch("SCHEDULE")}
-
           id="headerText"
         >
           SCHEDULE
@@ -188,10 +183,8 @@ function CourseList({
                 results={results}
                 courses={courses}
                 setCourses={setCourses}
-
                 setInfo={setInfo}
                 setActiveTab={handleTabSwitch}
-
                 setPreviewSection={setPreviewSection}
                 selectedTag={selectedTag.value}
                 specialFilters={specialFilters}
@@ -220,16 +213,18 @@ function CourseList({
                 </p>
               ) : (
                 <div className="courses_list">
-                  {courses.map((course, index) => (
-                    <SearchResult
-                      key={course.course_number || index}
-                      result={course}
-                      courses={courses}
-                      setCourses={setCourses}
-                      setPreviewSection={setPreviewSection}
-                      specialFilters={specialFilters}
-                    />
-                  ))}
+                  {courses && courses.length > 0
+                    ? courses.map((course, index) => (
+                        <SearchResult
+                          key={course.course_number || index}
+                          result={course}
+                          courses={courses}
+                          setCourses={setCourses}
+                          setPreviewSection={setPreviewSection}
+                          specialFilters={specialFilters}
+                        />
+                      ))
+                    : null}
                 </div>
               )}
             </div>
@@ -238,6 +233,15 @@ function CourseList({
           <div className="schedule_container">
             <div className="randomizer_container">
               randomizer + schedule next and behind generator put here
+              <ScheduleGenerator
+                courses={courses}
+                onGenerate={(schedules) => {
+                  // schedules is the Array<Array<sectionObject>> returned by generateSchedules()
+                  setGeneratedSchedules(schedules);
+                  // optionally run other logic here (preview first schedule, open modal, etc.)
+                  console.log('Received schedules from generator:', schedules);
+                }}
+              />
             </div>
             <div className="saved_schedule_container">
               <SavedSchedules ref={savedSchedulesRef} user={user} />
