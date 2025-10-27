@@ -1,14 +1,13 @@
-const path = require("path");
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
+const { updateOpenSecton } = require("../database/query");
 require("dotenv").config({ path: `./env/.env` });
 
 async function fetchOpenSections(headers = {}) {
-  const year = process.env.YEAR
-  const term = process.env.SEMESTER // 1 - Spring , 7 - Summer, 9 - Fall, 0 - Winter
-  const campus = process.env.CAMPUS // NB - New Brunswick
+  const year = process.env.YEAR;
+  const term = process.env.SEMESTER; // 1 - Spring , 7 - Summer, 9 - Fall, 0 - Winter
+  const campus = process.env.CAMPUS; // NB - New Brunswick
 
-  const url = `https://classes.rutgers.edu/soc/api/openSections.json?year=${year}&term=${(term)}&campus=${campus}`;
+  const url = `https://classes.rutgers.edu/soc/api/openSections.json?year=${year}&term=${term}&campus=${campus}`;
 
   const res = await fetch(url, { method: "GET", headers });
 
@@ -21,12 +20,13 @@ async function fetchOpenSections(headers = {}) {
   const data = await res.json();
   // console.log("Fetched open sections:", data);
 
-  return data
+  return data;
 }
 
 router.get("/", async (req, res) => {
   try {
     const openSections = await fetchOpenSections();
+    updateOpenSecton(openSections);
     res.json(openSections);
   } catch (err) {
     // Log for server visibility
@@ -36,7 +36,10 @@ router.get("/", async (req, res) => {
     res.status(502).json({
       status: 502,
       error_message: "Failed to fetch open sections from upstream.",
-      detail: process.env.NODE_ENV === "development" ? String(err.message) : undefined,
+      detail:
+        process.env.NODE_ENV === "development"
+          ? String(err.message)
+          : undefined,
     });
   }
 });

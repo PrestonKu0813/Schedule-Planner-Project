@@ -36,6 +36,24 @@ async function sectionsByCourseNumber(courseNumber) {
   return sectionsObject;
 }
 
+async function updateOpenSecton(openSectionsList) {
+  if (!Array.isArray(openSectionsList) || openSectionsList.length === 0) {
+    return database_names.message.failure;
+  }
+
+  await db
+    .table(database_names.table.SECTION)
+    .update({
+      [database_names.section.SECTION_OPEN]: db.raw(
+        `CASE WHEN ?? IN (${openSectionsList
+          .map(() => "?")
+          .join(",")}) THEN 1 ELSE 0 END`,
+        [database_names.section.INDEX, ...openSectionsList]
+      ),
+    });
+  return database_names.message.success;
+}
+
 async function courseSearch(courseName) {
   const coursesObject = {};
   const upperCaseCourseName = courseName.toUpperCase();
@@ -189,9 +207,15 @@ async function deleteSavedSchedules(id, scheduleName) {
   }
   // Properly parse the saved_schedule JSON string
   let obj;
-  if (data && typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "string") {
+  if (
+    data &&
+    typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "string"
+  ) {
     obj = JSON.parse(data[database_names.user.GOOGLE.SAVED_SCHEDULE]);
-  } else if (data && typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "object") {
+  } else if (
+    data &&
+    typeof data[database_names.user.GOOGLE.SAVED_SCHEDULE] === "object"
+  ) {
     obj = data[database_names.user.GOOGLE.SAVED_SCHEDULE];
   } else {
     obj = {};
@@ -219,8 +243,6 @@ async function getCoursesBySectionIndices(sectionIndices) {
     return [];
   }
 
-
-
   // Get all sections with their course information
   const sections = await db
     .table(database_names.table.SECTION)
@@ -236,7 +258,7 @@ async function getCoursesBySectionIndices(sectionIndices) {
     .whereIn(database_names.section.INDEX, sectionIndices);
 
   // Group sections by course
-  
+
   const coursesMap = {};
   sections.forEach((section) => {
     const courseNumber = section[database_names.course.NUMBER];
@@ -327,6 +349,7 @@ module.exports = {
   // course
   courseByCourseNumber,
   sectionsByCourseNumber,
+  updateOpenSecton,
   courseSearch,
   // subject
   getAllSubjects,
