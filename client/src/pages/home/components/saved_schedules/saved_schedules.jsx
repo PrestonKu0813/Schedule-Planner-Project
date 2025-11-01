@@ -53,6 +53,14 @@ const SavedSchedules = forwardRef(({ user }, ref) => {
   }));
 
   const handleScheduleClick = async (scheduleName, scheduleIndices) => {
+    // If clicking on the same schedule that's already selected, deselect it
+    if (currentSchedule === scheduleName) {
+      // Clear calendar and reset saved schedule view state
+      setCourses([], false);
+      setCurrentSchedule(null);
+      return;
+    }
+
     try {
       // Load the schedule from the server
       const courses = await loadScheduleByIndices(scheduleIndices);

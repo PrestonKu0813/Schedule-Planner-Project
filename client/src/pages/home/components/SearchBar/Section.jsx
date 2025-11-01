@@ -163,11 +163,16 @@ export const Section = ({
       className="section-table-row"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleButtonClick}
+      style={{ cursor: "pointer" }}
     >
       <div className="table-cell checkbox-cell">
         <button
           className={`section-button ${isSelected ? "selected" : ""}`}
-          onClick={handleButtonClick}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleButtonClick();
+          }}
         ></button>
       </div>
 
@@ -220,6 +225,7 @@ export const Section = ({
                     target="_blank"
                     rel="noreferrer"
                     className="classroom-link"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     {meeting.classroom}
                   </a>
