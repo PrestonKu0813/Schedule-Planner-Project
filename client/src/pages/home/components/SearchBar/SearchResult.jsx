@@ -84,7 +84,7 @@ export const SearchResult = ({
   }, [courses, result.course_number]);
 
   useEffect(() => {
-    const sectionList = Object.values(result.sections);
+    const sectionList = result.sections ? Object.values(result.sections) : [];
     setSections(sectionList);
     if (!isCourseAdded) {
       setSelectedSections(sectionList); // No sections selected by default when course is not added

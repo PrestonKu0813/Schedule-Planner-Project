@@ -192,6 +192,11 @@ async function getSavedSchedules(id) {
     return {};
   }
 
+  // Handle both string and object types
+  if (typeof user[database_names.user.GOOGLE.SAVED_SCHEDULE] === "string") {
+    return JSON.parse(user[database_names.user.GOOGLE.SAVED_SCHEDULE]);
+  }
+
   return user[database_names.user.GOOGLE.SAVED_SCHEDULE];
 }
 
