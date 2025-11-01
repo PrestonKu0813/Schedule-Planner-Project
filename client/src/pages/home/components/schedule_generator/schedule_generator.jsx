@@ -180,7 +180,7 @@ const ScheduleGenerator = ({ courses = [], onGenerate }) => {
           }}
         >
           Generate Schedule
-        </button>
+        </button> 
 
         <div style={{ marginTop: 12 }}>
           <strong>Found schedules:</strong> {schedules.length}
@@ -188,14 +188,14 @@ const ScheduleGenerator = ({ courses = [], onGenerate }) => {
             <div style={{ marginTop: 8 }}>
               <em>First schedule preview (section ids or indexes):</em>
               <pre style={{ whiteSpace: "pre-wrap", marginTop: 6 }}>
-                {JSON.stringify(
-                  schedules[0].map(
+                {console.log(JSON.stringify(
+                  schedules.map((schedule) => schedule.map(
                     (s) =>
-                      s.section_number || s.index_number || s.id || "<section>"
+                      s.index_number || s.id || "<section>"
                   ),
                   null,
                   2
-                )}
+                )))}
               </pre>
             </div>
           )}

@@ -75,10 +75,6 @@ function Calendar({ courses, previewSection }) {
   const calendarRef = useRef(null);
   const onlinePopupRef = useRef(null);
 
-  // Debug: log courses prop whenever it changes
-  useEffect(() => {
-    console.log("🛠️ [Calendar] courses prop:", courses);
-  }, [courses]);
 
   // Measure online popup height when it becomes visible
   useEffect(() => {

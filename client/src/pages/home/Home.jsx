@@ -53,13 +53,6 @@ export default function Home() {
     weekDays: Object.keys(weekDays)
   });
 
-  // Print out timeRanges every time they change
-  useEffect(() => {
-    console.log("Current weekdays:", specialFilters.weekDays);
-  }, [specialFilters.weekDays]);
-
-  console.log("🛠️ [App] Current courses state:", courses); // Log the courses state in App
-
   return (
     <div className="layout_container">
       <div className="selected_courses_container">

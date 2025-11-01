@@ -33,10 +33,6 @@ export const SearchResultsList = ({
       specialFilters.coreCode.includes(code)
     );
 
-    // Both filters must match
-    console.log("coreCodes:", coreCodes);
-    console.log("specialFilters.coreCode:", specialFilters.coreCode);
-    console.log("creditMatch:", creditMatch, "coreCodeMatch:", coreCodeMatch);
     return creditMatch && coreCodeMatch;
   });
 

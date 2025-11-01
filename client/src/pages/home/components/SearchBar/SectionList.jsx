@@ -46,9 +46,9 @@ export const SectionList = ({
     }
 
     // Split range string
-    console.log("Parsing time range:", rangeStr);
+    
     if (typeof rangeStr !== "string") {
-      console.log("Invalid rangeStr, not a string:", rangeStr);
+      
       return [-1, -1];
     }
     const [startStr, endStr] = rangeStr.split(" - ").map((s) => s.trim());
@@ -95,24 +95,6 @@ export const SectionList = ({
             startHour >= rangeStart && endHour <= rangeEnd
         );
       });
-      console.log(
-        "Time valid for section",
-        section.section_number,
-        ":",
-        timeValid
-      );
-      console.log(
-        "Campus valid for section",
-        section.section_number,
-        ":",
-        campusValid
-      );
-      console.log(
-        "WeekDays valid for section",
-        section.section_number,
-        ":",
-        weekDaysValid
-      );
       return campusValid && timeValid && weekDaysValid;
     } else {
       // Only include sections where ALL lecture_info ranges are [-1, -1]
@@ -121,12 +103,6 @@ export const SectionList = ({
           const [startHour, endHour] = getMilitaryHours(infoObj.lectureTime);
           return startHour === -1 && endHour === -1;
         }
-      );
-      console.log(
-        "WeekDays valid for section",
-        section.section_number,
-        ":",
-        weekDaysValid
       );
       return campusValid && onlyInvalidTime && weekDaysValid;
     }
