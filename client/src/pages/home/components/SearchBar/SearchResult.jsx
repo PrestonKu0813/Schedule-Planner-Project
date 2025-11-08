@@ -135,7 +135,7 @@ export const SearchResult = ({
         )
       );
     }
-  }, [selectedSections, isCourseAdded, result.course_number, setCourses]);
+  }, [selectedSections, isCourseAdded, result.course_number]);
 
   return (
     <div className="search-result" ref={dropdownRef}>
