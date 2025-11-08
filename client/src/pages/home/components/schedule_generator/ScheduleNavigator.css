@@ -1,0 +1,103 @@
+.schedule-navigator {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.schedule-navigator__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.schedule-navigator__header h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.schedule-navigator__counter {
+  font-size: 0.9em;
+  color: #666;
+  font-weight: 500;
+}
+
+.schedule-navigator__content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.schedule-navigator__arrow {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+.schedule-navigator__arrow:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.schedule-navigator__arrow:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.schedule-navigator__arrow:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.schedule-navigator__schedule-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.schedule-navigator__index-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-navigator__index-list strong {
+  color: #333;
+  font-size: 0.95em;
+}
+
+.schedule-navigator__indices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.schedule-navigator__index {
+  background-color: #e9ecef;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #495057;
+  border: 1px solid #ced4da;
+}
+
+.schedule-navigator__no-indices {
+  color: #999;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+

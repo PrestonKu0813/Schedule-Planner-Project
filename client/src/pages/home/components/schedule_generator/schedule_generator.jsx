@@ -121,7 +121,25 @@ const ScheduleGenerator = ({ courses = [], onGenerate }) => {
 
   // Backtracking generator (more efficient than building full cartesian product)
   const generateSchedules = ({ maxResults = 2000 } = {}) => {
-    const options = courses.map((c) => c.selected_sections || []);
+    // Map courses to sections, ensuring each section has course_number and course metadata for later grouping
+    const options = courses.map((c) => {
+      const sections = c.selected_sections || [];
+      // Ensure each section has course_number and course metadata for ScheduleNavigator
+      return sections.map((section) => ({
+        ...section,
+        course_number: section.course_number || c.course_number,
+        // Store course metadata directly on section for reliable lookup
+        _course_metadata: {
+          course_number: c.course_number,
+          course_name: c.course_name,
+          credit: c.credit,
+          core_code: c.core_code,
+          subject_code: c.subject_code,
+          course_link: c.course_link,
+        },
+      }));
+    });
+
     if (options.some((o) => !o || o.length === 0)) {
       setSchedules([]);
       return [];

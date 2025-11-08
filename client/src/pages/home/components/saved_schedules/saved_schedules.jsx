@@ -13,7 +13,7 @@ import { useSchedule } from "../../../../contexts/ScheduleContext";
 import "./saved_schedules.css";
 
 const SavedSchedules = forwardRef(({ user }, ref) => {
-  const { setCourses, isViewingSavedSchedule } = useSchedule();
+  const { setCourses } = useSchedule();
   const [savedSchedules, setSavedSchedules] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -55,8 +55,8 @@ const SavedSchedules = forwardRef(({ user }, ref) => {
   const handleScheduleClick = async (scheduleName, scheduleIndices) => {
     // If clicking on the same schedule that's already selected, deselect it
     if (currentSchedule === scheduleName) {
-      // Clear calendar and reset saved schedule view state
-      setCourses([], false);
+      // Clear calendar
+      setCourses([]);
       setCurrentSchedule(null);
       return;
     }
@@ -66,8 +66,7 @@ const SavedSchedules = forwardRef(({ user }, ref) => {
       const courses = await loadScheduleByIndices(scheduleIndices);
 
       // Set the courses in the main state to display on calendar
-      // Pass true to indicate this is from a saved schedule
-      setCourses(courses, true);
+      setCourses(courses);
 
       // Set current schedule
       setCurrentSchedule(scheduleName);

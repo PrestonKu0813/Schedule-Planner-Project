@@ -13,6 +13,7 @@ import Select from "react-select";
 import searchFilter from "../enums/search_filter.js";
 import RegisterButton from "../save_button/RegisterButton.jsx";
 import ScheduleGenerator from "../schedule_generator/schedule_generator.jsx";
+import ScheduleNavigator from "../schedule_generator/ScheduleNavigator.jsx";
 // Selected courses are rendered with SearchResult
 
 /**
@@ -41,8 +42,10 @@ function CourseList({
 }) {
   const { user } = useUser();
 
-  const { isViewingSavedSchedule, restoreUserSchedule } = useSchedule();
   const [generatedSchedules, setGeneratedSchedules] = useState([]);
+  // Store original courses used to generate schedules - needed for metadata lookup
+  const [originalCoursesForSchedules, setOriginalCoursesForSchedules] =
+    useState([]);
 
   const { campus } = searchFilter;
   const savedSchedulesRef = useRef(null);
@@ -79,17 +82,14 @@ function CourseList({
     }
   };
 
-  // Handle tab switching - restore user schedule when leaving saved schedule view
+  // Handle tab switching
   const handleTabSwitch = (newTab) => {
-    // If currently viewing a saved schedule and switching to SEARCH or SECTION tab,
-    // restore the user's work-in-progress schedule
-    if (
-      isViewingSavedSchedule &&
-      (newTab === "SEARCH" || newTab === "SECTION")
-    ) {
-      restoreUserSchedule();
-    }
     setActiveTab(newTab);
+    // Clear generated schedules and original courses when switching away from SCHEDULE tab
+    if (newTab !== "SCHEDULE") {
+      setGeneratedSchedules([]);
+      setOriginalCoursesForSchedules([]);
+    }
   };
 
   return (
@@ -238,10 +238,36 @@ function CourseList({
                 onGenerate={(schedules) => {
                   // schedules is the Array<Array<sectionObject>> returned by generateSchedules()
                   setGeneratedSchedules(schedules);
-                  // optionally run other logic here (preview first schedule, open modal, etc.)
-                  console.log('Received schedules from generator:', schedules);
+                  // Store the current courses as original for metadata lookup
+                  // This ensures ScheduleNavigator can always find course names even after displaying schedules
+                  if (
+                    schedules &&
+                    schedules.length > 0 &&
+                    courses &&
+                    courses.length > 0
+                  ) {
+                    setOriginalCoursesForSchedules([...courses]);
+                  } else if (!schedules || schedules.length === 0) {
+                    // Clear original courses if no schedules generated
+                    setOriginalCoursesForSchedules([]);
+                  }
+                  console.log("Received schedules from generator:", schedules);
                 }}
               />
+              {generatedSchedules && generatedSchedules.length > 0 && (
+                <ScheduleNavigator
+                  schedules={generatedSchedules}
+                  courses={
+                    originalCoursesForSchedules.length > 0
+                      ? originalCoursesForSchedules
+                      : courses
+                  }
+                  setCourses={setCourses}
+                  onScheduleSelect={(schedule, index) => {
+                    console.log(`Selected schedule ${index + 1}:`, schedule);
+                  }}
+                />
+              )}
             </div>
             <div className="saved_schedule_container">
               <SavedSchedules ref={savedSchedulesRef} user={user} />
