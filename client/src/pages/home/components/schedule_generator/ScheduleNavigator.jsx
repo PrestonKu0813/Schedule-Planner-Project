@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
 import "./ScheduleNavigator.css";
 
@@ -19,12 +19,13 @@ import "./ScheduleNavigator.css";
 const ScheduleNavigator = ({
   schedules = [],
   courses = [],
-  setCourses,
+  setGeneratedCourses,
+  selectedIndex,
+  onSelectedIndexChange,
   onScheduleSelect,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const previousSchedulesLengthRef = useRef(0);
-  const hasInitializedRef = useRef(false);
+  const [internalIndex, setInternalIndex] = useState(0);
+  const lastAppliedRef = useRef({ index: null, length: null });
 
   // Early check: don't do anything if there are no schedules
   // This prevents any state updates when component first mounts with empty schedules
@@ -34,6 +35,19 @@ const ScheduleNavigator = ({
     schedules[0] &&
     Array.isArray(schedules[0]) &&
     schedules[0].length > 0;
+
+  const isControlled = typeof selectedIndex === "number";
+
+  const clampIndex = (index) => {
+    if (!hasValidSchedules) return 0;
+    const maxIndex = schedules.length - 1;
+    if (maxIndex < 0) return 0;
+    return Math.min(Math.max(index, 0), maxIndex);
+  };
+
+  const currentIndex = hasValidSchedules
+    ? clampIndex(isControlled ? selectedIndex : internalIndex)
+    : 0;
 
   /**
    * Convert a generated schedule (array of sections) to course format for calendar.
@@ -206,179 +220,118 @@ const ScheduleNavigator = ({
     return convertedCourses;
   };
 
-  // Update calendar when schedule is selected
-  const handleScheduleSelection = (schedule, index) => {
-    // CRITICAL: Multiple safety checks to prevent modifying courses when we shouldn't
-
-    console.log("🛠️ [ScheduleNavigator] handleScheduleSelection called", {
+  const applySchedule = useCallback(
+    (schedule, index) => {
+    console.log("🛠️ [ScheduleNavigator] applySchedule called", {
       scheduleLength: schedule?.length,
-      coursesLength: courses?.length,
-      schedulesLength: schedules?.length,
-      hasValidSchedules,
+      requestedIndex: index,
+      totalSchedules: schedules?.length || 0,
     });
 
-    // Check 0: NEVER call this if we don't have valid schedules in the component
-    // This is the ultimate guard - even if somehow this function is called incorrectly
-    if (!hasValidSchedules) {
-      console.warn("🛠️ [ScheduleNavigator] Blocked: No valid schedules");
+    if (!schedule || schedule.length === 0 || !Array.isArray(schedule)) {
+      console.warn("🛠️ [ScheduleNavigator] Blocked: Invalid schedule");
       return;
     }
 
-    // Check 1: Validate schedule exists and has content
-    if (!schedule || schedule.length === 0 || !Array.isArray(schedule)) {
-      console.warn("🛠️ [ScheduleNavigator] Blocked: Invalid schedule");
-      return; // Don't update calendar with empty/invalid schedule
-    }
+      if (!setGeneratedCourses || typeof setGeneratedCourses !== "function") {
+        console.warn(
+          "🛠️ [ScheduleNavigator] Blocked: No setGeneratedCourses function"
+        );
+        return;
+      }
 
-    // Check 2: Courses are optional - we can build courses from schedule sections alone
-    // But we need at least the schedule sections to have course information
-
-    // Check 3: Ensure setCourses function exists
-    if (!setCourses || typeof setCourses !== "function") {
-      console.warn("🛠️ [ScheduleNavigator] Blocked: No setCourses function");
-      return; // Can't update without setCourses
-    }
-
-    // Check 4: Verify schedules array has valid content (double check)
-    if (!schedules || schedules.length === 0) {
-      console.warn("🛠️ [ScheduleNavigator] Blocked: Schedules array empty");
-      return; // No valid schedules, don't modify courses
-    }
-
-    const coursesToDisplay = convertScheduleToCourses(schedule);
-    console.log("🛠️ [ScheduleNavigator] Courses to display:", {
-      originalCoursesCount: courses?.length || 0,
-      displayCoursesCount: coursesToDisplay.length,
-      displayCourses: coursesToDisplay.map((c) => ({
-        name: c.course_name,
-        number: c.course_number,
-        sectionsCount: c.selected_sections?.length || 0,
-      })),
-    });
-
-    // Check 5: Update calendar with generated schedule courses
-    // The generated schedule may have different sections than user selected
-    if (coursesToDisplay.length > 0) {
-      console.log(
-        "🛠️ [ScheduleNavigator] Updating calendar with generated schedule"
-      );
-      setCourses(coursesToDisplay);
-    } else {
-      console.warn(
-        "🛠️ [ScheduleNavigator] No courses to display from schedule"
-      );
-    }
-
-    if (onScheduleSelect) {
-      onScheduleSelect(schedule, index);
-    }
-  };
-
-  // Reset to first schedule when schedules change (new schedules generated)
-  useEffect(() => {
-    console.log("🛠️ [ScheduleNavigator] useEffect triggered", {
-      schedulesLength: schedules?.length || 0,
-      previousLength: previousSchedulesLengthRef.current,
-      hasInitialized: hasInitializedRef.current,
-    });
-
-    // CRITICAL: Check schedules directly in useEffect, not using hasValidSchedules
-    // because hasValidSchedules is computed at render time and might be stale
-    const schedulesLength = schedules?.length || 0;
-    const firstScheduleIsValid =
-      schedulesLength > 0 &&
-      schedules[0] &&
-      Array.isArray(schedules[0]) &&
-      schedules[0].length > 0;
-
-    // Don't do anything if there are no valid schedules
-    if (!firstScheduleIsValid) {
-      console.log("🛠️ [ScheduleNavigator] No valid schedules, skipping");
-      previousSchedulesLengthRef.current = schedulesLength;
-      hasInitializedRef.current = false;
-      return; // Early return - don't touch anything
-    }
-
-    const previousLength = previousSchedulesLengthRef.current;
-    const currentLength = schedulesLength;
-
-    // Only update if:
-    // 1. We have valid schedules (already checked above)
-    // 2. The schedules array actually changed from 0 to >0 (transitioning from no schedules to having schedules)
-    // This is the ONLY time we should update courses - when schedules are FIRST generated
-    if (
-      currentLength > 0 &&
-      previousLength === 0 && // CRITICAL: Only update when transitioning FROM 0 TO >0
-      !hasInitializedRef.current
-    ) {
-      console.log(
-        "🛠️ [ScheduleNavigator] First time seeing schedules, updating"
-      );
-      setCurrentIndex(0);
-      handleScheduleSelection(schedules[0], 0);
-      hasInitializedRef.current = true;
-    } else if (
-      currentLength > 0 &&
-      previousLength > 0 &&
-      previousLength !== currentLength &&
-      hasInitializedRef.current
-    ) {
-      // Schedules were regenerated (different count) - only update navigation index, don't update courses
-      console.log(
-        "🛠️ [ScheduleNavigator] Schedules regenerated, updating index only"
-      );
-      setCurrentIndex(0);
-      // Don't call handleScheduleSelection here - let user navigate manually
-      hasInitializedRef.current = true;
-    } else {
-      console.log("🛠️ [ScheduleNavigator] No action needed", {
-        currentLength,
-        previousLength,
-        hasInitialized: hasInitializedRef.current,
+      const coursesToDisplay = convertScheduleToCourses(schedule);
+      console.log("🛠️ [ScheduleNavigator] Courses to display:", {
+        originalCoursesCount: courses?.length || 0,
+        displayCoursesCount: coursesToDisplay.length,
+        displayCourses: coursesToDisplay.map((c) => ({
+          name: c.course_name,
+          number: c.course_number,
+          sectionsCount: c.selected_sections?.length || 0,
+        })),
       });
-    }
 
-    // Update the ref to track current length
-    previousSchedulesLengthRef.current = currentLength;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schedules.length]); // Only reset when number of schedules changes
+      if (coursesToDisplay.length > 0) {
+        setGeneratedCourses(coursesToDisplay);
+      } else {
+        console.warn(
+          "🛠️ [ScheduleNavigator] No courses to display from schedule"
+        );
+      }
 
-  // Ensure currentIndex is valid
+      if (onScheduleSelect) {
+        onScheduleSelect(schedule, index);
+      }
+    },
+    [convertScheduleToCourses, courses, onScheduleSelect, setGeneratedCourses]
+  );
+
   useEffect(() => {
-    if (hasValidSchedules && currentIndex >= schedules.length) {
-      setCurrentIndex(Math.max(0, schedules.length - 1));
+    if (!hasValidSchedules) {
+      lastAppliedRef.current = { index: null, length: null };
+      if (!isControlled) {
+        setInternalIndex(0);
+      }
+      return;
     }
-  }, [schedules.length, currentIndex, hasValidSchedules]);
+
+    if (isControlled) {
+      const clamped = clampIndex(selectedIndex);
+      if (selectedIndex !== clamped && onSelectedIndexChange) {
+        onSelectedIndexChange(clamped);
+      }
+    } else {
+      setInternalIndex((prev) => clampIndex(prev));
+    }
+  }, [
+    hasValidSchedules,
+    schedules.length,
+    isControlled,
+    selectedIndex,
+    onSelectedIndexChange,
+  ]);
+
+  useEffect(() => {
+    if (!hasValidSchedules) return;
+    const schedule = schedules[currentIndex];
+    if (!schedule) return;
+    const last = lastAppliedRef.current;
+    if (last.index === currentIndex && last.length === schedules.length) {
+      return;
+    }
+    applySchedule(schedule, currentIndex);
+    lastAppliedRef.current = { index: currentIndex, length: schedules.length };
+  }, [hasValidSchedules, currentIndex, schedules, applySchedule]);
 
   // If no schedules, don't render anything AND don't interfere with courses
   if (!hasValidSchedules) {
     return null;
   }
 
-  // Ensure currentIndex is within bounds
-  const safeIndex = Math.min(currentIndex, schedules.length - 1);
-  const currentSchedule = schedules[safeIndex];
+  const currentSchedule = schedules[currentIndex];
   const totalSchedules = schedules.length;
 
   // Navigate to previous schedule
   const handlePrevious = () => {
-    if (currentIndex > 0) {
-      const newIndex = currentIndex - 1;
-      setCurrentIndex(newIndex);
-      if (schedules[newIndex]) {
-        handleScheduleSelection(schedules[newIndex], newIndex);
-      }
+    if (currentIndex <= 0) return;
+    const newIndex = currentIndex - 1;
+    if (!isControlled) {
+      setInternalIndex(newIndex);
+    }
+    if (onSelectedIndexChange) {
+      onSelectedIndexChange(newIndex);
     }
   };
 
   // Navigate to next schedule
   const handleNext = () => {
-    if (currentIndex < totalSchedules - 1) {
-      const newIndex = currentIndex + 1;
-      setCurrentIndex(newIndex);
-      if (schedules[newIndex]) {
-        handleScheduleSelection(schedules[newIndex], newIndex);
-      }
+    if (currentIndex >= totalSchedules - 1) return;
+    const newIndex = currentIndex + 1;
+    if (!isControlled) {
+      setInternalIndex(newIndex);
+    }
+    if (onSelectedIndexChange) {
+      onSelectedIndexChange(newIndex);
     }
   };
 
@@ -392,7 +345,7 @@ const ScheduleNavigator = ({
       <div className="schedule-navigator__header">
         <h3>Found Schedules</h3>
         <div className="schedule-navigator__counter">
-          Schedule {safeIndex + 1} of {totalSchedules}
+          Schedule {currentIndex + 1} of {totalSchedules}
         </div>
       </div>
 
@@ -441,7 +394,9 @@ const ScheduleNavigator = ({
 ScheduleNavigator.propTypes = {
   schedules: PropTypes.array,
   courses: PropTypes.array,
-  setCourses: PropTypes.func,
+  setGeneratedCourses: PropTypes.func,
+  selectedIndex: PropTypes.number,
+  onSelectedIndexChange: PropTypes.func,
   onScheduleSelect: PropTypes.func,
 };
 

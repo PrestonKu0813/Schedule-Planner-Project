@@ -13,6 +13,8 @@ export default function Home() {
   const {
     courses,
     setCourses,
+    generatedCourses,
+    setGeneratedCourses,
     info,
     setInfo,
     activeTab,
@@ -69,6 +71,7 @@ export default function Home() {
         <CourseList
           courses={courses}
           setCourses={setCourses}
+          setGeneratedCourses={setGeneratedCourses}
           info={info}
           setInfo={setInfo}
           activeTab={activeTab}
@@ -80,7 +83,10 @@ export default function Home() {
       </div>
       <div className="calendar">
         <div className="calendar_container_full">
-          <Calendar courses={courses} previewSection={previewSection} />
+          <Calendar
+            courses={generatedCourses}
+            previewSection={previewSection}
+          />
         </div>
         <div className="calendar_key_container_full">
           <Calendar_Key />

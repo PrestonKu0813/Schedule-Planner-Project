@@ -4,7 +4,7 @@ import { useSchedule } from "../../../../contexts/ScheduleContext";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResultsList } from "../SearchBar/SearchResultsList";
 import { SearchResult } from "../SearchBar/SearchResult";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { SearchAPI } from "../SearchBar/SearchAPI.js";
 import LogoutButton from "../buttons/logout_button";
 import SaveButton from "../save_button/save_button";
@@ -12,9 +12,65 @@ import SavedSchedules from "../saved_schedules/saved_schedules";
 import Select from "react-select";
 import searchFilter from "../enums/search_filter.js";
 import RegisterButton from "../save_button/RegisterButton.jsx";
-import ScheduleGenerator from "../schedule_generator/schedule_generator.jsx";
+import ScheduleGenerator, {
+  generateSchedulesFromCourses,
+} from "../schedule_generator/schedule_generator.jsx";
 import ScheduleNavigator from "../schedule_generator/ScheduleNavigator.jsx";
 // Selected courses are rendered with SearchResult
+
+const buildCoursesSignature = (courses) => {
+  if (!courses || courses.length === 0) return "[]";
+
+  return JSON.stringify(
+    courses.map((course) => ({
+      course_number: course.course_number || course.id || null,
+      sections: (course.selected_sections || []).map(
+        (section) =>
+          section.index_number ||
+          section.id ||
+          section.section_number ||
+          `${section.course_number || ""}-${section.section_id || ""}`
+      ),
+    }))
+  );
+};
+
+const convertScheduleToCourses = (schedule) => {
+  if (!schedule || schedule.length === 0) return [];
+
+  const courseMap = new Map();
+
+  schedule.forEach((section) => {
+    const metadata = section._course_metadata || {};
+    const courseNumber =
+      metadata.course_number || section.course_number || section.course_id;
+    if (!courseNumber) return;
+
+    if (!courseMap.has(courseNumber)) {
+      courseMap.set(courseNumber, {
+        course_number: courseNumber,
+        course_name: metadata.course_name || `Course ${courseNumber}`,
+        credit: metadata.credit ?? null,
+        core_code: metadata.core_code ?? null,
+        subject_code: metadata.subject_code ?? null,
+        course_link: metadata.course_link ?? null,
+        selected_sections: [],
+      });
+    }
+
+    const courseEntry = courseMap.get(courseNumber);
+    const { _course_metadata, ...sectionWithoutMetadata } = section;
+    courseEntry.selected_sections.push(sectionWithoutMetadata);
+  });
+
+  return Array.from(courseMap.values());
+};
+
+const getCoursesForScheduleIndex = (schedules, index = 0) => {
+  if (!schedules || schedules.length === 0) return [];
+  const safeIndex = Math.min(Math.max(index, 0), schedules.length - 1);
+  return convertScheduleToCourses(schedules[safeIndex]);
+};
 
 /**
  * @param {*} props
@@ -32,6 +88,7 @@ import ScheduleNavigator from "../schedule_generator/ScheduleNavigator.jsx";
 function CourseList({
   courses,
   setCourses,
+  setGeneratedCourses,
   info,
   setInfo,
   activeTab,
@@ -43,12 +100,89 @@ function CourseList({
   const { user } = useUser();
 
   const [generatedSchedules, setGeneratedSchedules] = useState([]);
+  const [selectedScheduleIndex, setSelectedScheduleIndex] = useState(0);
   // Store original courses used to generate schedules - needed for metadata lookup
   const [originalCoursesForSchedules, setOriginalCoursesForSchedules] =
     useState([]);
+  const coursesSignature = useMemo(
+    () => buildCoursesSignature(courses),
+    [courses]
+  );
+  const lastGeneratedSignatureRef = useRef(null);
+  const coursesLength = courses ? courses.length : 0;
+  const hasCourses = coursesLength > 0;
 
   const { campus } = searchFilter;
   const savedSchedulesRef = useRef(null);
+
+  const generatedSchedulesCount = generatedSchedules.length;
+
+  useEffect(() => {
+    setSelectedScheduleIndex((prev) => {
+      if (generatedSchedulesCount === 0) {
+        return 0;
+      }
+      if (prev >= generatedSchedulesCount) {
+        return 0;
+      }
+      return prev;
+    });
+  }, [generatedSchedulesCount]);
+
+  const runGeneration = useCallback(
+    (precomputedSchedules) => {
+      let schedules;
+      if (precomputedSchedules !== undefined) {
+        schedules = precomputedSchedules;
+      } else if (hasCourses) {
+        schedules = generateSchedulesFromCourses(courses);
+      } else {
+        schedules = [];
+      }
+
+      const nextIndex = schedules.length > 0 ? 0 : 0;
+      setGeneratedSchedules(schedules);
+      setSelectedScheduleIndex(nextIndex);
+      const coursesForCalendar = getCoursesForScheduleIndex(
+        schedules,
+        nextIndex
+      );
+      setGeneratedCourses(coursesForCalendar);
+
+      if (schedules.length > 0) {
+        setOriginalCoursesForSchedules([...courses]);
+      } else {
+        setOriginalCoursesForSchedules([]);
+      }
+
+      lastGeneratedSignatureRef.current = coursesSignature;
+      return schedules;
+    },
+    [
+      courses,
+      coursesSignature,
+      hasCourses,
+      setGeneratedCourses,
+      setGeneratedSchedules,
+      setSelectedScheduleIndex,
+      setOriginalCoursesForSchedules,
+    ]
+  );
+
+  useEffect(() => {
+    if (!hasCourses) {
+      if (lastGeneratedSignatureRef.current !== coursesSignature) {
+        runGeneration([]);
+      }
+      return;
+    }
+
+    if (lastGeneratedSignatureRef.current === coursesSignature) {
+      return;
+    }
+
+    runGeneration();
+  }, [coursesSignature, hasCourses, runGeneration]);
 
   // Setting the results of search bar
   const [results, setResults] = useState([]);
@@ -85,11 +219,6 @@ function CourseList({
   // Handle tab switching
   const handleTabSwitch = (newTab) => {
     setActiveTab(newTab);
-    // Clear generated schedules and original courses when switching away from SCHEDULE tab
-    if (newTab !== "SCHEDULE") {
-      setGeneratedSchedules([]);
-      setOriginalCoursesForSchedules([]);
-    }
   };
 
   return (
@@ -235,22 +364,9 @@ function CourseList({
               randomizer + schedule next and behind generator put here
               <ScheduleGenerator
                 courses={courses}
+                generatedSchedules={generatedSchedules}
                 onGenerate={(schedules) => {
-                  // schedules is the Array<Array<sectionObject>> returned by generateSchedules()
-                  setGeneratedSchedules(schedules);
-                  // Store the current courses as original for metadata lookup
-                  // This ensures ScheduleNavigator can always find course names even after displaying schedules
-                  if (
-                    schedules &&
-                    schedules.length > 0 &&
-                    courses &&
-                    courses.length > 0
-                  ) {
-                    setOriginalCoursesForSchedules([...courses]);
-                  } else if (!schedules || schedules.length === 0) {
-                    // Clear original courses if no schedules generated
-                    setOriginalCoursesForSchedules([]);
-                  }
+                  runGeneration(schedules);
                   console.log("Received schedules from generator:", schedules);
                 }}
               />
@@ -262,7 +378,9 @@ function CourseList({
                       ? originalCoursesForSchedules
                       : courses
                   }
-                  setCourses={setCourses}
+                  setGeneratedCourses={setGeneratedCourses}
+                  selectedIndex={selectedScheduleIndex}
+                  onSelectedIndexChange={setSelectedScheduleIndex}
                   onScheduleSelect={(schedule, index) => {
                     console.log(`Selected schedule ${index + 1}:`, schedule);
                   }}
