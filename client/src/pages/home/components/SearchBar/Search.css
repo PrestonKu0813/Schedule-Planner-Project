@@ -1,26 +1,24 @@
-/* Search Bar  */
-
+/* Search Bar */
 .input-wrapper {
-  @apply flex items-center relative
-    w-[70%] h-[2.5rem] 
-    p-[5px]
-    border-l-[8px] border-[3px] rounded-[5px]
-    bg-[#ffffff] border-[#000000];
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 70%;
+  height: 2.5rem;
+  padding: 5px;
+  border-left: 8px solid #000;
+  border: 3px solid #000;
+  border-radius: 5px;
+  background-color: #fff;
 }
 
-.input-wrapper:hover {
-  @apply top-[-2px];
-}
-
-input {
+.input-wrapper input {
   height: 100%;
-  font-size: 2px;
+  font-size: 1rem; /* Use a more standard font size */
   width: 100%;
   margin-left: 5px;
-}
-
-input:focus {
-  outline: none;
+  border: none; /* Remove default border */
+  outline: none; /* Remove focus outline */
 }
 
 #search-icon {
@@ -29,54 +27,79 @@ input:focus {
 }
 
 /* Search Results */
-
-.search-result {
+.search-result-container {
   border: 2px solid lightgrey;
   background-color: white;
   padding: 10px;
   margin: 10px 0;
   border-radius: 5px;
+  overflow: visible; /* allow buttons to render without being clipped */
 }
 
 .result-header {
   display: flex;
-  justify-content: space-between; /* Ensure space between elements */
-  align-items: center; /* Center items vertically */
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
+  padding: 0.35rem 0.5rem; /* ensure enough vertical space for buttons */
+  min-height: 2.4rem; /* prevent clipping of children */
+  overflow: visible;
 }
 
 .result-title {
-  flex-grow: 1; /* Allow the title to take up available space */
-  margin-right: 10px; /* Add some space between the title and the button */
-  white-space: normal; /* Allow the text to wrap */
-  overflow: visible; /* Show the overflow text */
-  text-align: left; /* Left justify the text */
+  flex-grow: 1;
+  margin-right: 10px;
+  text-align: left;
 }
 
 .result-header button {
-  flex-shrink: 0; /* Prevent the button from shrinking */
-  margin-left: 10px; /* Add some space between the buttons */
+  margin-left: 10px;
+  align-self: center;
+}
+
+.visit-course-button {
+  background-color: #0091df;
+  color: white;
+  border-radius: 5px;
+  padding: 0.25rem 0.5rem; /* tighter for icon-only */
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  cursor: pointer;
+  width: 2.2rem; /* smaller since content is just an icon */
+  display: inline-flex; /* center content horizontally & vertically */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.visit-course-button:hover {
+  background-color: #006eb8;
+}
+
+.add-course-button,
+.remove-course-button {
+  color: white;
+  border-radius: 5px;
+  width: 2rem; /* Use rem for sizing */
+  height: 2rem;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .add-course-button {
   background-color: rgb(77, 201, 77);
-  color: white;
-  border-radius: 5px;
-  width: 5%;
 }
-
 .add-course-button:hover {
-  background-color: #5cb85c; /* Darker green on hover */
+  background-color: #5cb85c;
 }
 
 .remove-course-button {
   background-color: #e74c3c;
-  color: white;
-  border-radius: 5px;
-  width: 5%;
 }
 .remove-course-button:hover {
-  background-color: #c0392b; /* Darker red on hover */
+  background-color: #c0392b;
 }
 
 .dropdown {
@@ -86,92 +109,77 @@ input:focus {
   text-align: left;
 }
 
+.selected-sections-display {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #333;
+  height: auto; /* or remove explicit height */
+  line-height: normal; /* something ≥ 1 */
+  /* Force a compositing layer to avoid browser repaint glitches */
+  transform: translateZ(0);
+}
+
 .toggle-all-sections-button {
   margin: 10px 0;
   padding: 5px 10px;
-  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  background-color: #007bff;
 }
 
 .toggle-all-sections-button.toggled {
-  background-color: #dc3545; /* Red for deselect state */
+  background-color: #dc3545;
 }
 
 .toggle-all-sections-button:hover {
   background-color: #0056b3;
 }
 .toggle-all-sections-button.toggled:hover {
-  background-color: #c82333; /* Darker red on hover */
+  background-color: #c82333;
 }
 
-.set-info-button {
-  order: 0;
-  background-color: #f5f5f5;
-  color: #333;
-  border: 1px solid #bbb;
-  border-radius: 4px;
-  padding: 5px 12px;
-  cursor: pointer;
-  transition:
-    background 0.2s,
-    color 0.2s;
-  font-weight: 500;
-}
-
-.set-info-button:hover {
-  background-color: #e0e0e0;
-}
-
-/* Search Results List */
-
-.results-list {
-  @apply flex-1 overflow-y-scroll;
-  width: auto;
-  max-height: 90vh;
+/* Section List */
+.section-list {
+  width: 100%;
+  max-width: 100%;
+  margin: 10px auto;
+  overflow-y: auto;
+  max-height: 628px;
   background-color: transparent;
+  border: 2px solid lightgrey;
+  border-radius: 10px;
   box-sizing: border-box;
 }
 
 /* Section Table */
-
-.section-table-header {
+.section-table-header,
+.section-table-row {
   display: grid;
   grid-template-columns: 40px 50px 80px 80px 1.5fr 1fr 1fr;
   align-items: center;
   width: 100%;
-  min-height: 40px;
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
   padding: 6px 10px;
   box-sizing: border-box;
   gap: 6px;
+}
+
+.section-table-header {
+  min-height: 40px;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
   font-weight: bold;
   font-size: 12px;
   color: #495057;
   text-transform: uppercase;
 }
 
-.section-table-header .table-cell {
-  font-weight: bold;
-  color: #495057;
-  text-transform: uppercase;
-}
-
 .section-table-row {
-  display: grid;
-  grid-template-columns: 40px 50px 80px 80px 1.5fr 1fr 1fr;
-  align-items: center;
-  width: 100%;
   min-height: 60px;
   background-color: white;
   border-bottom: 1px solid #e0e0e0;
-  padding: 6px 10px;
-  box-sizing: border-box;
-  gap: 6px;
 }
 
 .section-table-row:hover {
@@ -180,6 +188,27 @@ input:focus {
 
 .section-table-row:last-child {
   border-bottom: none;
+}
+
+.section-table-row.dimmed {
+  opacity: 0.5;
+  background-color: #f9f9f9;
+}
+
+.section-table-row.dimmed:hover {
+  opacity: 1;
+  background-color: #f0f0f0;
+}
+
+.filtered-out-separator {
+  text-align: center;
+  padding: 10px;
+  font-style: italic;
+  color: #666;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 5px 0;
 }
 
 /* Table Cell Styles */
@@ -191,7 +220,10 @@ input:focus {
   overflow: hidden;
 }
 
-.checkbox-cell {
+.checkbox-cell,
+.sec-cell,
+.status-cell,
+.index-cell {
   justify-content: center;
 }
 
@@ -199,33 +231,18 @@ input:focus {
   font-weight: bold;
   font-size: 14px;
   color: #2c3e50;
-  justify-content: center;
-}
-
-.status-cell {
-  justify-content: center;
 }
 
 .index-cell {
   font-family: monospace;
   font-size: 12px;
   color: #666;
-  justify-content: center;
   padding-left: 8px;
 }
 
-.section-table-header .index-cell {
-  color: #495057;
-  font-weight: bold;
-}
-
-.meeting-times-cell {
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.3;
-}
-
-.meeting-locations-cell {
+.meeting-times-cell,
+.meeting-locations-cell,
+.instructor-name {
   flex-direction: column;
   align-items: flex-start;
   line-height: 1.3;
@@ -234,27 +251,6 @@ input:focus {
 .instructor-cell {
   font-weight: 500;
   color: #2c3e50;
-}
-
-.section-table-header .instructor-cell {
-  font-weight: bold;
-  color: #495057;
-}
-
-.instructor-name {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.2;
-}
-
-.instructor-name-part {
-  font-size: 13px;
-  margin-bottom: 1px;
-}
-
-.instructor-name-part:last-child {
-  margin-bottom: 0;
 }
 
 /* Status Box */
@@ -266,7 +262,6 @@ input:focus {
   text-transform: uppercase;
   color: white;
   text-align: center;
-  cursor: default;
   min-width: 50px;
 }
 
@@ -299,29 +294,20 @@ input:focus {
 .section-button.selected {
   background-color: #007bff;
   border-color: #0056b3;
-  color: white;
 }
 
 .section-button::after {
   content: "✔";
   font-size: 12px;
-  display: none;
   color: white;
+  display: none;
 }
 
 .section-button.selected::after {
   display: block;
 }
 
-/* Meeting Times */
-.meeting-times {
-  width: 100%;
-}
-
-.meeting-locations {
-  width: 100%;
-}
-
+/* Meeting Info */
 .meeting-line {
   margin-bottom: 2px;
   font-size: 12px;
@@ -337,10 +323,6 @@ input:focus {
   color: #2c3e50;
 }
 
-.meeting-time {
-  color: #34495e;
-}
-
 .classroom-link {
   color: #007bff;
   text-decoration: none;
@@ -348,62 +330,17 @@ input:focus {
 }
 
 .classroom-link:hover {
-  color: #0056b3;
   text-decoration: underline;
 }
 
-.classroom-text {
-  color: #495057;
-  font-weight: 500;
-}
-
 .campus-text {
-  color: #6c757d;
   font-size: 11px;
+  color: #6c757d;
 }
 
-/* Section List */
-
-.section-list {
-  width: 100%; /* Ensure it takes the full width of its container */
-  max-width: 100%; /* Ensure it does not exceed the container's width */
-  margin: 10px auto; /* Center the div and add vertical margin */
-  height: auto; /* Allow the height to adjust based on content */
-  overflow-y: auto; /* Enable vertical scrolling if needed */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  max-height: 628px; /* Set a maximum height */
-  background-color: transparent; /* Ensure the background is transparent */
-  border: 2px solid lightgrey; /* Add a border */
-  border-radius: 10px; /* Add rounded corners */
-  box-sizing: border-box; /* Include border and padding in the element's total width and height */
-}
-
-.section-header {
-  display: flex;
-  background-color: #f8f9fa;
-  border-bottom: 2px solid lightgrey;
-  padding: 15px 10px;
-  font-weight: bold;
-  color: #495057;
-  border-radius: 8px 8px 0 0;
-  font-size: 14px;
-}
-
-.section-header span {
-  flex: 1;
-  text-align: center;
-  padding: 0 -10px 0 -100px;
-}
-
-.section-header span:first-child {
-  text-align: left;
-}
-
-.section-header span:last-child {
-  text-align: left;
-}
-
-.section-header span:nth-child(2) {
-  text-align: center;
-  margin-left: -100px;
+.results-list {
+  overflow-y: auto;
+  max-height: 90vh;
+  width: 100%;
+  box-sizing: border-box;
 }

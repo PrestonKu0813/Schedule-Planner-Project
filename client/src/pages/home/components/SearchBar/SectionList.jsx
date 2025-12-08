@@ -9,6 +9,7 @@ export const SectionList = ({
   setPreviewSection,
   courseInfo,
   specialFilters,
+  manualOverrides,
 }) => {
   function mergeAdjacentRanges(ranges) {
     if (!Array.isArray(ranges) || ranges.length === 0) return [];
@@ -46,9 +47,8 @@ export const SectionList = ({
     }
 
     // Split range string
-    
+
     if (typeof rangeStr !== "string") {
-      
       return [-1, -1];
     }
     const [startStr, endStr] = rangeStr.split(" - ").map((s) => s.trim());
@@ -62,57 +62,88 @@ export const SectionList = ({
 
   const mergedTimeRanges = mergeAdjacentRanges(specialFilters.timeRanges);
 
-  // Filter sections based on campus and time after helper functions
+  const { matchingSections, nonMatchingSections } = React.useMemo(() => {
+    const matched = [];
+    const unmatched = [];
 
-  const filteredSections = sections.filter((section) => {
-    const campusList = Object.values(section.lecture_info)
-      .map((infoObj) => infoObj.campus)
-      .filter(Boolean);
+    sections.forEach((section) => {
+      const campusList = Object.values(section.lecture_info)
+        .map((infoObj) => infoObj.campus)
+        .filter(Boolean);
 
-    // Campus filter
-    const campusValid = !(
-      campusList.some((campus) => !specialFilters.campus.includes(campus)) ||
-      (specialFilters.campus.length > 0 &&
-        !campusList.some((campus) => specialFilters.campus.includes(campus)))
-    );
+      const campusValid = !(
+        campusList.some((campus) => !specialFilters.campus.includes(campus)) ||
+        (specialFilters.campus.length > 0 &&
+          !campusList.some((campus) => specialFilters.campus.includes(campus)))
+      );
 
-    // Weekday filter: every weekday in every info must be in specialFilters.weekDays
-    const weekDaysValid = Object.values(section.lecture_info).every(
-      (infoObj) => {
-        if (infoObj.lectureDay === "Asynchronous content") return true; // Ignore invalid days
-        return specialFilters.weekDays.includes(infoObj.lectureDay);
-      }
-    );
-
-    // Time filter
-    if (mergedTimeRanges.length > 0) {
-      const timeValid = Object.values(section.lecture_info).every((infoObj) => {
-        if (!infoObj.lectureTime) return false;
-        const [startHour, endHour] = getMilitaryHours(infoObj.lectureTime);
-        if (startHour === -1 && endHour === -1) return true;
-        return mergedTimeRanges.some(
-          ([rangeStart, rangeEnd]) =>
-            startHour >= rangeStart && endHour <= rangeEnd
-        );
-      });
-      return campusValid && timeValid && weekDaysValid;
-    } else {
-      // Only include sections where ALL lecture_info ranges are [-1, -1]
-      const onlyInvalidTime = Object.values(section.lecture_info).every(
+      const weekDaysValid = Object.values(section.lecture_info).every(
         (infoObj) => {
-          const [startHour, endHour] = getMilitaryHours(infoObj.lectureTime);
-          return startHour === -1 && endHour === -1;
+          if (infoObj.lectureDay === "Asynchronous content") return true;
+          return specialFilters.weekDays.includes(infoObj.lectureDay);
         }
       );
-      return campusValid && onlyInvalidTime && weekDaysValid;
+
+      let isMatch;
+      if (mergedTimeRanges.length > 0) {
+        const timeValid = Object.values(section.lecture_info).every(
+          (infoObj) => {
+            if (!infoObj.lectureTime) return false;
+            const [startHour, endHour] = getMilitaryHours(infoObj.lectureTime);
+            if (startHour === -1 && endHour === -1) return true;
+            return mergedTimeRanges.some(
+              ([rangeStart, rangeEnd]) =>
+                startHour >= rangeStart && endHour <= rangeEnd
+            );
+          }
+        );
+        isMatch = campusValid && timeValid && weekDaysValid;
+      } else {
+        const onlyInvalidTime = Object.values(section.lecture_info).every(
+          (infoObj) => {
+            const [startHour, endHour] = getMilitaryHours(infoObj.lectureTime);
+            return startHour === -1 && endHour === -1;
+          }
+        );
+        isMatch = campusValid && onlyInvalidTime && weekDaysValid;
+      }
+
+      if (isMatch) {
+        matched.push(section);
+      } else {
+        unmatched.push(section);
+      }
+    });
+
+    // When filters change, deselect non-matching sections that weren't manually overridden
+    const nonMatchingIndexes = new Set(
+      unmatched.map((section) => section.index_number)
+    );
+    const newSelectedSections = selectedSections.filter(
+      (section) =>
+        !nonMatchingIndexes.has(section.index_number) ||
+        manualOverrides.has(section.index_number)
+    );
+
+    if (newSelectedSections.length !== selectedSections.length) {
+      setSelectedSections(newSelectedSections);
     }
-  });
+
+    return { matchingSections: matched, nonMatchingSections: unmatched };
+  }, [
+    sections,
+    specialFilters,
+    mergedTimeRanges,
+    selectedSections,
+    setSelectedSections,
+    manualOverrides,
+  ]);
 
   return (
     <div className="section-list">
-      {filteredSections.length === 0 ? (
+      {sections.length === 0 ? (
         <div className="no-sections">
-          No sections available for this course with current filter options.
+          No sections available for this course.
         </div>
       ) : (
         <>
@@ -125,7 +156,7 @@ export const SectionList = ({
             <div className="table-cell meeting-locations-cell">LOCATIONS</div>
             <div className="table-cell instructor-cell">INSTRUCTOR</div>
           </div>
-          {filteredSections.map((section, id) => (
+          {matchingSections.map((section, id) => (
             <Section
               section={section}
               key={id}
@@ -133,6 +164,23 @@ export const SectionList = ({
               setSelectedSections={setSelectedSections}
               setPreviewSection={setPreviewSection}
               courseInfo={courseInfo}
+              isDimmed={false}
+            />
+          ))}
+          {nonMatchingSections.length > 0 && matchingSections.length > 0 && (
+            <div className="filtered-out-separator">
+              Filtered out sections below (Can still be selected)
+            </div>
+          )}
+          {nonMatchingSections.map((section, id) => (
+            <Section
+              section={section}
+              key={id}
+              selectedSections={selectedSections}
+              setSelectedSections={setSelectedSections}
+              setPreviewSection={setPreviewSection}
+              courseInfo={courseInfo}
+              isDimmed={true}
             />
           ))}
         </>

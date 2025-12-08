@@ -46,14 +46,18 @@ export const SearchResultsList = ({
           const matchedCourse = courses.find(
             (course) => course.course_number === result.course_number
           );
-          // Set selected_sections to match, or empty array if not found
-          result.selected_sections = matchedCourse
-            ? matchedCourse.selected_sections
-            : [];
+          // Create a shallow copy of result and set selected_sections to match
+          // (avoid mutating the original result object passed from props)
+          const resultWithSelected = {
+            ...result,
+            selected_sections: matchedCourse
+              ? matchedCourse.selected_sections
+              : [],
+          };
 
           return (
             <SearchResult
-              result={result}
+              result={resultWithSelected}
               key={id}
               courses={courses}
               setCourses={setCourses}

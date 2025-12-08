@@ -125,12 +125,14 @@ export const Section = ({
   setSelectedSections,
   setPreviewSection,
   courseInfo,
+  isDimmed = false,
 }) => {
   const isSelected = selectedSections.some(
     (selected) => selected.index_number === section.index_number
   );
 
   const sectionStatus = getSectionStatus(section);
+  const rowClass = `section-table-row ${isDimmed ? "dimmed" : ""}`;
 
   const handleButtonClick = () => {
     if (isSelected) {
@@ -160,7 +162,7 @@ export const Section = ({
 
   return (
     <div
-      className="section-table-row"
+      className={rowClass}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleButtonClick}

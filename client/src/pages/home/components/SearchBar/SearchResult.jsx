@@ -33,7 +33,102 @@ export const SearchResult = ({
   );
   const [isCourseAdded, setIsCourseAdded] = useState(isCourseInList);
   const [isAllSectionsSelected, setIsAllSectionsSelected] = useState(true); // Track toggle state
+  const [manualOverrides, setManualOverrides] = useState(new Set());
   const dropdownRef = useRef(null);
+
+  // Debug: log renders and selectedSections updates
+  // Remove or guard behind a flag in production
+  // eslint-disable-next-line no-console
+  console.debug("[SearchResult] render", result.course_number, {
+    selectedCount: selectedSections.length,
+    selectedSections: selectedSections.map((s) => s.index_number),
+  });
+
+  const getFilteredSections = React.useCallback(() => {
+    // This logic should be kept in sync with SectionList's filtering
+    function mergeAdjacentRanges(ranges) {
+      if (!Array.isArray(ranges) || ranges.length === 0) return [];
+      const sorted = [...ranges].sort((a, b) => a[0] - b[0]);
+      const merged = [];
+      for (let i = 0; i < sorted.length; i++) {
+        const current = sorted[i];
+        if (merged.length === 0) {
+          merged.push([...current]);
+        } else {
+          const last = merged[merged.length - 1];
+          if (last[1] === current[0] - 1) {
+            last[1] = current[1];
+          } else {
+            merged.push([...current]);
+          }
+        }
+      }
+      return merged;
+    }
+
+    function getMilitaryHours(rangeStr) {
+      function parseHour(timeStr) {
+        const [hour, minute] = timeStr.split(":");
+        let h = parseInt(hour, 10);
+        const period = timeStr.includes("PM") ? "PM" : "AM";
+        if (period === "PM" && h !== 12) h += 12;
+        if (period === "AM" && h === 12) h = 0;
+        return h;
+      }
+      if (typeof rangeStr !== "string") {
+        return [-1, -1];
+      }
+      const [startStr, endStr] = rangeStr.split(" - ").map((s) => s.trim());
+      const startHour = parseHour(startStr);
+      const endHour = parseHour(endStr);
+      return [startHour, endHour];
+    }
+
+    const mergedTimeRanges = mergeAdjacentRanges(specialFilters.timeRanges);
+
+    return sections.filter((section) => {
+      const campusList = Object.values(section.lecture_info)
+        .map((infoObj) => infoObj.campus)
+        .filter(Boolean);
+
+      const campusValid = !(
+        campusList.some((campus) => !specialFilters.campus.includes(campus)) ||
+        (specialFilters.campus.length > 0 &&
+          !campusList.some((campus) => specialFilters.campus.includes(campus)))
+      );
+
+      const weekDaysValid = Object.values(section.lecture_info).every(
+        (infoObj) => {
+          if (infoObj.lectureDay === "Asynchronous content") return true;
+          return specialFilters.weekDays.includes(infoObj.lectureDay);
+        }
+      );
+
+      if (mergedTimeRanges.length > 0) {
+        const timeValid = Object.values(section.lecture_info).every(
+          (infoObj) => {
+            if (!infoObj.lectureTime) return false;
+            const [startHour, endHour] = getMilitaryHours(infoObj.lectureTime);
+            if (startHour === -1 && endHour === -1) return true;
+            return mergedTimeRanges.some(
+              ([rangeStart, rangeEnd]) =>
+                startHour >= rangeStart && endHour <= rangeEnd
+            );
+          }
+        );
+        return campusValid && timeValid && weekDaysValid;
+      } else {
+        const onlyInvalidTime = Object.values(section.lecture_info).every(
+          (infoObj) => {
+            const [startHour, endHour] = getMilitaryHours(infoObj.lectureTime);
+            return startHour === -1 && endHour === -1;
+          }
+        );
+        return campusValid && onlyInvalidTime && weekDaysValid;
+      }
+    });
+  }, [sections, specialFilters]);
+
   // toggles the dropdown visibility
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -68,13 +163,18 @@ export const SearchResult = ({
   // Toggles all sections: if all are selected, deselects them; otherwise, selects all
   const handleToggleAllSections = () => {
     if (isAllSectionsSelected) {
-      // Untoggle: Remove all sections
+      // Untoggle: Deselect all sections, regardless of filtering
       setSelectedSections([]);
     } else {
-      // Toggle: Add all sections
-      setSelectedSections(sections);
+      // Toggle: Add all filtered sections that are not already selected
+      const filteredSections = getFilteredSections();
+      const sectionsToAdd = filteredSections.filter(
+        (fs) =>
+          !selectedSections.some((ss) => ss.index_number === fs.index_number)
+      );
+      setSelectedSections([...selectedSections, ...sectionsToAdd]);
     }
-    setIsAllSectionsSelected(!isAllSectionsSelected);
+    // The state of "isAllSectionsSelected" will be re-evaluated by its useEffect
   };
 
   useEffect(() => {
@@ -94,8 +194,8 @@ export const SearchResult = ({
       );
       if (!matchedCourse) return;
       // Set selected_sections to match, or empty array if not found
-      result.selected_sections = matchedCourse.selected_sections || [];
-      setSelectedSections(result.selected_sections);
+      // Avoid mutating the `result` prop directly — use state instead
+      setSelectedSections(matchedCourse.selected_sections || []);
     }
     // Check if all sections are already selected
     setIsAllSectionsSelected(
@@ -109,20 +209,37 @@ export const SearchResult = ({
   }, [result.course_number, isCourseAdded]);
 
   useEffect(() => {
-    // Check if all sections are selected
+    // Check if all filtered sections are selected
+    const filtered = getFilteredSections();
     setIsAllSectionsSelected(
-      sections.length > 0 &&
-        sections.every((section) =>
+      filtered.length > 0 &&
+        filtered.every((section) =>
           selectedSections.some(
             (selected) => selected.index_number === section.index_number
           )
         )
     );
-  }, [sections, selectedSections]);
+  }, [sections, selectedSections, getFilteredSections]);
 
   // Update result.selected_sections whenever selectedSections changes
   useEffect(() => {
-    result.selected_sections = selectedSections;
+    // Debug: log when selectedSections changes
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[SearchResult] selectedSections changed",
+      result.course_number,
+      {
+        selectedCount: selectedSections.length,
+        selectedIndexes: selectedSections.map((s) => s.index_number),
+      }
+    );
+    // Force a layout reflow to help the browser repaint updated text in edge cases
+    // (reading offsetHeight forces layout). This is lightweight and only runs
+    // when selectedSections changes.
+    if (dropdownRef.current) {
+      // eslint-disable-next-line no-unused-expressions
+      void dropdownRef.current.offsetHeight;
+    }
   }, [selectedSections, result]);
 
   useEffect(() => {
@@ -138,20 +255,29 @@ export const SearchResult = ({
   }, [selectedSections, isCourseAdded, result.course_number]);
 
   return (
-    <div className="search-result" ref={dropdownRef}>
+    <div className="search-result-container" ref={dropdownRef}>
       <div className="result-header" onClick={toggleDropdown}>
         <div className="result-title">{result.course_name}</div>
         <button
           className="visit-course-button"
+          aria-label="Open course page in new tab"
           onClick={(e) => {
             e.stopPropagation();
             const courseNameEncoded = encodeURIComponent(result.course_name);
             const courseLink = `https://classes.rutgers.edu/soc/#keyword?keyword=${courseNameEncoded}&semester=92025&campus=NB&level=U`;
-            // Open the course link in a new tab
             window.open(courseLink, "_blank", "noopener,noreferrer");
           }}
         >
-          Visit
+          <span
+            aria-hidden="true"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            🌐
+          </span>
         </button>
         <button
           onClick={handleAddRemoveCourse}
@@ -179,16 +305,14 @@ export const SearchResult = ({
           <p>Course Number: {result.course_number}</p>
           <p>Credits: {result.credit}</p>
           <p>Core Codes: {result.core_code}</p>
-          <p>
-            Selected Sections:{" "}
-            {!isAllSectionsSelected
-              ? selectedSections.length != 0
-                ? selectedSections
-                    .map((section) => section.section_number)
-                    .join(", ")
-                : "None"
-              : "All"}
-          </p>
+          <div className="selected-sections-display">
+            <p key={selectedSections.map((s) => s.index_number).join(",")}>
+              Selected Sections:{" "}
+              {selectedSections
+                .map((section) => section.section_number)
+                .join(", ")}
+            </p>
+          </div>
           <button
             className={`toggle-all-sections-button ${isAllSectionsSelected ? "toggled" : ""}`}
             onClick={handleToggleAllSections}
@@ -200,10 +324,34 @@ export const SearchResult = ({
           <SectionList
             sections={sections}
             selectedSections={selectedSections}
-            setSelectedSections={setSelectedSections}
+            setSelectedSections={(newSections) => {
+              const newSectionNumbers = new Set(
+                Array.isArray(newSections)
+                  ? newSections.map((s) => s.index_number)
+                  : []
+              );
+              const oldSectionNumbers = new Set(
+                selectedSections.map((s) => s.index_number)
+              );
+
+              const added = [...newSectionNumbers].filter(
+                (x) => !oldSectionNumbers.has(x)
+              );
+              const removed = [...oldSectionNumbers].filter(
+                (x) => !newSectionNumbers.has(x)
+              );
+
+              const newOverrides = new Set(manualOverrides);
+              added.forEach((num) => newOverrides.add(num));
+              removed.forEach((num) => newOverrides.delete(num));
+
+              setManualOverrides(newOverrides);
+              setSelectedSections(newSections);
+            }}
             setPreviewSection={setPreviewSection}
             courseInfo={result}
             specialFilters={specialFilters}
+            manualOverrides={manualOverrides}
           />
         </div>
       )}

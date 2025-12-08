@@ -237,20 +237,6 @@
     cursor: pointer;
   }
 
-  /* Visit button for search/selected course items */
-  .visit-course-button {
-    @apply bg-[#3498db] text-white px-[8px] py-[4px] rounded-md border-2 border-black font-semibold;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-
-  .visit-course-button:hover {
-    @apply opacity-90;
-  }
-
-  .visit-course-button:active {
-    transform: scale(0.98);
-  }
 
   .search-bar-container {
     @apply flex flex-col max-w-full max-h-full box-border overflow-hidden;
