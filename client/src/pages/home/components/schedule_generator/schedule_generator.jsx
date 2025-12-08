@@ -1,5 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import searchFilter from "../enums/search_filter";
+// Campus enum keys (use keys instead of raw strings)
+// Normalize campus value to enum code (BU, LI, CA, CD, ...)
+
+const { campus } = searchFilter;
 
 const toMinutes = (t) => {
   if (typeof t === "number") return t;
@@ -44,6 +49,7 @@ const meetingsForSection = (section) => {
     .map((mt) => {
       const dayLabel = mt.lectureDay || mt.days || mt.day || "";
       const timeLabel = mt.lectureTime || mt.time || mt.timeslot || "";
+      const campus = mt.campus || mt.location || mt.campus_code || null; // expect enum code from data
       if (!timeLabel || timeLabel === -1) return null;
       const m = String(timeLabel).match(
         /(\d{1,2}:\d{2}\s*(?:AM|PM)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM)?)/i
@@ -52,7 +58,7 @@ const meetingsForSection = (section) => {
       const start = toMinutes(m[1]);
       const end = toMinutes(m[2]);
       const days = dayMap(dayLabel);
-      return { days, start, end };
+      return { days, start, end, campus };
     })
     .filter(Boolean);
 };
@@ -61,13 +67,34 @@ const overlaps = (aStart, aEnd, bStart, bEnd) => {
   return aStart < bEnd && bStart < aEnd;
 };
 
+const requiredGapMinutes = (c1, c2) => {
+  if (!c1 || !c2) return 0; // unknown campus: no travel gap (adjust if desired)
+  if (c1 === c2) return 0; // same campus: no travel gap
+  const a = String(c1).toUpperCase();
+  const b = String(c2).toUpperCase();
+  const isPair = (x, y, p, q) => (x === p && y === q) || (x === q && y === p);
+  // Use enum keys from searchFilter.campus (do not re-declare)
+  if (isPair(a, b, campus.BU, campus.LI)) return 30;
+  if (isPair(a, b, campus.CA, campus.CD)) return 30;
+  return 40;
+};
+
 const sectionsConflict = (s1, s2) => {
   const m1 = meetingsForSection(s1);
   const m2 = meetingsForSection(s2);
   for (const a of m1) {
     for (const b of m2) {
       const shareDay = a.days.some((d) => b.days.includes(d));
-      if (shareDay && overlaps(a.start, a.end, b.start, b.end)) return true;
+      if (!shareDay) continue;
+      // Direct time overlap is always a conflict
+      if (overlaps(a.start, a.end, b.start, b.end)) return true;
+      // Enforce travel gap between consecutive meetings on the same day
+      const gapAB = b.start - a.end; // b after a
+      const gapBA = a.start - b.end; // a after b
+      const needAB = requiredGapMinutes(a.campus, b.campus);
+      const needBA = requiredGapMinutes(b.campus, a.campus);
+      if (gapAB >= 0 && gapAB < needAB) return true;
+      if (gapBA >= 0 && gapBA < needBA) return true;
     }
   }
   return false;

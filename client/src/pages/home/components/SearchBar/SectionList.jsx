@@ -84,6 +84,12 @@ export const SectionList = ({
         }
       );
 
+      // Status filter: include open/closed per specialFilters.sectionStatus
+      const isOpen = section.section_open === 1;
+      const statusValid = isOpen
+        ? specialFilters.sectionStatus?.includes("open")
+        : specialFilters.sectionStatus?.includes("closed");
+
       let isMatch;
       if (mergedTimeRanges.length > 0) {
         const timeValid = Object.values(section.lecture_info).every(
@@ -97,7 +103,7 @@ export const SectionList = ({
             );
           }
         );
-        isMatch = campusValid && timeValid && weekDaysValid;
+        isMatch = campusValid && timeValid && weekDaysValid && statusValid;
       } else {
         const onlyInvalidTime = Object.values(section.lecture_info).every(
           (infoObj) => {
@@ -105,7 +111,8 @@ export const SectionList = ({
             return startHour === -1 && endHour === -1;
           }
         );
-        isMatch = campusValid && onlyInvalidTime && weekDaysValid;
+        isMatch =
+          campusValid && onlyInvalidTime && weekDaysValid && statusValid;
       }
 
       if (isMatch) {

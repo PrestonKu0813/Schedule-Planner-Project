@@ -42,7 +42,6 @@ export default function Home() {
       campus.ON,
     ],
     timeRanges: [timeRanges.MORNING, timeRanges.AFTERNOON, timeRanges.EVENING],
-    day: [],
     credit: [
       credit.ONE,
       credit.TWO,
@@ -52,7 +51,9 @@ export default function Home() {
       credit.NA,
     ],
     coreCode: Object.keys(coreCode),
-    weekDays: Object.keys(weekDays)
+    weekDays: Object.keys(weekDays),
+    // New filter: include open/closed sections
+    sectionStatus: ["open", "closed"],
   });
 
   return (

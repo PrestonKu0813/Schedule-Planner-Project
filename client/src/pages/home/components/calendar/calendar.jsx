@@ -61,12 +61,12 @@ const renderOnlineSectionItem = (
 function Calendar({ courses, previewSection }) {
   // Color mapping for campus locations
   const campusColors = {
-    Busch: "#ADD8E6",
-    Livingston: "#FFA500",
-    Online: "#F08080",
+    "Busch": "#ADD8E6",
+    "Livingston": "#FFA500",
+    "Online": "#F08080",
     "College Ave": "#FFFF99",
-    "Cook/Doug": "#90EE90",
-    Downtown: "#FFB6C1",
+    "C/D": "#90EE90",
+    "Downtown": "#FFB6C1",
   };
 
   const [selectedClass, setSelectedClass] = useState(null);

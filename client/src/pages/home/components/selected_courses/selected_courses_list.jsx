@@ -12,6 +12,7 @@ function Selected_Courses({
 }) {
   const [isMinimized, setIsMinimized] = useState(true);
   const [showCampus, setShowCampus] = useState(false);
+  const [showSectionStatus, setShowSectionStatus] = useState(false);
   const [showCredit, setShowCredit] = useState(false);
   const [showCoreCode, setShowCoreCode] = useState(false);
   const [showTimeRange, setShowTimeRange] = useState(false);
@@ -117,6 +118,57 @@ function Selected_Courses({
             }}
           >
             Additional Filters
+          </div>
+          {/* Section Status Filter Dropdown */}
+          <div className="filter-section">
+            <button
+              type="button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                userSelect: "none",
+                background: "none",
+                border: "none",
+                width: "100%",
+                padding: 0,
+                marginBottom: showSectionStatus ? "0.3em" : 0,
+              }}
+              onClick={() => setShowSectionStatus((prev) => !prev)}
+            >
+              <h4 style={{ margin: 0, flex: 1, pointerEvents: "none" }}>
+                Status (Open/Closed)
+              </h4>
+              <span style={{ fontSize: "1.1em" }}>
+                {showSectionStatus ? "▲" : "▼"}
+              </span>
+            </button>
+            {showSectionStatus && (
+              <div>
+                <Checkbox
+                  label="Open"
+                  isChecked={specialFilters.sectionStatus?.includes("open")}
+                  onClick={() => {
+                    if (specialFilters.sectionStatus?.includes("open")) {
+                      removeFromFilter("sectionStatus", "open");
+                    } else {
+                      addToFilter("sectionStatus", "open");
+                    }
+                  }}
+                />
+                <Checkbox
+                  label="Closed"
+                  isChecked={specialFilters.sectionStatus?.includes("closed")}
+                  onClick={() => {
+                    if (specialFilters.sectionStatus?.includes("closed")) {
+                      removeFromFilter("sectionStatus", "closed");
+                    } else {
+                      addToFilter("sectionStatus", "closed");
+                    }
+                  }}
+                />
+              </div>
+            )}
           </div>
           {/* Campus Filter Dropdown */}
           <div className="filter-section">
