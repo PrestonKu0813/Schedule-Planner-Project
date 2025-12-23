@@ -114,6 +114,7 @@ function CourseList({
 
   const { campus } = searchFilter;
   const savedSchedulesRef = useRef(null);
+  const [isSavedScheduleActive, setIsSavedScheduleActive] = useState(false);
 
   const generatedSchedulesCount = generatedSchedules.length;
 
@@ -169,7 +170,19 @@ function CourseList({
     ]
   );
 
+  // Callback to handle saved schedule state changes
+  const handleSavedScheduleStateChange = useCallback((scheduleName) => {
+    setIsSavedScheduleActive(
+      scheduleName !== null && scheduleName !== undefined
+    );
+  }, []);
+
   useEffect(() => {
+    // Don't auto-generate if a saved schedule is active
+    if (isSavedScheduleActive) {
+      return;
+    }
+
     if (!hasCourses) {
       if (lastGeneratedSignatureRef.current !== coursesSignature) {
         runGeneration([]);
@@ -182,7 +195,7 @@ function CourseList({
     }
 
     runGeneration();
-  }, [coursesSignature, hasCourses, runGeneration]);
+  }, [coursesSignature, hasCourses, runGeneration, isSavedScheduleActive]);
 
   // Setting the results of search bar
   const [results, setResults] = useState([]);
@@ -361,34 +374,59 @@ function CourseList({
         ) : (
           <div className="schedule_container">
             <div className="randomizer_container">
-              randomizer + schedule next and behind generator put here
-              <ScheduleGenerator
-                courses={courses}
-                generatedSchedules={generatedSchedules}
-                onGenerate={(schedules) => {
-                  runGeneration(schedules);
-                  console.log("Received schedules from generator:", schedules);
-                }}
-              />
-              {generatedSchedules && generatedSchedules.length > 0 && (
-                <ScheduleNavigator
-                  schedules={generatedSchedules}
-                  courses={
-                    originalCoursesForSchedules.length > 0
-                      ? originalCoursesForSchedules
-                      : courses
-                  }
-                  setGeneratedCourses={setGeneratedCourses}
-                  selectedIndex={selectedScheduleIndex}
-                  onSelectedIndexChange={setSelectedScheduleIndex}
-                  onScheduleSelect={(schedule, index) => {
-                    console.log(`Selected schedule ${index + 1}:`, schedule);
-                  }}
-                />
+              {isSavedScheduleActive ? (
+                <div style={{ padding: "1em", textAlign: "center" }}>
+                  <p style={{ marginBottom: "0.5em" }}>
+                    Schedule generator is disabled while viewing a saved
+                    schedule.
+                  </p>
+                  <p style={{ fontSize: "0.9em", color: "#666" }}>
+                    Deselect the saved schedule to use the generator.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  randomizer + schedule next and behind generator put here
+                  <ScheduleGenerator
+                    courses={courses}
+                    generatedSchedules={generatedSchedules}
+                    onGenerate={(schedules) => {
+                      runGeneration(schedules);
+                      console.log(
+                        "Received schedules from generator:",
+                        schedules
+                      );
+                    }}
+                    disabled={isSavedScheduleActive}
+                  />
+                  {generatedSchedules && generatedSchedules.length > 0 && (
+                    <ScheduleNavigator
+                      schedules={generatedSchedules}
+                      courses={
+                        originalCoursesForSchedules.length > 0
+                          ? originalCoursesForSchedules
+                          : courses
+                      }
+                      setGeneratedCourses={setGeneratedCourses}
+                      selectedIndex={selectedScheduleIndex}
+                      onSelectedIndexChange={setSelectedScheduleIndex}
+                      onScheduleSelect={(schedule, index) => {
+                        console.log(
+                          `Selected schedule ${index + 1}:`,
+                          schedule
+                        );
+                      }}
+                    />
+                  )}
+                </>
               )}
             </div>
             <div className="saved_schedule_container">
-              <SavedSchedules ref={savedSchedulesRef} user={user} />
+              <SavedSchedules
+                ref={savedSchedulesRef}
+                user={user}
+                onScheduleStateChange={handleSavedScheduleStateChange}
+              />
             </div>
           </div>
         )}

@@ -166,6 +166,7 @@ const ScheduleGenerator = ({
   courses = [],
   generatedSchedules = [],
   onGenerate,
+  disabled = false,
 }) => {
   const [schedules, setSchedules] = React.useState(generatedSchedules || []);
 
@@ -174,10 +175,11 @@ const ScheduleGenerator = ({
   }, [generatedSchedules]);
 
   const handleGenerate = React.useCallback(() => {
+    if (disabled) return;
     const valid = generateSchedulesFromCourses(courses);
     setSchedules(valid);
     if (onGenerate) onGenerate(valid);
-  }, [courses, onGenerate]);
+  }, [courses, onGenerate, disabled]);
 
   return (
     <div className="schedule-generator">
@@ -195,6 +197,7 @@ const ScheduleGenerator = ({
           type="button"
           className="schedule-generator__generate-button"
           onClick={handleGenerate}
+          disabled={disabled}
         >
           Generate Schedule
         </button>
@@ -227,6 +230,7 @@ ScheduleGenerator.propTypes = {
   courses: PropTypes.array,
   generatedSchedules: PropTypes.array,
   onGenerate: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 export default ScheduleGenerator;
